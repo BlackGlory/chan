@@ -7,8 +7,7 @@
   , "paths": {
       "@src/*": ["src/*"]
     , "@test/*": ["__tests__/*"]
-    , "@service/*": ["src/service/*"]
-    , "@adapter/*": ["src/adapter/*"]
+    , "@services/*": ["src/services/*"]
     }
   }
 }

@@ -1,20 +1,57 @@
 import * as TBAC from '@src/dao/token-based-access-control'
 import { prepareDatabase } from './utils'
 import { Database } from 'better-sqlite3'
+import 'jest-extended'
 
 jest.mock('@src/dao/database')
 
 describe('TBAC(token-based access control)', () => {
-  describe('WriteToken', () => {
-    describe('hasWriteTokens(id: string): boolean', () => {
+  describe('getAllIds(): string[]', () => {
+    it('return string[]', async () => {
+      const db = await prepareDatabase()
+      const id1 = 'id-1'
+      const token1 = 'token-1'
+      const id2 = 'id-2'
+      const token2 = 'token-2'
+      insert(db, { token: token1, id: id1, dequeue: true, enqueue: false })
+      insert(db, { token: token2, id: id2, dequeue: false, enqueue: true })
+
+      const result = TBAC.getAllIds()
+
+      // expect.toStrictEqual is broken, I have no idea
+      expect(result).toEqual([id1, id2])
+    })
+  })
+
+  describe('getAllTokens(id: string): Array<{ token: string, enqueue: boolean, dequeue: boolean }>', () => {
+    it('return Array<{ token: string, enqueue: boolean, dequeue: boolean }>', async () => {
+      const db = await prepareDatabase()
+      const id = 'id-1'
+      const token1 = 'token-1'
+      const token2 = 'token-2'
+      insert(db, { token: token1, id, dequeue: true, enqueue: false })
+      insert(db, { token: token2, id, dequeue: false, enqueue: true })
+
+      const result = TBAC.getAllTokens(id)
+
+      // expect.toStrictEqual is broken, I have no idea
+      expect(result).toEqual([
+        { token: token1, dequeue: true, enqueue: false }
+      , { token: token2, dequeue: false, enqueue: true }
+      ])
+    })
+  })
+
+  describe('EnqueueToken', () => {
+    describe('hasEnqueueTokens(id: string): boolean', () => {
       describe('tokens exist', () => {
         it('return true', async () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, { token, id, read: false, write: true })
+          insert(db, { token, id, dequeue: false, enqueue: true })
 
-          const result = TBAC.hasWriteTokens(id)
+          const result = TBAC.hasEnqueueTokens(id)
 
           expect(result).toBeTrue()
         })
@@ -25,24 +62,24 @@ describe('TBAC(token-based access control)', () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, { token, id, read: true, write: false })
+          insert(db, { token, id, dequeue: true, enqueue: false })
 
-          const result = TBAC.hasWriteTokens(id)
+          const result = TBAC.hasEnqueueTokens(id)
 
           expect(result).toBeFalse()
         })
       })
     })
 
-    describe('hasReadTokens(id: string): boolean', () => {
+    describe('hasDequeueTokens(id: string): boolean', () => {
       describe('tokens exist', () => {
         it('return true', async () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, { token, id, read: true, write: false })
+          insert(db, { token, id, dequeue: true, enqueue: false })
 
-          const result = TBAC.hasReadTokens(id)
+          const result = TBAC.hasDequeueTokens(id)
 
           expect(result).toBeTrue()
         })
@@ -53,28 +90,28 @@ describe('TBAC(token-based access control)', () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, { token, id, read: false, write: true })
+          insert(db, { token, id, dequeue: false, enqueue: true })
 
-          const result = TBAC.hasReadTokens(id)
+          const result = TBAC.hasDequeueTokens(id)
 
           expect(result).toBeFalse()
         })
       })
     })
 
-    describe('removeWriteToken(token: string, id: string)', () => {
+    describe('removeEnqueueToken(token: string, id: string)', () => {
       describe('token exists', () => {
         it('return undefined', async () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, { token, id, read: true, write: true })
+          insert(db, { token, id, dequeue: true, enqueue: true })
 
-          const result = TBAC.removeWriteToken({ token, id })
+          const result = TBAC.unsetEnqueueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
-          expect(row['write_permission']).toBe(0)
+          expect(row['enqueue_permission']).toBe(0)
         })
       })
 
@@ -84,7 +121,7 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.removeWriteToken({ token, id })
+          const result = TBAC.unsetEnqueueToken({ token, id })
 
           expect(result).toBeUndefined()
           expect(exist(db, { token, id })).toBeFalse()
@@ -93,20 +130,20 @@ describe('TBAC(token-based access control)', () => {
     })
   })
 
-  describe('ReadToken', () => {
-    describe('addWriteToken(token: string, id: string)', () => {
+  describe('DequeueToken', () => {
+    describe('addEnqueueToken(token: string, id: string)', () => {
       describe('token exists', () => {
         it('update row', async () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, { token, id, read: true, write: false })
+          insert(db, { token, id, dequeue: true, enqueue: false })
 
-          const result = TBAC.addWriteToken({ token, id })
+          const result = TBAC.setEnqueueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
-          expect(row['write_permission']).toBe(1)
+          expect(row['enqueue_permission']).toBe(1)
         })
       })
 
@@ -116,28 +153,28 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.addWriteToken({ token, id })
+          const result = TBAC.setEnqueueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
-          expect(row['write_permission']).toBe(1)
+          expect(row['enqueue_permission']).toBe(1)
         })
       })
     })
 
-    describe('addReadToken(token: string, id: string)', () => {
+    describe('addDequeueToken(token: string, id: string)', () => {
       describe('token exists', () => {
         it('update row', async () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, { token, id, read: false, write: true })
+          insert(db, { token, id, dequeue: false, enqueue: true })
 
-          const result = TBAC.addReadToken({ token, id })
+          const result = TBAC.setDequeueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
-          expect(row['read_permission']).toBe(1)
+          expect(row['dequeue_permission']).toBe(1)
         })
       })
 
@@ -147,28 +184,28 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.addReadToken({ token, id })
+          const result = TBAC.setDequeueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
-          expect(row['read_permission']).toBe(1)
+          expect(row['dequeue_permission']).toBe(1)
         })
       })
     })
 
-    describe('removeReadToken', () => {
+    describe('removeDequeueToken', () => {
       describe('token exists', () => {
         it('return undefined', async () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, { token, id, read: true, write: true })
+          insert(db, { token, id, dequeue: true, enqueue: true })
 
-          const result = TBAC.removeReadToken({ token, id })
+          const result = TBAC.unsetDequeueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
-          expect(row['read_permission']).toBe(0)
+          expect(row['dequeue_permission']).toBe(0)
         })
       })
 
@@ -178,7 +215,7 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.removeReadToken({ token, id })
+          const result = TBAC.unsetDequeueToken({ token, id })
 
           expect(result).toBeUndefined()
           expect(exist(db, { token, id })).toBeFalse()
@@ -202,20 +239,20 @@ function select(db: Database, { token, id }: { token: string; id: string }) {
 
 function insert(
   db: Database
-, { token, id, read, write }: {
+, { token, id, dequeue, enqueue }: {
     token: string
     id: string
-    read: boolean
-    write: boolean
+    dequeue: boolean
+    enqueue: boolean
   }
 ) {
   db.prepare(`
-    INSERT INTO mpmc_tbac (token, mpmc_id, read_permission, write_permission)
-    VALUES ($token, $id, $read, $write);
+    INSERT INTO mpmc_tbac (token, mpmc_id, dequeue_permission, enqueue_permission)
+    VALUES ($token, $id, $dequeue, $enqueue);
   `).run({
     token
   , id
-  , read: read ? 1 : 0
-  , write: write ? 1 : 0
+  , dequeue: dequeue ? 1 : 0
+  , enqueue: enqueue ? 1 : 0
   })
 }

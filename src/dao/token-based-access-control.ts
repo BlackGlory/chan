@@ -1,86 +1,112 @@
 import { getDatabase } from './database'
-import 'jest-extended'
 
-export function hasWriteTokens(id: string): boolean {
+export function getAllIds(): string[] {
+  const result = getDatabase().prepare(`
+    SELECT mpmc_id
+      FROM mpmc_tbac;
+  `).all()
+  return result.map(x => x['mpmc_id'])
+}
+
+export function getAllTokens(id: string): Array<{ token: string, enqueue: boolean, dequeue: boolean }> {
+  const result: Array<{
+    token: string
+    'enqueue_permission': number
+    'dequeue_permission': number
+  }> = getDatabase().prepare(`
+    SELECT token
+         , enqueue_permission
+         , dequeue_permission
+      FROM mpmc_tbac
+     WHERE mpmc_id = $id;
+  `).all({ id })
+  return result.map(x => ({
+    token: x['token']
+  , enqueue: x['enqueue_permission'] === 1
+  , dequeue: x['dequeue_permission'] === 1
+  }))
+}
+
+export function hasEnqueueTokens(id: string): boolean {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
                FROM mpmc_tbac
-               WHERE mpmc_id = $id AND write_permission=1
-           ) AS write_tokens_exist
+               WHERE mpmc_id = $id AND enqueue_permission=1
+           ) AS enqueue_tokens_exist
   `).get({ id })
-  return result['write_tokens_exist'] === 1
+  return result['enqueue_tokens_exist'] === 1
 }
 
-export function addWriteToken({ token, id }: { token: string; id: string }) {
+export function setEnqueueToken({ token, id }: { token: string; id: string }) {
   const db = getDatabase()
   const row = db.prepare(`
-    SELECT write_permission
+    SELECT enqueue_permission
       FROM mpmc_tbac
      WHERE token = $token AND mpmc_id = $id;
   `).get({ token, id })
   if (row) {
-    if (row['write_permission'] === 0) {
+    if (row['enqueue_permission'] === 0) {
       db.prepare(`
         UPDATE mpmc_tbac
-           SET write_permission = 1
+           SET enqueue_permission = 1
          WHERE token = $token AND mpmc_id = $id;
       `).run({ token, id })
     }
   } else {
     db.prepare(`
-      INSERT INTO mpmc_tbac (token, mpmc_id, read_permission, write_permission)
+      INSERT INTO mpmc_tbac (token, mpmc_id, dequeue_permission, enqueue_permission)
       VALUES ($token, $id, 0, 1);
     `).run({ token, id })
   }
 }
 
-export function removeWriteToken({ token, id }: { token: string; id: string }) {
+export function unsetEnqueueToken({ token, id }: { token: string; id: string }) {
   getDatabase().prepare(`
     UPDATE mpmc_tbac
-       SET write_permission = 0
+       SET enqueue_permission = 0
      WHERE token = $token AND mpmc_id = $id;
   `).run({ token, id })
 }
 
-export function hasReadTokens(id: string): boolean {
+export function hasDequeueTokens(id: string): boolean {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
                FROM mpmc_tbac
-               WHERE mpmc_id = $id AND read_permission=1
-           ) AS read_tokens_exist
+               WHERE mpmc_id = $id AND dequeue_permission=1
+           ) AS dequeue_tokens_exist
   `).get({ id })
-  return result['read_tokens_exist'] === 1
+  return result['dequeue_tokens_exist'] === 1
 }
 
-export function addReadToken({ token, id }: { token: string; id: string }) {
+export function setDequeueToken({ token, id }: { token: string; id: string }) {
   const db = getDatabase()
   const row = db.prepare(`
-    SELECT read_permission
+    SELECT dequeue_permission
       FROM mpmc_tbac
      WHERE token = $token AND mpmc_id = $id;
   `).get({ token, id })
   if (row) {
-    if (row['read_permission'] === 0) {
+    if (row['dequeue_permission'] === 0) {
       db.prepare(`
         UPDATE mpmc_tbac
-           SET read_permission = 1
+           SET dequeue_permission = 1
          WHERE token = $token AND mpmc_id = $id;
       `).run({ token, id })
     }
   } else {
     db.prepare(`
-      INSERT INTO mpmc_tbac (token, mpmc_id, read_permission, write_permission)
+      INSERT INTO mpmc_tbac (token, mpmc_id, dequeue_permission, enqueue_permission)
       VALUES ($token, $id, 1, 0);
     `).run({ token, id })
   }
 }
 
-export function removeReadToken({ token, id }: { token: string; id: string }) {
+export function unsetDequeueToken({ token, id }: { token: string; id: string }) {
   getDatabase().prepare(`
     UPDATE mpmc_tbac
-       SET read_permission = 0
+       SET dequeue_permission = 0
      WHERE token = $token AND mpmc_id = $id;
   `).run({ token, id })
 }
