@@ -99,17 +99,14 @@ describe('blacklist', () => {
   })
 })
 
+function exist(db: Database, id: string) {
+  return select(db, id).length !== 0
+}
+
 function insert(db: Database, id: string) {
   db.prepare('INSERT INTO mpmc_blacklist (mpmc_id) VALUES ($id);').run({ id });
 }
 
-function exist(db: Database, id: string) {
-  const result = db.prepare(`
-    SELECT EXISTS(
-             SELECT *
-               FROM mpmc_blacklist
-              WHERE mpmc_id = $id
-           ) AS exist;
-  `).get({ id })
-  return result.exist === 1
+function select(db: Database, id: string) {
+  return db.prepare(`SELECT * FROM mpmc_blacklist WHERE mpmc_id = $id;`).all({ id })
 }
