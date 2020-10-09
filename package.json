@@ -19,6 +19,12 @@
     "docker:dev": "docker run --rm -it refile dev",
     "docker:test": "docker run -e CI=true refile test"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint && yarn test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",

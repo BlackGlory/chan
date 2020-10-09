@@ -12,7 +12,7 @@ describe('TBAC(token-based access control)', () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, token, id, false, true)
+          insert(db, { token, id, read: false, write: true })
 
           const result = TBAC.hasWriteTokens(id)
 
@@ -25,7 +25,7 @@ describe('TBAC(token-based access control)', () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, token, id, true, false)
+          insert(db, { token, id, read: true, write: false })
 
           const result = TBAC.hasWriteTokens(id)
 
@@ -40,7 +40,7 @@ describe('TBAC(token-based access control)', () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, token, id, true, false)
+          insert(db, { token, id, read: true, write: false })
 
           const result = TBAC.hasReadTokens(id)
 
@@ -53,7 +53,7 @@ describe('TBAC(token-based access control)', () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, token, id, false, true)
+          insert(db, { token, id, read: false, write: true })
 
           const result = TBAC.hasReadTokens(id)
 
@@ -68,10 +68,10 @@ describe('TBAC(token-based access control)', () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, token, id, true, true)
+          insert(db, { token, id, read: true, write: true })
 
-          const result = TBAC.removeWriteToken(token, id)
-          const row = select(db, token, id)
+          const result = TBAC.removeWriteToken({ token, id })
+          const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
           expect(row['write_permission']).toBe(0)
@@ -84,10 +84,10 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.removeWriteToken(token, id)
+          const result = TBAC.removeWriteToken({ token, id })
 
           expect(result).toBeUndefined()
-          expect(exist(db, token, id)).toBeFalse()
+          expect(exist(db, { token, id })).toBeFalse()
         })
       })
     })
@@ -100,10 +100,10 @@ describe('TBAC(token-based access control)', () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, token, id, true, false)
+          insert(db, { token, id, read: true, write: false })
 
-          const result = TBAC.addWriteToken(token, id)
-          const row = select(db, token, id)
+          const result = TBAC.addWriteToken({ token, id })
+          const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
           expect(row['write_permission']).toBe(1)
@@ -116,8 +116,8 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.addWriteToken(token, id)
-          const row = select(db, token, id)
+          const result = TBAC.addWriteToken({ token, id })
+          const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
           expect(row['write_permission']).toBe(1)
@@ -131,10 +131,10 @@ describe('TBAC(token-based access control)', () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, token, id, false, true)
+          insert(db, { token, id, read: false, write: true })
 
-          const result = TBAC.addReadToken(token, id)
-          const row = select(db, token, id)
+          const result = TBAC.addReadToken({ token, id })
+          const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
           expect(row['read_permission']).toBe(1)
@@ -147,8 +147,8 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.addReadToken(token, id)
-          const row = select(db, token, id)
+          const result = TBAC.addReadToken({ token, id })
+          const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
           expect(row['read_permission']).toBe(1)
@@ -162,10 +162,10 @@ describe('TBAC(token-based access control)', () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
-          insert(db, token, id, true, true)
+          insert(db, { token, id, read: true, write: true })
 
-          const result = TBAC.removeReadToken(token, id)
-          const row = select(db, token, id)
+          const result = TBAC.removeReadToken({ token, id })
+          const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
           expect(row['read_permission']).toBe(0)
@@ -178,21 +178,21 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.removeReadToken(token, id)
+          const result = TBAC.removeReadToken({ token, id })
 
           expect(result).toBeUndefined()
-          expect(exist(db, token, id)).toBeFalse()
+          expect(exist(db, { token, id })).toBeFalse()
         })
       })
     })
   })
 })
 
-function exist(db: Database, token: string, id: string) {
-  return !!select(db, token, id)
+function exist(db: Database, { token, id }: { token: string; id: string }) {
+  return !!select(db, { token, id })
 }
 
-function select(db: Database, token: string, id: string) {
+function select(db: Database, { token, id }: { token: string; id: string }) {
   return db.prepare(`
     SELECT *
       FROM mpmc_tbac
@@ -200,7 +200,15 @@ function select(db: Database, token: string, id: string) {
   `).get({ token, id })
 }
 
-function insert(db: Database, token: string, id: string, read: boolean, write: boolean) {
+function insert(
+  db: Database
+, { token, id, read, write }: {
+    token: string
+    id: string
+    read: boolean
+    write: boolean
+  }
+) {
   db.prepare(`
     INSERT INTO mpmc_tbac (token, mpmc_id, read_permission, write_permission)
     VALUES ($token, $id, $read, $write);

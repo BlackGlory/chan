@@ -10,5 +10,6 @@ module.exports = {
   ]
 , rules: {
     'no-constant-condition': 'off'
+  , 'no-empty': 'off'
   }
 }

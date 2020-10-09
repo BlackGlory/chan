@@ -12,7 +12,7 @@ export function hasWriteTokens(id: string): boolean {
   return result['write_tokens_exist'] === 1
 }
 
-export function addWriteToken(token: string, id: string) {
+export function addWriteToken({ token, id }: { token: string; id: string }) {
   const db = getDatabase()
   const row = db.prepare(`
     SELECT write_permission
@@ -35,7 +35,7 @@ export function addWriteToken(token: string, id: string) {
   }
 }
 
-export function removeWriteToken(token: string, id: string) {
+export function removeWriteToken({ token, id }: { token: string; id: string }) {
   getDatabase().prepare(`
     UPDATE mpmc_tbac
        SET write_permission = 0
@@ -54,7 +54,7 @@ export function hasReadTokens(id: string): boolean {
   return result['read_tokens_exist'] === 1
 }
 
-export function addReadToken(token: string, id: string) {
+export function addReadToken({ token, id }: { token: string; id: string }) {
   const db = getDatabase()
   const row = db.prepare(`
     SELECT read_permission
@@ -77,7 +77,7 @@ export function addReadToken(token: string, id: string) {
   }
 }
 
-export function removeReadToken(token: string, id: string) {
+export function removeReadToken({ token, id }: { token: string; id: string }) {
   getDatabase().prepare(`
     UPDATE mpmc_tbac
        SET read_permission = 0
