@@ -1,5 +1,5 @@
 {
-  "name": "connector",
+  "name": "mpmc",
   "version": "0.1.0",
   "main": "index.js",
   "author": "BlackGlory <woshenmedoubuzhidao@blackglory.me>",
@@ -25,13 +25,14 @@
     "@types/app-root-path": "^1.2.4",
     "@types/better-sqlite3": "^5.4.0",
     "@types/jest": "^26.0.14",
-    "@types/node": "^14.11.5",
+    "@types/node": "^14.11.7",
     "@types/ws": "^7.2.7",
     "@typescript-eslint/eslint-plugin": "^4.4.0",
     "@typescript-eslint/parser": "^4.4.0",
     "eslint": "^7.10.0",
     "husky": "^4.3.0",
     "jest": "^26.5.2",
+    "jest-extended": "^0.11.5",
     "nodemon": "^2.0.4",
     "pino-pretty": "^4.3.0",
     "ts-jest": "^26.4.1",
@@ -48,7 +49,7 @@
     "fastify": "^3.5.1",
     "fastify-cors": "^4.1.0",
     "fastify-plugin": "^2.3.4",
-    "fastify-websocket": "^2.0.9",
+    "fastify-websocket": "^2.0.10",
     "rxjs": "^7.0.0-beta.7"
   }
 }

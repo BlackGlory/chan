@@ -23,7 +23,7 @@ CREATE TABLE mpmc_tbac (
 , mpmc_id          VARCHAR(255) NOT NULL
 , read_permission  BOOLEAN      NOT NULL CHECK(read_permission IN (0,1))
 , write_permission BOOLEAN      NOT NULL CHECK(write_permission IN (0,1))
-, UNIQUE (mpmc_id, token)
+, UNIQUE (token, mpmc_id)
 );
 
 CREATE TRIGGER auto_delete_after_insert_mpmc_tbac
