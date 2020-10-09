@@ -7,16 +7,16 @@ export async function migrateToLatest(options: { db: Database, migrationsPath: s
   await migrateTo(lastVersion, options)
 }
 
-export async function migrateTo(version: number, { db, migrationsPath }: { db: Database, migrationsPath: string }) {
-  console.group('Schema Migration')
+export async function migrateTo(targetVersion: number, { db, migrationsPath }: { db: Database, migrationsPath: string }) {
+  // console.group('Schema Migration')
   const migrations = await readMigrations(migrationsPath)
 
   let currentVersion = getDatabaseVersion()
-  console.info(`Current schema version: ${ currentVersion }`)
-  console.info(`Target schema version: ${ currentVersion }`)
+  // console.info(`Current schema version: ${ currentVersion }`)
+  // console.info(`Target schema version: ${ targetVersion }`)
 
-  while ((currentVersion = getDatabaseVersion()) !== version) {
-    if (currentVersion < version) {
+  while ((currentVersion = getDatabaseVersion()) !== targetVersion) {
+    if (currentVersion < targetVersion) {
       upgrade()
     } else {
       downgrade()
@@ -29,13 +29,11 @@ export async function migrateTo(version: number, { db, migrationsPath }: { db: D
     const currentVersion = getDatabaseVersion()
     const targetVersion = currentVersion + 1
 
-    console.group(`Upgrading to version ${targetVersion}`)
+    // console.group(`Upgrading to version ${targetVersion}`)
 
     const nextMigration = migrations.find(x => x.version === targetVersion)
     if (!nextMigration) throw new Error(`Cannot find migration for version ${ targetVersion }`)
-    db.transaction(() => {
-      db.exec(nextMigration.up);
-    })
+    db.exec(nextMigration.up);
     setDatabaseVersion(targetVersion)
 
     console.groupEnd()
@@ -45,13 +43,11 @@ export async function migrateTo(version: number, { db, migrationsPath }: { db: D
     const currentVersion = getDatabaseVersion()
     const targetVersion = currentVersion - 1
 
-    console.group(`Downgrading to version ${targetVersion}`)
+    // console.group(`Downgrading to version ${targetVersion}`)
 
     const nextMigration = migrations.find(x => x.version === targetVersion)
     if (!nextMigration) throw new Error(`Cannot find migration for version ${ targetVersion }`)
-    db.transaction(() => {
-      db.exec(nextMigration.up);
-    })
+    db.exec(nextMigration.up);
     setDatabaseVersion(targetVersion)
 
     console.groupEnd()

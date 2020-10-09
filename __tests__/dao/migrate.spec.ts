@@ -6,7 +6,7 @@ import { path as appRoot } from 'app-root-path'
 describe('migrateToLatest()', () => {
   it('upgrades database schema to latest version', async () => {
     const db = new Database(':memory:')
-    const migrationsPath = path.join(appRoot, 'src/migrations')
+    const migrationsPath = path.join(appRoot, 'migrations')
 
     await migrateToLatest({ db, migrationsPath })
   })
