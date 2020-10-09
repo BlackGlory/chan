@@ -2,7 +2,7 @@ import { FastifyPluginAsync } from 'fastify'
 import { ChannelManager } from './channel-manager'
 import urlencodedParser from '@src/urlencoded-parser'
 
-export const routes: FastifyPluginAsync  = async function routes(server, options) {
+export const routes: FastifyPluginAsync = async function routes(server, options) {
   server.register(urlencodedParser, { parseAs: 'string' })
   const manager = new ChannelManager<string>()
 
