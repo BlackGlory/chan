@@ -100,7 +100,7 @@ describe('whitelist', () => {
 })
 
 function exist(db: Database, id: string) {
-  return select(db, id).length !== 0
+  return !!select(db, id)
 }
 
 function insert(db: Database, id: string) {
@@ -108,5 +108,5 @@ function insert(db: Database, id: string) {
 }
 
 function select(db: Database, id: string) {
-  return db.prepare(`SELECT * FROM mpmc_whitelist WHERE mpmc_id = $id;`).all({ id })
+  return db.prepare(`SELECT * FROM mpmc_whitelist WHERE mpmc_id = $id;`).get({ id })
 }
