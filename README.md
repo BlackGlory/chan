@@ -32,7 +32,7 @@ docker run --publish 80:8080 blackglory/mpmc
 
 ## Usage
 
-对消息队列id的要求: `[a-zA-Z0-9\-]{1,256}`
+对消息队列id的要求: `^[a-zA-Z0-9\-]{1,256}$`
 
 ### dequeue
 
@@ -92,6 +92,8 @@ MPMC提供两种访问控制策略, 可以一并使用.
 
 访问控制规则是通过[WAL模式]的SQLite3进行持久化的, 开启访问控制后,
 服务器的吞吐量和响应速度会受到硬盘性能的影响.
+
+被新的访问控制规则影响到的连接会被断开.
 
 [WAL模式]: https://www.sqlite.org/wal.html
 
@@ -261,7 +263,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 
 ### 基于token的访问控制
 
-对token的要求: `[a-zA-Z0-9\-]{1,256}`
+对token的要求: `^[a-zA-Z0-9\-]{1,256}$`
 
 通过将环境变量`TOKEN_BASED_ACCESS_CONTROL`设置为`true`开启基于token的访问控制.
 
