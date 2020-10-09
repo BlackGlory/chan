@@ -19,10 +19,12 @@ export function inBlacklist(id: string): boolean {
 }
 
 export function addBlacklistItem(id: string): void {
-  getDatabase().prepare(`
-    INSERT INTO mpmc_blacklist (mpmc_id)
-    VALUES ($id);
-  `).run({ id })
+  try {
+    getDatabase().prepare(`
+      INSERT INTO mpmc_blacklist (mpmc_id)
+      VALUES ($id);
+    `).run({ id })
+  } catch {}
 }
 
 export function removeBlacklistItem(id: string) {

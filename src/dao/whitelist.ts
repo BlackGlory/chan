@@ -19,10 +19,12 @@ export function inWhitelist(id: string): boolean {
 }
 
 export function addWhitelistItem(id: string): void {
-  getDatabase().prepare(`
-    INSERT INTO mpmc_whitelist (mpmc_id)
-    VALUES ($id);
-  `).run({ id })
+  try {
+    getDatabase().prepare(`
+      INSERT INTO mpmc_whitelist (mpmc_id)
+      VALUES ($id);
+    `).run({ id })
+  } catch {}
 }
 
 export function removeWhitelistItem(id: string) {

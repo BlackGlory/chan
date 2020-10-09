@@ -9,7 +9,7 @@ describe('whitelist', () => {
   describe('getAllWhitelistItems(): string[]', () => {
     it('return string[]', async () => {
       const db = await prepareDatabase()
-      const id = '1'
+      const id = 'id-1'
       insert(db, id)
 
       const result = DAO.getAllWhitelistItems()
@@ -20,39 +20,81 @@ describe('whitelist', () => {
   })
 
   describe('inWhitelist(id: string): boolean', () => {
-    it('return boolean', async () => {
-      const db = await prepareDatabase()
-      const id = '1'
-      insert(db, id)
+    describe('exist', () => {
+      it('return true', async () => {
+        const db = await prepareDatabase()
+        const id = 'id-1'
+        insert(db, id)
 
-      const result = DAO.inWhitelist(id)
+        const result = DAO.inWhitelist(id)
 
-      expect(result).toBeTrue()
+        expect(result).toBeTrue()
+      })
+    })
+
+    describe('not exist', () => {
+      it('return false', async () => {
+        const db = await prepareDatabase()
+        const id = 'id-1'
+
+        const result = DAO.inWhitelist(id)
+
+        expect(result).toBeFalse()
+      })
     })
   })
 
   describe('addWhitelistItem', () => {
-    it('return undefined', async () => {
-      const db = await prepareDatabase()
-      const id = '1'
+    describe('exist', () => {
+      it('return undefined', async () => {
+        const db = await prepareDatabase()
+        const id = 'id-1'
+        insert(db, id)
 
-      const result = DAO.addWhitelistItem(id)
+        const result = DAO.addWhitelistItem(id)
 
-      expect(result).toBeUndefined()
-      expect(exist(db, id)).toBeTrue()
+        expect(result).toBeUndefined()
+        expect(exist(db, id)).toBeTrue()
+      })
+    })
+
+    describe('not exist', () => {
+      it('return undefined', async () => {
+        const db = await prepareDatabase()
+        const id = 'id-1'
+
+        const result = DAO.addWhitelistItem(id)
+
+        expect(result).toBeUndefined()
+        expect(exist(db, id)).toBeTrue()
+      })
     })
   })
 
   describe('removeWhitelistItem', () => {
-    it('return undefined', async () => {
-      const db = await prepareDatabase()
-      const id = '1'
-      insert(db, id)
+    describe('exist', () => {
+      it('return undefined', async () => {
+        const db = await prepareDatabase()
+        const id = 'id-1'
+        insert(db, id)
 
-      const result = DAO.removeWhitelistItem(id)
+        const result = DAO.removeWhitelistItem(id)
 
-      expect(result).toBeUndefined()
-      expect(exist(db, id)).toBeFalse()
+        expect(result).toBeUndefined()
+        expect(exist(db, id)).toBeFalse()
+      })
+    })
+
+    describe('not exist', () => {
+      it('return undefined', async () => {
+        const db = await prepareDatabase()
+        const id = 'id-1'
+
+        const result = DAO.removeWhitelistItem(id)
+
+        expect(result).toBeUndefined()
+        expect(exist(db, id)).toBeFalse()
+      })
     })
   })
 })
