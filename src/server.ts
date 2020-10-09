@@ -8,7 +8,7 @@ import { HOST, PORT } from '@src/config'
 export function startup() {
   const server = fastify(({
     logger: true
-  , maxParamLength: 500
+  , maxParamLength: 600
   }))
   server.register(cors, { origin: true })
   server.register(mpmc)
