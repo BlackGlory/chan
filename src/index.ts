@@ -1,7 +1,8 @@
 import * as path from 'path'
 import { migrateToLatest } from './dao/migrate'
 import { path as appRoot } from 'app-root-path'
-import { startup } from './server'
+import { buildServer } from './server'
+import { PORT, HOST } from '@src/config'
 import { getDatabase } from './dao/database'
 
 migrateToLatest({
@@ -9,4 +10,7 @@ migrateToLatest({
 , migrationsPath: path.join(appRoot, 'migrations')
 })
 
-startup()
+buildServer({ logger: true }).listen(PORT(), HOST(), (err, address) => {
+  if (err) throw err
+  console.log(`Server listening at ${address}`)
+})

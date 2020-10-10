@@ -10,7 +10,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
   server.register(bearerAuthPlugin, {
     keys: new Set<string>() // because auth is a function, keys will be ignored.
   , auth(key, req) {
-      if (ADMIN_PASSWORD && key === ADMIN_PASSWORD) return true
+      if (ADMIN_PASSWORD() && key === ADMIN_PASSWORD()) return true
       return false
     }
   })

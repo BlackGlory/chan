@@ -63,7 +63,7 @@ docker run --publish 8080:8080 blackglory/mpmc:1
 
 `GET /mpmc/<id>`
 
-对特定消息队列进行出列操作, 如果消息队列为空, 则阻塞直到有新消息入列.
+从特定消息队列取出消息, 如果消息队列为空, 则阻塞直到有新消息入列.
 id用于标识消息队列.
 
 如果开启访问控制, 则可能需要在Querystring提供具有dequeue权限的token:
@@ -85,7 +85,7 @@ await fetch(`http://localhost:8080/mpmc/${uuid}`).then(res => res.text())
 
 `POST /mpmc/<id>`
 
-对特定消息队列进行入列操作, 会阻塞直到此消息出列.
+往特定消息队列放入消息, 会阻塞直到此消息出列.
 id用于标识消息队列.
 
 如果开启访问控制, 则可能需要在Querystring提供具有enqueue权限的token:
