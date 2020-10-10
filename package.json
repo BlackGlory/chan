@@ -14,10 +14,10 @@
     "prepublishOnly": "yarn clean && yarn build",
     "clean": "rm -rf lib",
     "build": "tsc --project tsconfig.build.json && tscpaths -p tsconfig.build.json -s ./src -o ./lib",
-    "start": "yarn clean && yarn build && node lib/index.js",
-    "docker:build": "docker build -t refile .",
-    "docker:dev": "docker run --rm -it refile dev",
-    "docker:test": "docker run -e CI=true refile test"
+    "start": "node lib/index.js",
+    "docker:build": "docker build --no-cache --tag mpmc:1 .",
+    "docker:dev": "docker run --rm -it mpmc dev",
+    "docker:test": "docker run -e CI=true mpmc test"
   },
   "husky": {
     "hooks": {
