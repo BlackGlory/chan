@@ -38,6 +38,20 @@ export function hasEnqueueTokens(id: string): boolean {
   return result['enqueue_tokens_exist'] === 1
 }
 
+export function matchEnqueueToken({ token, id }: {
+  token: string
+  id: string
+}): boolean {
+  const result = getDatabase().prepare(`
+    SELECT EXISTS(
+             SELECT *
+               FROM mpmc_tbac
+               WHERE mpmc_id = $id AND token = $token AND enqueue_permission=1
+           ) AS matched
+  `).get({ token, id })
+  return result['matched'] === 1
+}
+
 export function setEnqueueToken({ token, id }: { token: string; id: string }) {
   const db = getDatabase()
   const row = db.prepare(`
@@ -78,6 +92,20 @@ export function hasDequeueTokens(id: string): boolean {
            ) AS dequeue_tokens_exist
   `).get({ id })
   return result['dequeue_tokens_exist'] === 1
+}
+
+export function matchDequeueToken({ token, id }: {
+  token: string;
+  id: string
+}): boolean {
+  const result = getDatabase().prepare(`
+    SELECT EXISTS(
+             SELECT *
+               FROM mpmc_tbac
+               WHERE mpmc_id = $id AND token = $token AND dequeue_permission=1
+           ) AS matched
+  `).get({ token, id })
+  return result['matched'] === 1
 }
 
 export function setDequeueToken({ token, id }: { token: string; id: string }) {

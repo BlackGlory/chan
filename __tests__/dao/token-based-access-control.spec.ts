@@ -23,8 +23,8 @@ describe('TBAC(token-based access control)', () => {
     })
   })
 
-  describe('getAllTokens(id: string): Array<{ token: string, enqueue: boolean, dequeue: boolean }>', () => {
-    it('return Array<{ token: string, enqueue: boolean, dequeue: boolean }>', async () => {
+  describe('getAllTokens(id: string): Array<{ token: string; enqueue: boolean; dequeue: boolean }>', () => {
+    it('return Array<{ token: string; enqueue: boolean; dequeue: boolean }>', async () => {
       const db = await prepareDatabase()
       const id = 'id-1'
       const token1 = 'token-1'
@@ -71,35 +71,66 @@ describe('TBAC(token-based access control)', () => {
       })
     })
 
-    describe('hasDequeueTokens(id: string): boolean', () => {
-      describe('tokens exist', () => {
+    describe('matchEnqueueToken({ token: string; id: string }): boolean', () => {
+      describe('token exist', () => {
         it('return true', async () => {
-          const db = await prepareDatabase()
-          const token = 'token-1'
-          const id = 'id-1'
-          insert(db, { token, id, dequeue: true, enqueue: false })
-
-          const result = TBAC.hasDequeueTokens(id)
-
-          expect(result).toBeTrue()
-        })
-      })
-
-      describe('tokens do not exist', () => {
-        it('return false', async () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, dequeue: false, enqueue: true })
 
-          const result = TBAC.hasDequeueTokens(id)
+          const result = TBAC.matchEnqueueToken({ token, id })
+
+          expect(result).toBeTrue()
+        })
+      })
+
+      describe('token does not exist', () => {
+        it('return false', async () => {
+          const db = await prepareDatabase()
+          const token = 'token-1'
+          const id = 'id-1'
+          insert(db, { token, id, dequeue: true, enqueue: false })
+
+          const result = TBAC.matchEnqueueToken({ token, id })
 
           expect(result).toBeFalse()
         })
       })
     })
 
-    describe('removeEnqueueToken(token: string, id: string)', () => {
+    describe('addEnqueueToken({ token: string; id: string })', () => {
+      describe('token exists', () => {
+        it('update row', async () => {
+          const db = await prepareDatabase()
+          const token = 'token-1'
+          const id = 'id-1'
+          insert(db, { token, id, dequeue: true, enqueue: false })
+
+          const result = TBAC.setEnqueueToken({ token, id })
+          const row = select(db, { token, id })
+
+          expect(result).toBeUndefined()
+          expect(row['enqueue_permission']).toBe(1)
+        })
+      })
+
+      describe('token does not exist', () => {
+        it('insert row', async () => {
+          const db = await prepareDatabase()
+          const token = 'token-1'
+          const id = 'id-1'
+
+          const result = TBAC.setEnqueueToken({ token, id })
+          const row = select(db, { token, id })
+
+          expect(result).toBeUndefined()
+          expect(row['enqueue_permission']).toBe(1)
+        })
+      })
+    })
+
+    describe('removeEnqueueToken({ token: string; id: string })', () => {
       describe('token exists', () => {
         it('return undefined', async () => {
           const db = await prepareDatabase()
@@ -131,33 +162,58 @@ describe('TBAC(token-based access control)', () => {
   })
 
   describe('DequeueToken', () => {
-    describe('addEnqueueToken(token: string, id: string)', () => {
-      describe('token exists', () => {
-        it('update row', async () => {
+    describe('hasDequeueTokens(id: string): boolean', () => {
+      describe('tokens exist', () => {
+        it('return true', async () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, dequeue: true, enqueue: false })
 
-          const result = TBAC.setEnqueueToken({ token, id })
-          const row = select(db, { token, id })
+          const result = TBAC.hasDequeueTokens(id)
 
-          expect(result).toBeUndefined()
-          expect(row['enqueue_permission']).toBe(1)
+          expect(result).toBeTrue()
         })
       })
 
-      describe('token does not exist', () => {
-        it('insert row', async () => {
+      describe('tokens do not exist', () => {
+        it('return false', async () => {
           const db = await prepareDatabase()
           const token = 'token-1'
           const id = 'id-1'
+          insert(db, { token, id, dequeue: false, enqueue: true })
 
-          const result = TBAC.setEnqueueToken({ token, id })
-          const row = select(db, { token, id })
+          const result = TBAC.hasDequeueTokens(id)
 
-          expect(result).toBeUndefined()
-          expect(row['enqueue_permission']).toBe(1)
+          expect(result).toBeFalse()
+        })
+      })
+    })
+
+    describe('matchDequeueToken({ token: string; id: string }): boolean', () => {
+      describe('tokens exist', () => {
+        it('return true', async () => {
+          const db = await prepareDatabase()
+          const token = 'token-1'
+          const id = 'id-1'
+          insert(db, { token, id, dequeue: true, enqueue: false })
+
+          const result = TBAC.matchDequeueToken({ token, id })
+
+          expect(result).toBeTrue()
+        })
+      })
+
+      describe('tokens do not exist', () => {
+        it('return false', async () => {
+          const db = await prepareDatabase()
+          const token = 'token-1'
+          const id = 'id-1'
+          insert(db, { token, id, dequeue: false, enqueue: true })
+
+          const result = TBAC.matchDequeueToken({ token, id })
+
+          expect(result).toBeFalse()
         })
       })
     })
