@@ -1,6 +1,6 @@
 # MPMC
 
-一个受[patchbay.pub]启发的自托管微服务, 提供基于 HTTP 的阻塞式 MPMC 消息队列功能,
+一个受[patchbay.pub]启发的自托管ad-hoc微服务, 提供基于 HTTP 的阻塞式 MPMC 消息队列功能,
 并带有基于token和名单的访问控制策略.
 
 基于HTTP的阻塞方式类似于长轮询(long polling), 直到消息入列或出列, 服务器才会返回响应.
@@ -12,6 +12,31 @@
 所有URL都采用了反射性的CORS, 没有提供针对`Origin`的访问控制策略.
 
 [patchbay.pub]: https://patchbay.pub/
+
+## Quickstart
+
+```sh
+# 运行
+docker run --publish 8080:8080 blackglory/mpmc:1
+
+# 打开第一个终端
+curl http://localhost:8080/mpmc/hello-world # 没有可消费的消息, 阻塞
+
+# 打开第二个终端
+curl http://localhost:8080/mpmc/hello-world # 没有可消费的消息, 阻塞
+
+# 打开第三个终端
+curl http://localhost:8080/mpmc/hello-world --data 'hello world1' # 生产消息, 第一个终端返回hello world1
+curl http://localhost:8080/mpmc/hello-world --data 'hello world2' # 生产消息, 第二个终端返回hello world2
+curl http://localhost:8080/mpmc/hello-world --data 'hello world3' # 生产消息, 没有消费者, 阻塞
+
+# 打开第四个终端
+curl http://localhost:8080/mpmc/hello-world --data 'hello world4' # 生产消息, 没有消费者, 阻塞
+
+# 打开第五个终端
+curl http://localhost:8080/mpmc/hello-world # 消费消息, 返回hello world3, 第三个终端返回
+curl http://localhost:8080/mpmc/hello-world # 消费消息, 返回hello world4, 第四个终端返回
+```
 
 ## Install
 
@@ -27,7 +52,7 @@ yarn start
 ### Docker
 
 ```sh
-docker run --publish 80:8080 blackglory/mpmc
+docker run --publish 8080:8080 blackglory/mpmc:1
 ```
 
 ## Usage
@@ -81,7 +106,7 @@ await fetch(`http://localhost:8080/mpmc/${uuid}`, {
 })
 ```
 
-## 访问控制 API
+## 访问控制
 
 MPMC提供两种访问控制策略, 可以一并使用.
 
@@ -90,7 +115,7 @@ MPMC提供两种访问控制策略, 可以一并使用.
 口令需通过环境变量`ADMIN_PASSWORD`进行设置.
 `ADMIN_PASSWORD`同时也是访问控制的开关, 未提供此环境变量的情况下, 服务会采取无访问控制的运行模式.
 
-访问控制规则是通过[WAL模式]的SQLite3进行持久化的, 开启访问控制后,
+访问控制规则是通过[WAL模式]的SQLite3持久化的, 开启访问控制后,
 服务器的吞吐量和响应速度会受到硬盘性能的影响.
 
 被新的访问控制规则影响到的连接会被断开.
