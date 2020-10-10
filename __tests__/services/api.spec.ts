@@ -1,7 +1,10 @@
 import { buildServer } from '@src/server'
 import { prepareDatabase } from '@test/dao/utils'
+import { matchers } from 'jest-json-schema'
+import { tokenSchema } from '@src/schema'
 
 jest.mock('@src/dao/database')
+expect.extend(matchers)
 
 beforeEach(async () => {
   await prepareDatabase()
@@ -21,6 +24,10 @@ describe('blacklist', () => {
         })
 
         expect(res.statusCode).toBe(200)
+        expect(res.json()).toMatchSchema({
+          type: 'array'
+        , items: { type: 'string' }
+        })
       })
     })
 
@@ -167,6 +174,10 @@ describe('whitelist', () => {
         })
 
         expect(res.statusCode).toBe(200)
+        expect(res.json()).toMatchSchema({
+          type: 'array'
+        , items: { type: 'string' }
+        })
       })
     })
 
@@ -313,6 +324,10 @@ describe('TBAC', () => {
         })
 
         expect(res.statusCode).toBe(200)
+        expect(res.json()).toMatchSchema({
+          type: 'array'
+        , items: { type: 'string' }
+        })
       })
     })
 
@@ -360,6 +375,17 @@ describe('TBAC', () => {
         })
 
         expect(res.statusCode).toBe(200)
+        expect(res.json()).toMatchSchema({
+          type: 'array'
+        , items: {
+            type: 'object'
+          , properties: {
+              token: tokenSchema
+            , enqueue: { type: 'boolean' }
+            , dequeue: { type: 'boolean' }
+            }
+          }
+        })
       })
     })
 

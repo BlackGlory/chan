@@ -843,7 +843,15 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@26.x", "@types/jest@^26.0.14":
+"@types/jest-json-schema@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@types/jest-json-schema/-/jest-json-schema-2.1.2.tgz#83f67494798132b94310c3df069c7060e788cdb7"
+  integrity sha512-reUy11u4kLMbZzg/bEB/uFhDcyMlcPT/98KLBPfc5CiOprj3ZYgnbQn8xvBW0pNOx1ASaaAmdrE4b7Q23mWHLA==
+  dependencies:
+    "@types/jest" "*"
+    ajv "^6.10.2"
+
+"@types/jest@*", "@types/jest@26.x", "@types/jest@^26.0.14":
   version "26.0.14"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.14.tgz#078695f8f65cb55c5a98450d65083b2b73e5a3f3"
   integrity sha512-Hz5q8Vu0D288x3iWXePSn53W7hAjP0H7EQ6QvDO9c7t46mR0lNOLlfuwQ+JkVxuhygHzlzPX+0jKdA3ZgSh+Vg==
@@ -1566,7 +1574,7 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1:
+chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.4.1:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
@@ -3569,6 +3577,15 @@ jest-jasmine2@^26.5.2:
     pretty-format "^26.5.2"
     throat "^5.0.0"
 
+jest-json-schema@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/jest-json-schema/-/jest-json-schema-2.1.0.tgz#e63fa6819620cee1985c36379acca09891511307"
+  integrity sha512-FaXuFj6Rak1OnV+cfQsD8YnfyfEJ/DeGbomRnmNRO0HeyCpqLsDkC0Lr6z0hXK4/d7Ekz1mqBewVJpcYQ6H89w==
+  dependencies:
+    ajv "^6.10.2"
+    chalk "^2.4.1"
+    jest-matcher-utils "^24.0.0"
+
 jest-leak-detector@^26.5.2:
   version "26.5.2"
   resolved "https://registry.yarnpkg.com/jest-leak-detector/-/jest-leak-detector-26.5.2.tgz#83fcf9a4a6ef157549552cb4f32ca1d6221eea69"
@@ -3586,7 +3603,7 @@ jest-matcher-utils@^22.0.0:
     jest-get-type "^22.4.3"
     pretty-format "^22.4.3"
 
-jest-matcher-utils@^24.9.0:
+jest-matcher-utils@^24.0.0, jest-matcher-utils@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/jest-matcher-utils/-/jest-matcher-utils-24.9.0.tgz#f5b3661d5e628dffe6dd65251dfdae0e87c3a073"
   integrity sha512-OZz2IXsu6eaiMAwe67c1T+5tUAtQyQx27/EMEkbFAGiw52tB9em+uGbzpcgYVpA8wl0hlxKPZxrly4CXU/GjHA==
