@@ -1,5 +1,5 @@
 import { readMigrations, readMigrationFile, Migration } from '@src/dao/migration-file'
-import '@test/matchers'
+import '@blackglory/jest-matchers'
 import * as path from 'path'
 
 describe('readMigrationFile(migrationsPath: string): Promise<Migration[]>', () => {
