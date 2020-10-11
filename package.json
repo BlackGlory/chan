@@ -14,12 +14,10 @@
     "dev:debug": "node --inspect-brk --files -r tsconfig-paths/register -r dotenv/config src/index.ts | pino-pretty",
     "prepublishOnly": "yarn clean && yarn build",
     "clean": "rm -rf lib",
-    "build": "tsc --project tsconfig.build.json && tscpaths -p tsconfig.build.json -s ./src -o ./lib",
-    "start": "node lib/index.js",
+    "build": "cross-env NODE_ENV=production tsc --project tsconfig.build.json && tscpaths -p tsconfig.build.json -s ./src -o ./lib",
+    "start": "cross-env NODE_ENV=production node lib/index.js",
     "docker:build": "docker build --tag mpmc .",
-    "docker:build-no-cache": "docker build --no-cache --tag mpmc .",
-    "docker:dev": "docker run --rm -it mpmc dev",
-    "docker:test": "docker run -e CI=true mpmc test"
+    "docker:test": "docker-compose -f docker-compose.test.yml run --rm sut"
   },
   "husky": {
     "hooks": {
@@ -43,6 +41,7 @@
     "@typescript-eslint/eslint-plugin": "^4.4.0",
     "@typescript-eslint/parser": "^4.4.0",
     "ajv": "^7.0.0-beta.0",
+    "cross-env": "^7.0.2",
     "eslint": "^7.10.0",
     "husky": "^4.3.0",
     "jest": "^26.5.2",
