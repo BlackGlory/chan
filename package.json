@@ -16,7 +16,8 @@
     "clean": "rm -rf lib",
     "build": "tsc --project tsconfig.build.json && tscpaths -p tsconfig.build.json -s ./src -o ./lib",
     "start": "node lib/index.js",
-    "docker:build": "docker build --no-cache --tag mpmc:1 .",
+    "docker:build": "docker build --tag mpmc .",
+    "docker:build-no-cache": "docker build --no-cache --tag mpmc .",
     "docker:dev": "docker run --rm -it mpmc dev",
     "docker:test": "docker run -e CI=true mpmc test"
   },

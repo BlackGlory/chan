@@ -1,21 +1,22 @@
 FROM node:12-alpine
-
 WORKDIR /usr/src/app
 
 COPY package.json yarn.lock ./
 
-RUN apk add --update --no-cache \
+# better-sqlite3 build deps
+RUN apk add --update --no-cache --virtual .build-deps \
       build-base \
       python3 \
  && yarn install \
  && yarn cache clean \
- && apk del \
-      build-base \
-      python3
+ && apk del .build-deps
 
 COPY . ./
 
 RUN yarn build \
- && mkdir -p data
+ && mkdir /data
+ && ln -s /data data
 
-ENTRYPOINT ["yarn", "start"]
+EXPOSE 8080
+ENTRYPOINT ["yarn"]
+CMD ["start"]

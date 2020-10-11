@@ -17,7 +17,7 @@
 
 ```sh
 # 运行
-docker run --publish 8080:8080 blackglory/mpmc:1
+docker run --detach --publish 8080:8080 blackglory/mpmc
 
 # 打开第一个终端
 curl http://localhost:8080/mpmc/hello-world # 没有可消费的消息, 阻塞
@@ -38,12 +38,15 @@ curl http://localhost:8080/mpmc/hello-world # 消费消息, 返回hello world3, 
 curl http://localhost:8080/mpmc/hello-world # 消费消息, 返回hello world4, 第四个终端返回
 ```
 
-## Install
+## Install & Run
 
 ### 从源代码
 
+可以使用环境变量HOST和PORT决定服务器监听的地址和端口, 默认值为localhost和8080.
+
 ```sh
 git clone https://github.com/BlackGlory/mpmc
+cd mpmc
 yarn install
 yarn build
 yarn start
@@ -52,12 +55,41 @@ yarn start
 ### Docker
 
 ```sh
-docker run --publish 8080:8080 blackglory/mpmc:1
+docker run \
+  --detach \
+  --volume mpmc-data:/data \
+  --publish 8080:8080 \
+  blackglory/mpmc
+```
+
+#### Recipes
+
+##### 私人服务器
+
+docker-compose.yml
+```yml
+version: '3.8'
+
+services:
+  mpmc:
+    image: 'mpmc'
+    environment:
+      - HOST=0.0.0.0
+      - ADMIN_PASSWORD=password
+      - TOKEN_BASED_ACCESS_CONTROL=true
+      - DISABLE_NO_TOKENS=true
+    volumes:
+      - 'mpmc-data:/data'
+    ports:
+      - '8080'
+
+volumes:
+  mpmc-data:
 ```
 
 ## Usage
 
-对消息队列id的要求: `^[a-zA-Z0-9\-]{1,256}$`
+对消息队列id的要求: `^[a-zA-Z0-9\-_]{1,256}$`
 
 ### dequeue
 
@@ -288,7 +320,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 
 ### 基于token的访问控制
 
-对token的要求: `^[a-zA-Z0-9\-]{1,256}$`
+对token的要求: `^[a-zA-Z0-9\-_]{1,256}$`
 
 通过将环境变量`TOKEN_BASED_ACCESS_CONTROL`设置为`true`开启基于token的访问控制.
 
