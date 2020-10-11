@@ -66,7 +66,7 @@ docker run --publish 8080:8080 blackglory/mpmc:1
 从特定消息队列取出消息, 如果消息队列为空, 则阻塞直到有新消息入列.
 id用于标识消息队列.
 
-如果开启访问控制, 则可能需要在Querystring提供具有dequeue权限的token:
+如果开启基于token的访问控制, 则可能需要在Querystring提供具有dequeue权限的token:
 `GET /mpmc/<id>?token=<token>`
 
 #### Example
@@ -88,7 +88,7 @@ await fetch(`http://localhost:8080/mpmc/${uuid}`).then(res => res.text())
 往特定消息队列放入消息, 会阻塞直到此消息出列.
 id用于标识消息队列.
 
-如果开启访问控制, 则可能需要在Querystring提供具有enqueue权限的token:
+如果开启基于token的访问控制, 则可能需要在Querystring提供具有enqueue权限的token:
 `POST /mpmc/<id>?token=<token>`
 
 #### Example
@@ -118,7 +118,7 @@ MPMC提供两种访问控制策略, 可以一并使用.
 访问控制规则是通过[WAL模式]的SQLite3持久化的, 开启访问控制后,
 服务器的吞吐量和响应速度会受到硬盘性能的影响.
 
-被新的访问控制规则影响到的连接会被断开.
+已经存在的阻塞连接不会受到新的访问控制规则的影响.
 
 [WAL模式]: https://www.sqlite.org/wal.html
 

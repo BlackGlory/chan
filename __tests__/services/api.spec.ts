@@ -8,6 +8,10 @@ expect.extend(matchers)
 
 beforeEach(async () => {
   await prepareDatabase()
+  process.env.ADMIN_PASSWORD = undefined
+  process.env.LIST_BASED_ACCESS_CONTROL = undefined
+  process.env.TOKEN_BASED_ACCESS_CONTROL = undefined
+  process.env.DISABLE_NO_TOKENS = undefined
 })
 
 describe('blacklist', () => {
