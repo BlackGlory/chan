@@ -509,3 +509,4 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/dequeue/${token}`, {
 
 - [ ] 中断POST后, 相关消息不应留在服务器内存里.
       mpmc在内存中隐式维护队列的行为与patchbay不符.
+- [ ] 在更新访问控制规则时, 断开受影响的连接.
