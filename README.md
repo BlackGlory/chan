@@ -1,6 +1,6 @@
 # MPMC
 
-一个受[patchbay]启发的自托管ad-hoc微服务, 提供基于 HTTP 的阻塞式 MPMC 消息队列功能,
+一个受[patchbay]启发的Web友好的自托管ad-hoc微服务, 提供基于 HTTP 的阻塞式 MPMC 消息队列功能,
 并带有基于token和名单的访问控制策略.
 
 基于HTTP的阻塞方式类似于长轮询(long polling), 直到消息入列或出列, 服务器才会返回响应.
@@ -114,29 +114,7 @@ volumes:
 
 ## Usage
 
-对消息队列id的要求: `^[a-zA-Z0-9\-_]{1,256}$`
-
-### dequeue
-
-`GET /mpmc/<id>`
-
-从特定消息队列取出消息, 如果消息队列为空, 则阻塞直到有新消息入列.
-id用于标识消息队列.
-
-如果开启基于token的访问控制, 则可能需要在Querystring提供具有dequeue权限的token:
-`GET /mpmc/<id>?token=<token>`
-
-#### Example
-
-curl
-```sh
-curl "http://localhost:8080/mpmc/$uuid"
-```
-
-JavaScript
-```js
-await fetch(`http://localhost:8080/mpmc/${uuid}`).then(res => res.text())
-```
+对id的要求: `^[a-zA-Z0-9\-_]{1,256}$`
 
 ### enqueue
 
@@ -152,15 +130,37 @@ id用于标识消息队列.
 
 curl
 ```sh
-curl "http://localhost:8080/mpmc/$uuid" --data 'message'
+curl "http://localhost:8080/mpmc/$id" --data 'message'
 ```
 
 JavaScript
 ```js
-await fetch(`http://localhost:8080/mpmc/${uuid}`, {
+await fetch(`http://localhost:8080/mpmc/${id}`, {
   method: 'POST'
 , body: 'message'
 })
+```
+
+### dequeue
+
+`GET /mpmc/<id>`
+
+从特定消息队列取出消息, 如果消息队列为空, 则阻塞直到有新消息入列.
+id用于标识消息队列.
+
+如果开启基于token的访问控制, 则可能需要在Querystring提供具有dequeue权限的token:
+`GET /mpmc/<id>?token=<token>`
+
+#### Example
+
+curl
+```sh
+curl "http://localhost:8080/mpmc/$id"
+```
+
+JavaScript
+```js
+await fetch(`http://localhost:8080/mpmc/${id}`).then(res => res.text())
 ```
 
 ## 访问控制
