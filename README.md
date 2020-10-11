@@ -40,7 +40,7 @@ curl http://localhost:8080/mpmc/hello-world # 消费消息, 返回hello world4, 
 
 ## Install & Run
 
-### 从源代码
+### 从源代码运行
 
 可以使用环境变量HOST和PORT决定服务器监听的地址和端口, 默认值为localhost和8080.
 
@@ -61,6 +61,15 @@ docker run \
   blackglory/mpmc
 ```
 
+#### 从源代码构建
+
+```sh
+git clone https://github.com/BlackGlory/mpmc
+cd mpmc
+yarn install
+yarn docker:build
+```
+
 #### Recipes
 
 ##### 公开服务器
@@ -71,7 +80,7 @@ version: '3.8'
 
 services:
   mpmc:
-    image: 'mpmc'
+    image: 'blackglory/mpmc'
     restart: always
     environment:
       - HOST=0.0.0.0
@@ -87,7 +96,7 @@ version: '3.8'
 
 services:
   mpmc:
-    image: 'mpmc'
+    image: 'blackglory/mpmc'
     restart: always
     environment:
       - HOST=0.0.0.0
