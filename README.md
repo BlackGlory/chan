@@ -1,6 +1,6 @@
 # MPMC
 
-一个受[patchbay.pub]启发的自托管ad-hoc微服务, 提供基于 HTTP 的阻塞式 MPMC 消息队列功能,
+一个受[patchbay]启发的自托管ad-hoc微服务, 提供基于 HTTP 的阻塞式 MPMC 消息队列功能,
 并带有基于token和名单的访问控制策略.
 
 基于HTTP的阻塞方式类似于长轮询(long polling), 直到消息入列或出列, 服务器才会返回响应.
@@ -11,7 +11,7 @@
 
 所有URL都采用了反射性的CORS, 没有提供针对`Origin`的访问控制策略.
 
-[patchbay.pub]: https://patchbay.pub/
+[patchbay]: https://patchbay.pub/
 
 ## Quickstart
 
@@ -49,7 +49,7 @@ git clone https://github.com/BlackGlory/mpmc
 cd mpmc
 yarn install
 yarn build
-yarn start
+yarn --silent start
 ```
 
 ### Docker
@@ -57,12 +57,27 @@ yarn start
 ```sh
 docker run \
   --detach \
-  --volume mpmc-data:/data \
   --publish 8080:8080 \
   blackglory/mpmc
 ```
 
 #### Recipes
+
+##### 公开服务器
+
+docker-compose.yml
+```yml
+version: '3.8'
+
+services:
+  mpmc:
+    image: 'mpmc'
+    restart: always
+    environment:
+      - HOST=0.0.0.0
+    ports:
+      - '8080:8080'
+```
 
 ##### 私人服务器
 
@@ -73,6 +88,7 @@ version: '3.8'
 services:
   mpmc:
     image: 'mpmc'
+    restart: always
     environment:
       - HOST=0.0.0.0
       - ADMIN_PASSWORD=password
@@ -81,7 +97,7 @@ services:
     volumes:
       - 'mpmc-data:/data'
     ports:
-      - '8080'
+      - '8080:8080'
 
 volumes:
   mpmc-data:
@@ -488,3 +504,8 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/dequeue/${token}`, {
   }
 })
 ```
+
+## TODO
+
+- [ ] 中断POST后, 相关消息不应留在服务器内存里.
+      mpmc在内存中隐式维护队列的行为与patchbay不符.

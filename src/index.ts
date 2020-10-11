@@ -12,5 +12,4 @@ migrateToLatest({
 
 buildServer({ logger: true }).listen(PORT(), HOST(), (err, address) => {
   if (err) throw err
-  console.log(`Server listening at ${address}`)
 })

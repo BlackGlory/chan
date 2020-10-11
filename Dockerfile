@@ -14,9 +14,9 @@ RUN apk add --update --no-cache --virtual .build-deps \
 COPY . ./
 
 RUN yarn build \
- && mkdir /data
+ && mkdir /data \
  && ln -s /data data
 
 EXPOSE 8080
 ENTRYPOINT ["yarn"]
-CMD ["start"]
+CMD ["--silent", "start"]
