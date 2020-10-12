@@ -114,7 +114,7 @@ volumes:
 
 ## Usage
 
-对id的要求: `^[a-zA-Z0-9\-_]{1,256}$`
+对id的要求: `^[a-zA-Z0-9\.\-_]{1,256}$`
 
 ### enqueue
 
@@ -170,7 +170,8 @@ MPMC提供两种访问控制策略, 可以一并使用.
 所有访问控制API都使用基于口令的Bearer Token Authentication.
 
 口令需通过环境变量`ADMIN_PASSWORD`进行设置.
-`ADMIN_PASSWORD`同时也是访问控制的开关, 未提供此环境变量的情况下, 服务会采取无访问控制的运行模式.
+`ADMIN_PASSWORD`同时也是访问控制的开关, 未提供此环境变量的情况下,
+服务会采取无访问控制的运行模式.
 
 访问控制规则是通过[WAL模式]的SQLite3持久化的, 开启访问控制后,
 服务器的吞吐量和响应速度会受到硬盘性能的影响.
@@ -345,7 +346,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 
 ### 基于token的访问控制
 
-对token的要求: `^[a-zA-Z0-9\-_]{1,256}$`
+对token的要求: `^[a-zA-Z0-9\.\-_]{1,256}$`
 
 通过将环境变量`TOKEN_BASED_ACCESS_CONTROL`设置为`true`开启基于token的访问控制.
 
@@ -360,7 +361,13 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 | NO | YES | 无token可以出列, 只有具有入列权限的token可以入列 |
 | NO | NO | 无token可以入列和出列 |
 
-在开启基于token的访问控制时, 可以通过将环境变量`DISABLE_NO_TOKENS`设置为`true`将无token的消息队列禁用.
+在开启基于token的访问控制时,
+可以通过将环境变量`DISABLE_NO_TOKENS`设置为`true`将无token的消息队列禁用.
+
+基于token的访问控制作出了如下假定, 因此不使用加密和消息验证码(MAC):
+- token的传输过程是安全的
+- token难以被猜测
+- token的意外泄露可以被迅速处理
 
 #### 获取所有具有token的消息队列id
 
@@ -390,7 +397,8 @@ await fetch(`http://localhost:8080/api/mpmc`, {
 
 `GET /api/mpmc/<id>`
 
-获取特定消息队列的所有token信息, 返回JSON表示的token信息数组`Array<{ token: string, enqueue: boolean, dequeue: boolean }>`.
+获取特定消息队列的所有token信息, 返回JSON表示的token信息数组
+`Array<{ token: string, enqueue: boolean, dequeue: boolean }>`.
 
 ##### Example
 
@@ -515,7 +523,6 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/dequeue/${token}`, {
 ```
 
 ## TODO
-
 - [ ] 中断POST后, 相关消息不应留在服务器内存里.
       mpmc在内存中隐式维护队列的行为与patchbay不符.
 - [ ] 在更新访问控制规则时, 断开受影响的连接.
