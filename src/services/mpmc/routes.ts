@@ -12,6 +12,7 @@ import {
 } from '@src/config'
 import { inBlacklist } from '@src/dao/blacklist'
 import { inWhitelist } from '@src/dao/whitelist'
+import { getJsonSchema } from '@src/dao/json-schema'
 import {
   hasEnqueueTokens
 , hasDequeueTokens
@@ -19,7 +20,6 @@ import {
 , matchDequeueToken
 } from '@src/dao/token-based-access-control'
 import Ajv from 'ajv'
-import { getErrorResult } from 'return-style'
 
 export const routes: FastifyPluginAsync = async function routes(server, options) {
   server.register(urlencodedParser, { parseAs: 'string' })
@@ -109,24 +109,32 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
           204: { type: 'null' }
         }
       }
-    , preValidation(req, reply, done) {
-        if (req.headers['content-type']?.includes('application/json')) {
-          if (JSON_SCHEMA()) {
-            const ajv = new Ajv()
-            const valid = ajv.validate(JSON_SCHEMA(), req.body)
-            if (!valid) {
-              reply.status(400).send(ajv.errorsText())
-              done()
-              return
-            }
-          }
-        }
-        done()
-      }
     }
   , async (req, reply) => {
       const id = req.params.id
       const token = req.query.token
+
+      if (req.headers['content-type']?.includes('application/json')) {
+        const schema = getJsonSchema(req.params.id)
+        if (schema) {
+          const ajv = new Ajv()
+          const valid = ajv.validate(JSON.parse(schema), req.body)
+          if (!valid) {
+            return reply.status(400).send(ajv.errorsText())
+          }
+        }
+
+        if (JSON_SCHEMA()) {
+          const ajv = new Ajv()
+          const valid = ajv.validate(JSON.parse(JSON_SCHEMA()!), req.body)
+          if (!valid) {
+            return reply.status(400).send(ajv.errorsText())
+          }
+        }
+      } else {
+        const schema = getJsonSchema(req.params.id)
+        if (schema) return reply.status(400).send('Content-Type must be application/json')
+      }
 
       if (LIST_BASED_ACCESS_CONTROL() === RBAC.Blacklist) {
         if (inBlacklist(req.params.id)) return reply.status(403).send()

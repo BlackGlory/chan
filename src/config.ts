@@ -37,12 +37,7 @@ export function HTTP2() {
 }
 
 export function JSON_SCHEMA() {
-  if (process.env.MPMC_JSON_SCHEMA) {
-    const schema = JSON.parse(process.env.MPMC_JSON_SCHEMA)
-    return schema
-  } else {
-    return { type: 'string' }
-  }
+  return process.env.MPMC_JSON_SCHEMA
 }
 
 export function JSON_ONLY() {

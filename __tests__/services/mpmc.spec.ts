@@ -3,6 +3,7 @@ import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { addBlacklistItem } from '@src/dao/blacklist'
 import { addWhitelistItem } from '@src/dao/whitelist'
+import { setJsonSchema } from '@src/dao/json-schema'
 import {
   setDequeueToken
 , setEnqueueToken
@@ -134,58 +135,36 @@ describe('mpmc', () => {
       })
 
       describe('MPMC_JSON_ONLY', () => {
-        describe('set', () => {
-          describe('Content-Type: application/json', () => {
-            describe('valid JSON', () => {
-              it('204', async done => {
-                process.env.MPMC_JSON_ONLY = 'true'
-                const server = buildServer()
-                const id = 'id'
-                const message = JSON.stringify('message')
+        describe('Content-Type: application/json', () => {
+          describe('valid JSON', () => {
+            it('204', async done => {
+              process.env.MPMC_JSON_ONLY = 'true'
+              const server = buildServer()
+              const id = 'id'
+              const message = JSON.stringify('message')
 
-                setImmediate(async () => {
-                  const res = await server.inject({
-                    method: 'GET'
-                  , url: `/mpmc/${id}`
-                  })
-                  expect(res.headers['content-type']).toMatch('application/json')
-                  done()
-                })
+              setImmediate(async () => {
                 const res = await server.inject({
-                  method: 'POST'
+                  method: 'GET'
                 , url: `/mpmc/${id}`
-                , payload: message
-                , headers: {
-                    'Content-Type': 'application/json'
-                  }
                 })
-
-                expect(res.statusCode).toBe(204)
+                expect(res.headers['content-type']).toMatch('application/json')
+                done()
               })
-            })
-
-            describe('invalid JSON', () => {
-              it('400', async () => {
-                process.env.MPMC_JSON_ONLY = 'true'
-                const server = buildServer()
-                const id = 'id'
-                const message = 'message'
-
-                const res = await server.inject({
-                  method: 'POST'
-                , url: `/mpmc/${id}`
-                , payload: message
-                , headers: {
-                    'Content-Type': 'application/json'
-                  }
-                })
-
-                expect(res.statusCode).toBe(400)
+              const res = await server.inject({
+                method: 'POST'
+              , url: `/mpmc/${id}`
+              , payload: message
+              , headers: {
+                  'Content-Type': 'application/json'
+                }
               })
+
+              expect(res.statusCode).toBe(204)
             })
           })
 
-          describe('other Content-Type', () => {
+          describe('invalid JSON', () => {
             it('400', async () => {
               process.env.MPMC_JSON_ONLY = 'true'
               const server = buildServer()
@@ -197,7 +176,7 @@ describe('mpmc', () => {
               , url: `/mpmc/${id}`
               , payload: message
               , headers: {
-                  'Content-Type': 'text/plain'
+                  'Content-Type': 'application/json'
                 }
               })
 
@@ -206,67 +185,46 @@ describe('mpmc', () => {
           })
         })
 
-        describe('not set', () => {
-          describe('Content-Type: application/json', () => {
-            describe('valid JSON', () => {
-              it('204', async done => {
-                const server = buildServer()
-                const id = 'id'
-                const message = '"message"'
+        describe('other Content-Type', () => {
+          it('400', async () => {
+            process.env.MPMC_JSON_ONLY = 'true'
+            const server = buildServer()
+            const id = 'id'
+            const message = 'message'
 
-                setImmediate(async () => {
-                  const res = await server.inject({
-                    method: 'GET'
-                  , url: `/mpmc/${id}`
-                  })
-                  expect(res.headers['content-type']).toMatch('application/json')
-                  done()
-                })
-                const res = await server.inject({
-                  method: 'POST'
-                , url: `/mpmc/${id}`
-                , payload: message
-                , headers: {
-                    'Content-Type': 'application/json'
-                  }
-                })
-
-                expect(res.statusCode).toBe(204)
-              })
+            const res = await server.inject({
+              method: 'POST'
+            , url: `/mpmc/${id}`
+            , payload: message
+            , headers: {
+                'Content-Type': 'text/plain'
+              }
             })
 
-            describe('invalid JSON', () => {
-              it('400', async () => {
-                const server = buildServer()
-                const id = 'id'
-                const message = 'message'
-
-                const res = await server.inject({
-                  method: 'POST'
-                , url: `/mpmc/${id}`
-                , payload: message
-                , headers: {
-                    'Content-Type': 'application/json'
-                  }
-                })
-
-                expect(res.statusCode).toBe(400)
-              })
-            })
+            expect(res.statusCode).toBe(400)
           })
+        })
+      })
 
-          describe('other Content-Type', () => {
+      describe('id has JSON Schema', () => {
+        describe('Content-Type: application/json', () => {
+          describe('valid JSON', () => {
             it('204', async done => {
-              const server = buildServer()
               const id = 'id'
-              const message = 'message'
+              const schema = { type: 'string' }
+              setJsonSchema({
+                id
+              , schema: JSON.stringify(schema)
+              })
+              const message = '"message"'
+              const server = buildServer()
 
               setImmediate(async () => {
                 const res = await server.inject({
                   method: 'GET'
                 , url: `/mpmc/${id}`
                 })
-                expect(res.headers['content-type']).toMatch('text/plain')
+                expect(res.headers['content-type']).toMatch('application/json')
                 done()
               })
               const res = await server.inject({
@@ -274,12 +232,137 @@ describe('mpmc', () => {
               , url: `/mpmc/${id}`
               , payload: message
               , headers: {
-                  'Content-Type': 'text/plain'
+                  'Content-Type': 'application/json'
                 }
               })
 
               expect(res.statusCode).toBe(204)
             })
+          })
+
+          describe('invalid JSON', () => {
+            it('400', async () => {
+              const id = 'id'
+              const schema = { type: 'string' }
+              setJsonSchema({
+                id
+              , schema: JSON.stringify(schema)
+              })
+              const message = 'message'
+              const server = buildServer()
+
+              const res = await server.inject({
+                method: 'POST'
+              , url: `/mpmc/${id}`
+              , payload: message
+              , headers: {
+                  'Content-Type': 'application/json'
+                }
+              })
+
+              expect(res.statusCode).toBe(400)
+            })
+          })
+        })
+
+        describe('other Content-Type', () => {
+          it('400', async () => {
+            const id = 'id'
+            const schema = { type: 'string' }
+            setJsonSchema({
+              id
+            , schema: JSON.stringify(schema)
+            })
+            const message = '"message"'
+            const server = buildServer()
+
+            const res = await server.inject({
+              method: 'POST'
+            , url: `/mpmc/${id}`
+            , payload: message
+            , headers: {
+                'Content-Type': 'text/plain'
+              }
+            })
+
+            expect(res.statusCode).toBe(400)
+          })
+        })
+      })
+
+      describe('other', () => {
+        describe('Content-Type: application/json', () => {
+          describe('valid JSON', () => {
+            it('204', async done => {
+              const id = 'id'
+              const message = '"message"'
+              const server = buildServer()
+
+              setImmediate(async () => {
+                const res = await server.inject({
+                  method: 'GET'
+                , url: `/mpmc/${id}`
+                })
+                expect(res.headers['content-type']).toMatch('application/json')
+                done()
+              })
+              const res = await server.inject({
+                method: 'POST'
+              , url: `/mpmc/${id}`
+              , payload: message
+              , headers: {
+                  'Content-Type': 'application/json'
+                }
+              })
+
+              expect(res.statusCode).toBe(204)
+            })
+          })
+
+          describe('invalid JSON', () => {
+            it('400', async () => {
+              const server = buildServer()
+              const id = 'id'
+              const message = 'message'
+
+              const res = await server.inject({
+                method: 'POST'
+              , url: `/mpmc/${id}`
+              , payload: message
+              , headers: {
+                  'Content-Type': 'application/json'
+                }
+              })
+
+              expect(res.statusCode).toBe(400)
+            })
+          })
+        })
+
+        describe('other Content-Type', () => {
+          it('204', async done => {
+            const server = buildServer()
+            const id = 'id'
+            const message = 'message'
+
+            setImmediate(async () => {
+              const res = await server.inject({
+                method: 'GET'
+              , url: `/mpmc/${id}`
+              })
+              expect(res.headers['content-type']).toMatch('text/plain')
+              done()
+            })
+            const res = await server.inject({
+              method: 'POST'
+            , url: `/mpmc/${id}`
+            , payload: message
+            , headers: {
+                'Content-Type': 'text/plain'
+              }
+            })
+
+            expect(res.statusCode).toBe(204)
           })
         })
       })
