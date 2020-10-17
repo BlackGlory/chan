@@ -1,4 +1,4 @@
-import { migrateToLatest } from '@src/dao/migrate'
+import { migrateToLatest } from '@dao/sqlite3/migrate'
 import Database = require('better-sqlite3')
 import * as path from 'path'
 import { path as appRoot } from 'app-root-path'

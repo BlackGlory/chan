@@ -1,15 +1,15 @@
 import { buildServer } from '@src/server'
 import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
-import { addBlacklistItem } from '@src/dao/blacklist'
-import { addWhitelistItem } from '@src/dao/whitelist'
-import { setJsonSchema } from '@src/dao/json-schema'
+import { addBlacklistItem } from '@dao/sqlite3/blacklist'
+import { addWhitelistItem } from '@dao/sqlite3/whitelist'
+import { setJsonSchema } from '@dao/sqlite3/json-schema'
 import {
   setDequeueToken
 , setEnqueueToken
-} from '@src/dao/token-based-access-control'
+} from '@dao/sqlite3/token-based-access-control'
 
-jest.mock('@src/dao/database')
+jest.mock('@dao/sqlite3/database')
 expect.extend(matchers)
 
 beforeEach(async () => {

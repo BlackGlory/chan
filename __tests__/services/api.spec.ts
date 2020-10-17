@@ -2,9 +2,9 @@ import { buildServer } from '@src/server'
 import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { tokenSchema } from '@src/schema'
-import * as JsonSchemaDAO from '@src/dao/json-schema'
+import * as JsonSchemaDAO from '@dao/sqlite3/json-schema'
 
-jest.mock('@src/dao/database')
+jest.mock('@dao/sqlite3/database')
 expect.extend(matchers)
 
 beforeEach(async () => {

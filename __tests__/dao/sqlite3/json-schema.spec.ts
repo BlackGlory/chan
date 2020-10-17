@@ -1,57 +1,60 @@
-import * as DAO from '@src/dao/whitelist'
+import * as DAO from '@dao/sqlite3/json-schema'
 import { Database } from 'better-sqlite3'
 import { prepareDatabase } from '@test/utils'
 import 'jest-extended'
 
-jest.mock('@src/dao/database')
+jest.mock('@dao/sqlite3/database')
 
-describe('whitelist', () => {
-  describe('getAllWhitelistItems(): string[]', () => {
+describe('JSON Schema', () => {
+  describe('getAllIdsWithJsonSchema(): string[]', () => {
     it('return string[]', async () => {
       const db = await prepareDatabase()
       const id = 'id-1'
-      insert(db, id)
+      const schema = createSchema()
+      insert(db, { id, schema })
 
-      const result = DAO.getAllWhitelistItems()
+      const result = DAO.getAllIdsWithJsonSchema()
 
       // expect.toStrictEqual is broken, I have no idea
       expect(result).toEqual([id])
     })
   })
 
-  describe('inWhitelist(id: string): boolean', () => {
+  describe('getJsonSchema(id: string): string | null', () => {
     describe('exist', () => {
-      it('return true', async () => {
+      it('return schema', async () => {
         const db = await prepareDatabase()
         const id = 'id-1'
-        insert(db, id)
+        const schema = createSchema()
+        insert(db, { id, schema })
 
-        const result = DAO.inWhitelist(id)
+        const result = DAO.getJsonSchema(id)
 
-        expect(result).toBeTrue()
+        expect(result).toBe(schema)
       })
     })
 
     describe('not exist', () => {
-      it('return false', async () => {
-        const db = await prepareDatabase()
+      it('return null', async () => {
+        await prepareDatabase()
         const id = 'id-1'
 
-        const result = DAO.inWhitelist(id)
+        const result = DAO.getJsonSchema(id)
 
-        expect(result).toBeFalse()
+        expect(result).toBeNull()
       })
     })
   })
 
-  describe('addWhitelistItem', () => {
+  describe('setJsonSchema({ id: string; schema: string })', () => {
     describe('exist', () => {
       it('return undefined', async () => {
         const db = await prepareDatabase()
         const id = 'id-1'
-        insert(db, id)
+        const schema = createSchema()
+        insert(db, { id, schema })
 
-        const result = DAO.addWhitelistItem(id)
+        const result = DAO.setJsonSchema({ id, schema })
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeTrue()
@@ -62,8 +65,9 @@ describe('whitelist', () => {
       it('return undefined', async () => {
         const db = await prepareDatabase()
         const id = 'id-1'
+        const schema = createSchema()
 
-        const result = DAO.addWhitelistItem(id)
+        const result = DAO.setJsonSchema({ id, schema })
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeTrue()
@@ -71,14 +75,15 @@ describe('whitelist', () => {
     })
   })
 
-  describe('removeWhitelistItem', () => {
+  describe('removeJsonSchema(id: string)', () => {
     describe('exist', () => {
       it('return undefined', async () => {
         const db = await prepareDatabase()
         const id = 'id-1'
-        insert(db, id)
+        const schema = createSchema()
+        insert(db, { id, schema })
 
-        const result = DAO.removeWhitelistItem(id)
+        const result = DAO.removeJsonSchema(id)
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeFalse()
@@ -90,7 +95,7 @@ describe('whitelist', () => {
         const db = await prepareDatabase()
         const id = 'id-1'
 
-        const result = DAO.removeWhitelistItem(id)
+        const result = DAO.removeJsonSchema(id)
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeFalse()
@@ -99,14 +104,18 @@ describe('whitelist', () => {
   })
 })
 
+function createSchema() {
+  return JSON.stringify({ type: 'number' })
+}
+
 function exist(db: Database, id: string) {
   return !!select(db, id)
 }
 
-function insert(db: Database, id: string) {
-  db.prepare('INSERT INTO mpmc_whitelist (mpmc_id) VALUES ($id);').run({ id });
+function insert(db: Database, { id, schema }:{ id: string; schema: string }) {
+  db.prepare('INSERT INTO mpmc_json_schema (mpmc_id, json_schema) VALUES ($id, $schema);').run({ id, schema })
 }
 
 function select(db: Database, id: string) {
-  return db.prepare('SELECT * FROM mpmc_whitelist WHERE mpmc_id = $id;').get({ id })
+  return db.prepare('SELECT * FROM mpmc_json_schema WHERE mpmc_id = $id;').get({ id })
 }

@@ -5,8 +5,8 @@ import {
 , RBAC
 , TOKEN_BASED_ACCESS_CONTROL
 , DISABLE_NO_TOKENS
-} from '@src/config'
-import DAO from '@src/dao'
+} from '@config'
+import DAO from '@dao'
 import type { ChannelManager } from '@src/core/channel-manager'
 
 export const routes: FastifyPluginAsync<{

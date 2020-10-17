@@ -8,9 +8,9 @@ import {
 , JSON_SCHEMA_VALIDATION
 , DEFAULT_JSON_SCHEMA
 , JSON_PAYLOAD_ONLY
-} from '@src/config'
+} from '@config'
 import Ajv from 'ajv'
-import DAO from '@src/dao'
+import DAO from '@dao'
 import type { ChannelManager } from '@src/core/channel-manager'
 
 export const routes: FastifyPluginAsync<{

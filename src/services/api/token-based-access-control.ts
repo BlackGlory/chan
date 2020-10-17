@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 import { idSchema, tokenSchema } from '@src/schema'
-import DAO from '@src/dao'
+import DAO from '@dao'
 
 export const routes: FastifyPluginAsync = async function routes(server, options) {
   // get all ids

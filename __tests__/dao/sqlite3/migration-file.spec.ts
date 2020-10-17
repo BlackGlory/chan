@@ -1,4 +1,4 @@
-import { readMigrations, readMigrationFile, Migration } from '@src/dao/migration-file'
+import { readMigrations, readMigrationFile, Migration } from '@dao/sqlite3/migration-file'
 import '@blackglory/jest-matchers'
 import * as path from 'path'
 

@@ -1,9 +1,9 @@
-import * as TBAC from '@src/dao/token-based-access-control'
+import * as DAO from '@dao/sqlite3/token-based-access-control'
 import { prepareDatabase } from '@test/utils'
 import { Database } from 'better-sqlite3'
 import 'jest-extended'
 
-jest.mock('@src/dao/database')
+jest.mock('@dao/sqlite3/database')
 
 describe('TBAC(token-based access control)', () => {
   describe('getAllIdsWithTokens(): string[]', () => {
@@ -16,7 +16,7 @@ describe('TBAC(token-based access control)', () => {
       insert(db, { token: token1, id: id1, dequeue: true, enqueue: false })
       insert(db, { token: token2, id: id2, dequeue: false, enqueue: true })
 
-      const result = TBAC.getAllIdsWithTokens()
+      const result = DAO.getAllIdsWithTokens()
 
       // expect.toStrictEqual is broken, I have no idea
       expect(result).toEqual([id1, id2])
@@ -32,7 +32,7 @@ describe('TBAC(token-based access control)', () => {
       insert(db, { token: token1, id, dequeue: true, enqueue: false })
       insert(db, { token: token2, id, dequeue: false, enqueue: true })
 
-      const result = TBAC.getAllTokens(id)
+      const result = DAO.getAllTokens(id)
 
       // expect.toStrictEqual is broken, I have no idea
       expect(result).toEqual([
@@ -51,7 +51,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: false, enqueue: true })
 
-          const result = TBAC.hasEnqueueTokens(id)
+          const result = DAO.hasEnqueueTokens(id)
 
           expect(result).toBeTrue()
         })
@@ -64,7 +64,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: true, enqueue: false })
 
-          const result = TBAC.hasEnqueueTokens(id)
+          const result = DAO.hasEnqueueTokens(id)
 
           expect(result).toBeFalse()
         })
@@ -79,7 +79,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: false, enqueue: true })
 
-          const result = TBAC.matchEnqueueToken({ token, id })
+          const result = DAO.matchEnqueueToken({ token, id })
 
           expect(result).toBeTrue()
         })
@@ -92,7 +92,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: true, enqueue: false })
 
-          const result = TBAC.matchEnqueueToken({ token, id })
+          const result = DAO.matchEnqueueToken({ token, id })
 
           expect(result).toBeFalse()
         })
@@ -107,7 +107,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: true, enqueue: false })
 
-          const result = TBAC.setEnqueueToken({ token, id })
+          const result = DAO.setEnqueueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
@@ -121,7 +121,7 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.setEnqueueToken({ token, id })
+          const result = DAO.setEnqueueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
@@ -138,7 +138,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: true, enqueue: true })
 
-          const result = TBAC.unsetEnqueueToken({ token, id })
+          const result = DAO.unsetEnqueueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
@@ -152,7 +152,7 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.unsetEnqueueToken({ token, id })
+          const result = DAO.unsetEnqueueToken({ token, id })
 
           expect(result).toBeUndefined()
           expect(exist(db, { token, id })).toBeFalse()
@@ -170,7 +170,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: true, enqueue: false })
 
-          const result = TBAC.hasDequeueTokens(id)
+          const result = DAO.hasDequeueTokens(id)
 
           expect(result).toBeTrue()
         })
@@ -183,7 +183,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: false, enqueue: true })
 
-          const result = TBAC.hasDequeueTokens(id)
+          const result = DAO.hasDequeueTokens(id)
 
           expect(result).toBeFalse()
         })
@@ -198,7 +198,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: true, enqueue: false })
 
-          const result = TBAC.matchDequeueToken({ token, id })
+          const result = DAO.matchDequeueToken({ token, id })
 
           expect(result).toBeTrue()
         })
@@ -211,7 +211,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: false, enqueue: true })
 
-          const result = TBAC.matchDequeueToken({ token, id })
+          const result = DAO.matchDequeueToken({ token, id })
 
           expect(result).toBeFalse()
         })
@@ -226,7 +226,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: false, enqueue: true })
 
-          const result = TBAC.setDequeueToken({ token, id })
+          const result = DAO.setDequeueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
@@ -240,7 +240,7 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.setDequeueToken({ token, id })
+          const result = DAO.setDequeueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
@@ -257,7 +257,7 @@ describe('TBAC(token-based access control)', () => {
           const id = 'id-1'
           insert(db, { token, id, dequeue: true, enqueue: true })
 
-          const result = TBAC.unsetDequeueToken({ token, id })
+          const result = DAO.unsetDequeueToken({ token, id })
           const row = select(db, { token, id })
 
           expect(result).toBeUndefined()
@@ -271,7 +271,7 @@ describe('TBAC(token-based access control)', () => {
           const token = 'token-1'
           const id = 'id-1'
 
-          const result = TBAC.unsetDequeueToken({ token, id })
+          const result = DAO.unsetDequeueToken({ token, id })
 
           expect(result).toBeUndefined()
           expect(exist(db, { token, id })).toBeFalse()
