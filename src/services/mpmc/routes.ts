@@ -8,6 +8,7 @@ import {
 , RBAC
 , TOKEN_BASED_ACCESS_CONTROL
 , DISABLE_NO_TOKENS
+, JSON_SCHEMA
 } from '@src/config'
 import { inBlacklist } from '@src/dao/blacklist'
 import { inWhitelist } from '@src/dao/whitelist'
@@ -91,7 +92,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
             id: idSchema
           }
         }
-      , body: { type: 'string' }
+      , body: JSON_SCHEMA()
       , response: {
           204: { type: 'null' }
         }

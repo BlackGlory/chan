@@ -1,5 +1,5 @@
 import { buildServer } from '@src/server'
-import { prepareDatabase } from '@test/dao/utils'
+import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { addBlacklistItem } from '@src/dao/blacklist'
 import { addWhitelistItem } from '@src/dao/whitelist'
@@ -12,18 +12,14 @@ jest.mock('@src/dao/database')
 expect.extend(matchers)
 
 beforeEach(async () => {
+  resetEnvironment()
   await prepareDatabase()
-  process.env.MPMC_ADMIN_PASSWORD = undefined
-  process.env.MPMC_LIST_BASED_ACCESS_CONTROL = undefined
-  process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = undefined
-  process.env.MPMC_DISABLE_NO_TOKENS = undefined
 })
 
 describe('mpmc', () => {
   describe('no access control', () => {
     describe('GET /mpmc/:id', () => {
       it('200', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = undefined
         const server = buildServer()
         const id = 'id'
         const message = 'message'
@@ -49,28 +45,87 @@ describe('mpmc', () => {
     })
 
     describe('POST /mpmc/:id', () => {
-      it('204', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = undefined
-        const server = buildServer()
-        const id = 'id'
-        const message = 'message'
+      describe('MPMC_JSON_SCHEMA', () => {
+        describe('pass', () => {
+          it('204', async () => {
+            process.env.MPMC_JSON_SCHEMA = JSON.stringify({
+              type: 'number'
+            })
+            const server = buildServer()
+            const id = 'id'
+            const message = '8964'
 
-        setImmediate(() => {
-          server.inject({
-            method: 'GET'
-          , url: `/mpmc/${id}`
+            setImmediate(() => {
+              server.inject({
+                method: 'GET'
+              , url: `/mpmc/${id}`
+              })
+            })
+            const res = await server.inject({
+              method: 'POST'
+            , url: `/mpmc/${id}`
+            , payload: message
+            , headers: {
+                'Content-Type': 'text/plain'
+              }
+            })
+
+            expect(res.statusCode).toBe(204)
           })
         })
-        const res = await server.inject({
-          method: 'POST'
-        , url: `/mpmc/${id}`
-        , payload: message
-        , headers: {
-            'Content-Type': 'text/plain'
-          }
-        })
 
-        expect(res.statusCode).toBe(204)
+        describe('not pass', () => {
+          it('400', async () => {
+            process.env.MPMC_JSON_SCHEMA = JSON.stringify({
+              type: 'number'
+            })
+            const server = buildServer()
+            const id = 'id'
+            const message = 'message'
+
+            setImmediate(() => {
+              server.inject({
+                method: 'GET'
+              , url: `/mpmc/${id}`
+              })
+            })
+            const res = await server.inject({
+              method: 'POST'
+            , url: `/mpmc/${id}`
+            , payload: message
+            , headers: {
+                'Content-Type': 'text/plain'
+              }
+            })
+
+            expect(res.statusCode).toBe(400)
+          })
+        })
+      })
+
+      describe('MPMC_JSON_SCHEMA is not set', () => {
+        it('204', async () => {
+          const server = buildServer()
+          const id = 'id'
+          const message = 'message'
+
+          setImmediate(() => {
+            server.inject({
+              method: 'GET'
+            , url: `/mpmc/${id}`
+            })
+          })
+          const res = await server.inject({
+            method: 'POST'
+          , url: `/mpmc/${id}`
+          , payload: message
+          , headers: {
+              'Content-Type': 'text/plain'
+            }
+          })
+
+          expect(res.statusCode).toBe(204)
+        })
       })
     })
   })

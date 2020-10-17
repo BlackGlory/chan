@@ -1,5 +1,5 @@
 import { buildServer } from '@src/server'
-import { prepareDatabase } from '@test/dao/utils'
+import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { tokenSchema } from '@src/schema'
 
@@ -7,11 +7,8 @@ jest.mock('@src/dao/database')
 expect.extend(matchers)
 
 beforeEach(async () => {
+  resetEnvironment()
   await prepareDatabase()
-  process.env.MPMC_ADMIN_PASSWORD = undefined
-  process.env.MPMC_LIST_BASED_ACCESS_CONTROL = undefined
-  process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = undefined
-  process.env.MPMC_DISABLE_NO_TOKENS = undefined
 })
 
 describe('blacklist', () => {

@@ -35,3 +35,12 @@ export function DISABLE_NO_TOKENS() {
 export function HTTP2() {
   return process.env.MPMC_HTTP2 === 'true'
 }
+
+export function JSON_SCHEMA() {
+  if (process.env.MPMC_JSON_SCHEMA) {
+    const schema = JSON.parse(process.env.MPMC_JSON_SCHEMA)
+    return schema
+  } else {
+    return { type: 'string' }
+  }
+}

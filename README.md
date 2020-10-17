@@ -153,6 +153,10 @@ await fetch(`http://localhost:8080/mpmc/${id}`, {
 })
 ```
 
+#### 添加JSON Schema约束
+
+enqueue可以通过环境变量`MPMC_JSON_SCHEMA`设置JSON Schema约束, 默认值为`{ "type": "string" }`, 适用于所有文本.
+
 ### dequeue
 
 `GET /mpmc/<id>`
@@ -548,4 +552,3 @@ mpmc提供了HTTP/2支持, 以多路复用反向代理时的连接, 可通过设
 - [ ] 通过fastify.decorate解耦底层实现, 以便切换到Redis等分布式服务
       (Redis没有原生提供BLPUSH命令, 因此这仅是为未来而考虑的特性)
 - [ ] Payload的JSON Schema支持, 用于约束请求内容的格式
-- [ ] 支持设置默认JSON Schema

@@ -1,5 +1,5 @@
 import * as TBAC from '@src/dao/token-based-access-control'
-import { prepareDatabase } from './utils'
+import { prepareDatabase } from '@test/utils'
 import { Database } from 'better-sqlite3'
 import 'jest-extended'
 

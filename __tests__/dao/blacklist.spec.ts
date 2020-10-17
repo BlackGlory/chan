@@ -1,6 +1,6 @@
 import * as DAO from '@src/dao/blacklist'
 import { Database } from 'better-sqlite3'
-import { prepareDatabase } from './utils'
+import { prepareDatabase } from '@test/utils'
 import 'jest-extended'
 
 jest.mock('@src/dao/database')
