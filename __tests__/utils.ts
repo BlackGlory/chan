@@ -20,6 +20,7 @@ export async function resetEnvironment() {
   delete process.env.MPMC_LIST_BASED_ACCESS_CONTROL
   delete process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL
   delete process.env.MPMC_DISABLE_NO_TOKENS
-  delete process.env.MPMC_JSON_SCHEMA
-  delete process.env.MPMC_JSON_ONLY
+  delete process.env.MPMC_JSON_SCHEMA_VALIDATION
+  delete process.env.MPMC_DEFAULT_JSON_SCHEMA
+  delete process.env.MPMC_JSON_PAYLOAD_ONLY
 }

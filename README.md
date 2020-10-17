@@ -176,15 +176,17 @@ JavaScript
 await fetch(`http://localhost:8080/mpmc/${id}`).then(res => res.text())
 ```
 
-## 为enqueue添加JSON Schema约束
+## 为enqueue添加JSON Schema验证
 
-enqueue可以通过环境变量`MPMC_JSON_SCHEMA`设置默认的JSON Schema约束,
-该设置仅对带有`Content-Type: application/json`的请求有效.
-通过设置`MPMC_JSON_ONLY=true`, 可以强制只接受带有`Content-Type: application/json`的请求.
+通过设置环境变量`MPMC_JSON_SCHEMA_VALIDATION=true`可开启enqueue的JSON Schema验证功能.
 
-### 单独为id设置JSON Schema约束
+通过环境变量`MPMC_DEFAULT_JSON_SCHEMA`可设置默认的JSON Schema, 该验证仅对带有`Content-Type: application/json`的请求有效.
 
-可单独为id设置JSON Schema约束, 在这种情况下, 此id将仅接受`Content-Type: application/json`请求.
+通过设置环境变量`MPMC_JSON_PAYLOAD_ONLY=true`, 可以强制enqueue只接受带有`Content-Type: application/json`的请求, 此设置在未开启JSON Schema验证的情况下也有效.
+
+### 单独为id设置JSON Schema
+
+可单独为id设置JSON Schema, 被设置的id将仅接受`Content-Type: application/json`请求.
 
 #### 获取所有具有JSON Schema的消息队列id
 
@@ -210,7 +212,7 @@ await fetch('http://localhost:8080/api/mpmc-with-json-schema', {
 }).then(res => res.json())
 ```
 
-#### 获取JSON Schema约束
+#### 获取JSON Schema
 
 `GET /api/mpmc/<id>/json-schema`
 
@@ -232,7 +234,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/json-schema`, {
 }).then(res => res.json())
 ```
 
-#### 添加JSON Schema约束
+#### 设置JSON Schema
 
 `PUT /api/mpmc/<id>/json-schema`
 
@@ -260,7 +262,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/json-schema`, {
 })
 ```
 
-#### 移除JSON Schema约束
+#### 移除JSON Schema
 
 `DELETE /api/mpmc/<id>/json-schema`
 

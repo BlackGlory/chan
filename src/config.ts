@@ -36,10 +36,14 @@ export function HTTP2() {
   return process.env.MPMC_HTTP2 === 'true'
 }
 
-export function JSON_SCHEMA() {
-  return process.env.MPMC_JSON_SCHEMA
+export function JSON_SCHEMA_VALIDATION() {
+  return process.env.MPMC_JSON_SCHEMA_VALIDATION === 'true'
 }
 
-export function JSON_ONLY() {
-  return process.env.MPMC_JSON_ONLY === 'true'
+export function DEFAULT_JSON_SCHEMA() {
+  return process.env.MPMC_DEFAULT_JSON_SCHEMA
+}
+
+export function JSON_PAYLOAD_ONLY() {
+  return process.env.MPMC_JSON_PAYLOAD_ONLY === 'true'
 }

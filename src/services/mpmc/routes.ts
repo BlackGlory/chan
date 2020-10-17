@@ -7,8 +7,9 @@ import {
 , RBAC
 , TOKEN_BASED_ACCESS_CONTROL
 , DISABLE_NO_TOKENS
-, JSON_SCHEMA
-, JSON_ONLY
+, JSON_SCHEMA_VALIDATION
+, DEFAULT_JSON_SCHEMA
+, JSON_PAYLOAD_ONLY
 } from '@src/config'
 import { inBlacklist } from '@src/dao/blacklist'
 import { inWhitelist } from '@src/dao/whitelist'
@@ -96,7 +97,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
       , headers: {
           'content-type': {
             type: 'string'
-          , enum: JSON_ONLY()
+          , enum: JSON_PAYLOAD_ONLY()
                 ? ['application/json']
                 : [
                     'application/json'
@@ -113,28 +114,6 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
   , async (req, reply) => {
       const id = req.params.id
       const token = req.query.token
-
-      if (req.headers['content-type']?.includes('application/json')) {
-        const schema = getJsonSchema(req.params.id)
-        if (schema) {
-          const ajv = new Ajv()
-          const valid = ajv.validate(JSON.parse(schema), req.body)
-          if (!valid) {
-            return reply.status(400).send(ajv.errorsText())
-          }
-        }
-
-        if (JSON_SCHEMA()) {
-          const ajv = new Ajv()
-          const valid = ajv.validate(JSON.parse(JSON_SCHEMA()!), req.body)
-          if (!valid) {
-            return reply.status(400).send(ajv.errorsText())
-          }
-        }
-      } else {
-        const schema = getJsonSchema(req.params.id)
-        if (schema) return reply.status(400).send('Content-Type must be application/json')
-      }
 
       if (LIST_BASED_ACCESS_CONTROL() === RBAC.Blacklist) {
         if (inBlacklist(req.params.id)) return reply.status(403).send()
@@ -153,6 +132,22 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
           if (DISABLE_NO_TOKENS()) {
             if (!hasDequeueTokens(id)) return reply.status(403).send()
           }
+        }
+      }
+
+      if (JSON_SCHEMA_VALIDATION()) {
+        const specificJsonSchema= getJsonSchema(req.params.id)
+        if (req.headers['content-type']?.includes('application/json')) {
+          const schema = specificJsonSchema ?? DEFAULT_JSON_SCHEMA()
+          if (schema) {
+            const ajv = new Ajv()
+            const valid = ajv.validate(JSON.parse(schema), req.body)
+            if (!valid) {
+              return reply.status(400).send(ajv.errorsText())
+            }
+          }
+        } else if (specificJsonSchema) {
+          return reply.status(400).send('content-type must be application/json')
         }
       }
 
