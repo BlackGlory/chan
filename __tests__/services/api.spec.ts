@@ -8,17 +8,17 @@ expect.extend(matchers)
 
 beforeEach(async () => {
   await prepareDatabase()
-  process.env.ADMIN_PASSWORD = undefined
-  process.env.LIST_BASED_ACCESS_CONTROL = undefined
-  process.env.TOKEN_BASED_ACCESS_CONTROL = undefined
-  process.env.DISABLE_NO_TOKENS = undefined
+  process.env.MPMC_ADMIN_PASSWORD = undefined
+  process.env.MPMC_LIST_BASED_ACCESS_CONTROL = undefined
+  process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = undefined
+  process.env.MPMC_DISABLE_NO_TOKENS = undefined
 })
 
 describe('blacklist', () => {
   describe('GET /api/blacklist', () => {
     describe('auth', () => {
       it('200', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
 
         const res = await server.inject({
@@ -37,7 +37,7 @@ describe('blacklist', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const server = buildServer()
 
         const res = await server.inject({
@@ -51,7 +51,7 @@ describe('blacklist', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
 
         const res = await server.inject({
@@ -68,7 +68,7 @@ describe('blacklist', () => {
   describe('PUT /api/blacklist/:id', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = buildServer()
 
@@ -84,7 +84,7 @@ describe('blacklist', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const id = 'id'
         const server = buildServer()
 
@@ -99,7 +99,7 @@ describe('blacklist', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = buildServer()
 
@@ -117,7 +117,7 @@ describe('blacklist', () => {
   describe('DELETE /api/blacklist/:id', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = buildServer()
 
@@ -133,7 +133,7 @@ describe('blacklist', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const id = 'id'
         const server = buildServer()
 
@@ -148,7 +148,7 @@ describe('blacklist', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = buildServer()
 
@@ -168,7 +168,7 @@ describe('whitelist', () => {
   describe('GET /api/whitelist', () => {
     describe('auth', () => {
       it('200', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
 
         const res = await server.inject({
@@ -187,7 +187,7 @@ describe('whitelist', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const server = buildServer()
 
         const res = await server.inject({
@@ -201,7 +201,7 @@ describe('whitelist', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
 
         const res = await server.inject({
@@ -218,7 +218,7 @@ describe('whitelist', () => {
   describe('PUT /api/whitelist/:id', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = buildServer()
 
@@ -234,7 +234,7 @@ describe('whitelist', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const id = 'id'
         const server = buildServer()
 
@@ -249,7 +249,7 @@ describe('whitelist', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = buildServer()
 
@@ -267,7 +267,7 @@ describe('whitelist', () => {
   describe('DELETE /api/whitelist/:id', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = buildServer()
 
@@ -283,7 +283,7 @@ describe('whitelist', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const id = 'id'
         const server = buildServer()
 
@@ -298,7 +298,7 @@ describe('whitelist', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = buildServer()
 
@@ -318,7 +318,7 @@ describe('TBAC', () => {
   describe('GET /api/mpmc', () => {
     describe('auth', () => {
       it('200', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
 
         const res = await server.inject({
@@ -337,7 +337,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const server = buildServer()
 
         const res = await server.inject({
@@ -351,7 +351,7 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
 
         const res = await server.inject({
@@ -368,7 +368,7 @@ describe('TBAC', () => {
   describe('GET /api/mpmc/:id', () => {
     describe('auth', () => {
       it('200', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
         const id = 'id'
 
@@ -395,7 +395,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const server = buildServer()
         const id = 'id'
 
@@ -410,7 +410,7 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
         const id = 'id'
 
@@ -428,7 +428,7 @@ describe('TBAC', () => {
   describe('PUT /api/mpmc/:id/enqueue/:token', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -445,7 +445,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -461,7 +461,7 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -480,7 +480,7 @@ describe('TBAC', () => {
   describe('DELETE /api/mpmc/:id/enqueue/:token', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -497,7 +497,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -513,7 +513,7 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -532,7 +532,7 @@ describe('TBAC', () => {
   describe('PUT /api/mpmc/:id/dequeue/:token', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -549,7 +549,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -565,7 +565,7 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -584,7 +584,7 @@ describe('TBAC', () => {
   describe('DELETE /api/mpmc/:id/dequeue/:token', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -601,7 +601,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -617,7 +617,7 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.ADMIN_PASSWORD = 'password'
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
         const server = buildServer()
         const id = 'id'
         const token = 'token'
@@ -636,6 +636,6 @@ describe('TBAC', () => {
 
 function createAuthHeaders(adminPassword?: string) {
   return {
-    'Authorization': `Bearer ${ adminPassword ?? process.env.ADMIN_PASSWORD }`
+    'Authorization': `Bearer ${ adminPassword ?? process.env.MPMC_ADMIN_PASSWORD }`
   }
 }

@@ -5,19 +5,19 @@ export enum RBAC {
 }
 
 export function PORT() {
-  return Number(process.env.PORT) || 8080
+  return Number(process.env.MPMC_PORT) || 8080
 }
 
 export function HOST() {
-  return process.env.HOST || 'localhost'
+  return process.env.MPMC_HOST || 'localhost'
 }
 
 export function ADMIN_PASSWORD() {
-  return process.env.ADMIN_PASSWORD
+  return process.env.MPMC_ADMIN_PASSWORD
 }
 
 export function LIST_BASED_ACCESS_CONTROL() {
-  switch (process.env.LIST_BASED_ACCESS_CONTROL) {
+  switch (process.env.MPMC_LIST_BASED_ACCESS_CONTROL) {
     case 'whitelist': return RBAC.Whitelist
     case 'blacklist': return RBAC.Blacklist
     default: return RBAC.Disable
@@ -25,13 +25,13 @@ export function LIST_BASED_ACCESS_CONTROL() {
 }
 
 export function TOKEN_BASED_ACCESS_CONTROL() {
-  return process.env.TOKEN_BASED_ACCESS_CONTROL === 'true'
+  return process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL === 'true'
 }
 
 export function DISABLE_NO_TOKENS() {
-  return process.env.DISABLE_NO_TOKENS === 'true'
+  return process.env.MPMC_DISABLE_NO_TOKENS === 'true'
 }
 
 export function HTTP2() {
-  return process.env.HTTP2 === 'true'
+  return process.env.MPMC_HTTP2 === 'true'
 }

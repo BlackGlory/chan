@@ -52,7 +52,7 @@ curl http://localhost:8080/mpmc/hello-world # 消费消息, 返回hello world4, 
 
 ### 从源代码运行
 
-可以使用环境变量HOST和PORT决定服务器监听的地址和端口, 默认值为localhost和8080.
+可以使用环境变量`MPMC_HOST`和`MPMC_PORT`决定服务器监听的地址和端口, 默认值为localhost和8080.
 
 ```sh
 git clone https://github.com/BlackGlory/mpmc
@@ -93,7 +93,7 @@ services:
     image: 'blackglory/mpmc'
     restart: always
     environment:
-      - HOST=0.0.0.0
+      - MPMC_HOST=0.0.0.0
     ports:
       - '8080:8080'
 ```
@@ -109,10 +109,10 @@ services:
     image: 'blackglory/mpmc'
     restart: always
     environment:
-      - HOST=0.0.0.0
-      - ADMIN_PASSWORD=password
-      - TOKEN_BASED_ACCESS_CONTROL=true
-      - DISABLE_NO_TOKENS=true
+      - MPMC_HOST=0.0.0.0
+      - MPMC_ADMIN_PASSWORD=password
+      - MPMC_TOKEN_BASED_ACCESS_CONTROL=true
+      - MPMC_DISABLE_NO_TOKENS=true
     volumes:
       - 'mpmc-data:/data'
     ports:
@@ -181,8 +181,8 @@ MPMC提供两种访问控制策略, 可以一并使用.
 
 所有访问控制API都使用基于口令的Bearer Token Authentication.
 
-口令需通过环境变量`ADMIN_PASSWORD`进行设置.
-`ADMIN_PASSWORD`同时也是访问控制的开关, 未提供此环境变量的情况下,
+口令需通过环境变量`MPMC_ADMIN_PASSWORD`进行设置.
+`MPMC_ADMIN_PASSWORD`同时也是访问控制的开关, 未提供此环境变量的情况下,
 服务会采取无访问控制的运行模式.
 
 访问控制规则是通过[WAL模式]的SQLite3持久化的, 开启访问控制后,
@@ -194,7 +194,7 @@ MPMC提供两种访问控制策略, 可以一并使用.
 
 ### 基于名单的访问控制
 
-通过设置环境变量`LIST_BASED_ACCESS_CONTROL`开启基于名单的访问控制:
+通过设置环境变量`MPMC_LIST_BASED_ACCESS_CONTROL`开启基于名单的访问控制:
 - `whitelist`
   启用基于消息队列白名单的访问控制, 只有在名单内的消息队列允许被访问.
 - `blacklist`
@@ -360,7 +360,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 
 对token的要求: `^[a-zA-Z0-9\.\-_]{1,256}$`
 
-通过设置环境变量`TOKEN_BASED_ACCESS_CONTROL=true`开启基于token的访问控制.
+通过设置环境变量`MPMC_TOKEN_BASED_ACCESS_CONTROL=true`开启基于token的访问控制.
 
 基于token的访问控制将根据消息队列具有的token决定其访问规则, 具体行为见下方表格.
 一个消息队列可以有多个token, 每个token可以单独设置入列权限和出列权限.
@@ -374,7 +374,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 | NO | NO | 无token可以入列和出列 |
 
 在开启基于token的访问控制时,
-可以通过将环境变量`DISABLE_NO_TOKENS`设置为`true`将无token的消息队列禁用.
+可以通过将环境变量`MPMC_DISABLE_NO_TOKENS`设置为`true`将无token的消息队列禁用.
 
 基于token的访问控制作出了如下假定, 因此不使用加密和消息验证码(MAC):
 - token的传输过程是安全的
@@ -536,7 +536,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/dequeue/${token}`, {
 
 ## HTTP/2
 
-mpmc提供了HTTP/2支持, 以多路复用反向代理时的连接, 可通过设置环境变量`HTTP2=true`开启.
+mpmc提供了HTTP/2支持, 以多路复用反向代理时的连接, 可通过设置环境变量`MPMC_HTTP2=true`开启.
 
 此HTTP/2支持不提供从HTTP/1.1自动升级的功能, 亦不提供HTTPS.
 因此, 在本地curl里进行测试时, 需要开启`--http2-prior-knowledge`选项.

@@ -13,17 +13,17 @@ expect.extend(matchers)
 
 beforeEach(async () => {
   await prepareDatabase()
-  process.env.ADMIN_PASSWORD = undefined
-  process.env.LIST_BASED_ACCESS_CONTROL = undefined
-  process.env.TOKEN_BASED_ACCESS_CONTROL = undefined
-  process.env.DISABLE_NO_TOKENS = undefined
+  process.env.MPMC_ADMIN_PASSWORD = undefined
+  process.env.MPMC_LIST_BASED_ACCESS_CONTROL = undefined
+  process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = undefined
+  process.env.MPMC_DISABLE_NO_TOKENS = undefined
 })
 
 describe('mpmc', () => {
   describe('no access control', () => {
     describe('GET /mpmc/:id', () => {
       it('200', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const server = buildServer()
         const id = 'id'
         const message = 'message'
@@ -50,7 +50,7 @@ describe('mpmc', () => {
 
     describe('POST /mpmc/:id', () => {
       it('204', async () => {
-        process.env.ADMIN_PASSWORD = undefined
+        process.env.MPMC_ADMIN_PASSWORD = undefined
         const server = buildServer()
         const id = 'id'
         const message = 'message'
@@ -82,8 +82,8 @@ describe('mpmc', () => {
           it('403', async () => {
             const id = 'id'
             addBlacklistItem(id)
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.LIST_BASED_ACCESS_CONTROL = 'blacklist'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
             const server = buildServer()
 
             const res = await server.inject({
@@ -99,8 +99,8 @@ describe('mpmc', () => {
           it('200', async () => {
             const id = 'id'
             const message = 'message'
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.LIST_BASED_ACCESS_CONTROL = 'blacklist'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
             const server = buildServer()
 
             setImmediate(() => {
@@ -130,8 +130,8 @@ describe('mpmc', () => {
             const id = 'id'
             const message = 'message'
             addBlacklistItem(id)
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.LIST_BASED_ACCESS_CONTROL = 'blacklist'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
             const server = buildServer()
 
             const res = await server.inject({
@@ -151,8 +151,8 @@ describe('mpmc', () => {
           it('204', async () => {
             const id = 'id'
             const message = 'message'
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.LIST_BASED_ACCESS_CONTROL = 'blacklist'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
             const server = buildServer()
 
             setImmediate(() => {
@@ -183,8 +183,8 @@ describe('mpmc', () => {
             const id = 'id'
             const message = 'message'
             addWhitelistItem(id)
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.LIST_BASED_ACCESS_CONTROL = 'whitelist'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'whitelist'
             const server = buildServer()
 
             setImmediate(() => {
@@ -210,8 +210,8 @@ describe('mpmc', () => {
         describe('id not in whitelist', () => {
           it('403', async () => {
             const id = 'id'
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.LIST_BASED_ACCESS_CONTROL = 'whitelist'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'whitelist'
             const server = buildServer()
 
             const res = await server.inject({
@@ -230,8 +230,8 @@ describe('mpmc', () => {
             const id = 'id'
             const message = 'message'
             addWhitelistItem(id)
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.LIST_BASED_ACCESS_CONTROL = 'whitelist'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'whitelist'
             const server = buildServer()
 
             setImmediate(() => {
@@ -257,8 +257,8 @@ describe('mpmc', () => {
           it('403', async () => {
             const id = 'id'
             const message = 'message'
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.LIST_BASED_ACCESS_CONTROL = 'whitelist'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'whitelist'
             const server = buildServer()
 
             const res = await server.inject({
@@ -286,8 +286,8 @@ describe('mpmc', () => {
             const token = 'token'
             const message = 'message'
             setDequeueToken({ id, token })
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.TOKEN_BASED_ACCESS_CONTROL = 'true'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const server = buildServer()
 
             setImmediate(() => {
@@ -316,8 +316,8 @@ describe('mpmc', () => {
             const id = 'id'
             const token = 'token'
             setDequeueToken({ id, token })
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.TOKEN_BASED_ACCESS_CONTROL = 'true'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const server = buildServer()
 
             const res = await server.inject({
@@ -338,8 +338,8 @@ describe('mpmc', () => {
             const token = 'token'
             const message = 'message'
             setEnqueueToken({ id, token })
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.TOKEN_BASED_ACCESS_CONTROL = 'true'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const server = buildServer()
 
             setImmediate(() => {
@@ -368,9 +368,9 @@ describe('mpmc', () => {
           describe('DISABLE_NO_TOKENS', () => {
             it('403', async () => {
               const id = 'id'
-              process.env.ADMIN_PASSWORD = 'password'
-              process.env.TOKEN_BASED_ACCESS_CONTROL = 'true'
-              process.env.DISABLE_NO_TOKENS = 'true'
+              process.env.MPMC_ADMIN_PASSWORD = 'password'
+              process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
+              process.env.MPMC_DISABLE_NO_TOKENS = 'true'
               const server = buildServer()
 
               const res = await server.inject({
@@ -386,8 +386,8 @@ describe('mpmc', () => {
             it('200', async () => {
               const id = 'id'
               const message = 'message'
-              process.env.ADMIN_PASSWORD = 'password'
-              process.env.TOKEN_BASED_ACCESS_CONTROL = 'true'
+              process.env.MPMC_ADMIN_PASSWORD = 'password'
+              process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
               const server = buildServer()
 
               setImmediate(() => {
@@ -421,8 +421,8 @@ describe('mpmc', () => {
             const token = 'token'
             const message = 'message'
             setEnqueueToken({ id, token })
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.TOKEN_BASED_ACCESS_CONTROL = 'true'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const server = buildServer()
 
             setImmediate(() => {
@@ -452,8 +452,8 @@ describe('mpmc', () => {
             const token = 'token'
             const message = 'message'
             setEnqueueToken({ id, token })
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.TOKEN_BASED_ACCESS_CONTROL = 'true'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const server = buildServer()
 
             const res = await server.inject({
@@ -478,8 +478,8 @@ describe('mpmc', () => {
             const token = 'token'
             const message = 'message'
             setDequeueToken({ id, token })
-            process.env.ADMIN_PASSWORD = 'password'
-            process.env.TOKEN_BASED_ACCESS_CONTROL = 'true'
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const server = buildServer()
 
             setImmediate(() => {
@@ -507,9 +507,9 @@ describe('mpmc', () => {
             it('403', async () => {
               const id = 'id'
               const message = 'message'
-              process.env.ADMIN_PASSWORD = 'password'
-              process.env.TOKEN_BASED_ACCESS_CONTROL = 'true'
-              process.env.DISABLE_NO_TOKENS = 'true'
+              process.env.MPMC_ADMIN_PASSWORD = 'password'
+              process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
+              process.env.MPMC_DISABLE_NO_TOKENS = 'true'
               const server = buildServer()
 
               const res = await server.inject({
@@ -529,8 +529,8 @@ describe('mpmc', () => {
             it('204', async () => {
               const id = 'id'
               const message = 'message'
-              process.env.ADMIN_PASSWORD = 'password'
-              process.env.TOKEN_BASED_ACCESS_CONTROL = 'true'
+              process.env.MPMC_ADMIN_PASSWORD = 'password'
+              process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
               const server = buildServer()
 
               setImmediate(() => {
