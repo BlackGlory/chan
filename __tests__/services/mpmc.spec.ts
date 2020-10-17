@@ -1,13 +1,7 @@
 import { buildServer } from '@src/server'
 import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
-import { addBlacklistItem } from '@dao/sqlite3/blacklist'
-import { addWhitelistItem } from '@dao/sqlite3/whitelist'
-import { setJsonSchema } from '@dao/sqlite3/json-schema'
-import {
-  setDequeueToken
-, setEnqueueToken
-} from '@dao/sqlite3/token-based-access-control'
+import DAO from '@dao'
 
 jest.mock('@dao/sqlite3/database')
 expect.extend(matchers)
@@ -145,12 +139,12 @@ describe('mpmc', () => {
                 process.env.MPMC_JSON_SCHEMA_VALIDATION = 'true'
                 const id = 'id'
                 const schema = { type: 'string' }
-                setJsonSchema({
+                const message = '"message"'
+                const server = buildServer()
+                await DAO.setJsonSchema({
                   id
                 , schema: JSON.stringify(schema)
                 })
-                const message = '"message"'
-                const server = buildServer()
 
                 setImmediate(async () => {
                   const res = await server.inject({
@@ -178,12 +172,12 @@ describe('mpmc', () => {
                 process.env.MPMC_JSON_SCHEMA_VALIDATION = 'true'
                 const id = 'id'
                 const schema = { type: 'string' }
-                setJsonSchema({
+                const message = 'message'
+                const server = buildServer()
+                await DAO.setJsonSchema({
                   id
                 , schema: JSON.stringify(schema)
                 })
-                const message = 'message'
-                const server = buildServer()
 
                 const res = await server.inject({
                   method: 'POST'
@@ -204,12 +198,12 @@ describe('mpmc', () => {
               process.env.MPMC_JSON_SCHEMA_VALIDATION = 'true'
               const id = 'id'
               const schema = { type: 'string' }
-              setJsonSchema({
+              const message = '"message"'
+              const server = buildServer()
+              await DAO.setJsonSchema({
                 id
               , schema: JSON.stringify(schema)
               })
-              const message = '"message"'
-              const server = buildServer()
 
               const res = await server.inject({
                 method: 'POST'
@@ -382,11 +376,11 @@ describe('mpmc', () => {
       describe('GET /mpmc/:id', () => {
         describe('id in blacklist', () => {
           it('403', async () => {
-            const id = 'id'
-            addBlacklistItem(id)
             process.env.MPMC_ADMIN_PASSWORD = 'password'
             process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
+            const id = 'id'
             const server = buildServer()
+            await DAO.addBlacklistItem(id)
 
             const res = await server.inject({
               method: 'GET'
@@ -399,10 +393,10 @@ describe('mpmc', () => {
 
         describe('id not in blacklist', () => {
           it('200', async () => {
-            const id = 'id'
-            const message = 'message'
             process.env.MPMC_ADMIN_PASSWORD = 'password'
             process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
+            const id = 'id'
+            const message = 'message'
             const server = buildServer()
 
             setImmediate(() => {
@@ -429,12 +423,12 @@ describe('mpmc', () => {
       describe('POST /mpmc/:id', () => {
         describe('id in blacklist', () => {
           it('403', async () => {
-            const id = 'id'
-            const message = 'message'
-            addBlacklistItem(id)
             process.env.MPMC_ADMIN_PASSWORD = 'password'
             process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
+            const id = 'id'
+            const message = 'message'
             const server = buildServer()
+            await DAO.addBlacklistItem(id)
 
             const res = await server.inject({
               method: 'POST'
@@ -451,10 +445,10 @@ describe('mpmc', () => {
 
         describe('id not in blacklist', () => {
           it('204', async () => {
-            const id = 'id'
-            const message = 'message'
             process.env.MPMC_ADMIN_PASSWORD = 'password'
             process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
+            const id = 'id'
+            const message = 'message'
             const server = buildServer()
 
             setImmediate(() => {
@@ -482,12 +476,12 @@ describe('mpmc', () => {
       describe('GET /mpmc/:id', () => {
         describe('id in whitelist', () => {
           it('200', async () => {
-            const id = 'id'
-            const message = 'message'
-            addWhitelistItem(id)
             process.env.MPMC_ADMIN_PASSWORD = 'password'
             process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'whitelist'
+            const id = 'id'
+            const message = 'message'
             const server = buildServer()
+            await DAO.addWhitelistItem(id)
 
             setImmediate(() => {
               server.inject({
@@ -511,9 +505,9 @@ describe('mpmc', () => {
 
         describe('id not in whitelist', () => {
           it('403', async () => {
-            const id = 'id'
             process.env.MPMC_ADMIN_PASSWORD = 'password'
             process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'whitelist'
+            const id = 'id'
             const server = buildServer()
 
             const res = await server.inject({
@@ -531,10 +525,10 @@ describe('mpmc', () => {
           it('204', async () => {
             const id = 'id'
             const message = 'message'
-            addWhitelistItem(id)
             process.env.MPMC_ADMIN_PASSWORD = 'password'
             process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'whitelist'
             const server = buildServer()
+            await DAO.addWhitelistItem(id)
 
             setImmediate(() => {
               server.inject({
@@ -557,10 +551,10 @@ describe('mpmc', () => {
 
         describe('id not in whitelist', () => {
           it('403', async () => {
-            const id = 'id'
-            const message = 'message'
             process.env.MPMC_ADMIN_PASSWORD = 'password'
             process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'whitelist'
+            const id = 'id'
+            const message = 'message'
             const server = buildServer()
 
             const res = await server.inject({
@@ -584,13 +578,13 @@ describe('mpmc', () => {
       describe('id has dequeue tokens', () => {
         describe('token matched', () => {
           it('200', async () => {
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const id = 'id'
             const token = 'token'
             const message = 'message'
-            setDequeueToken({ id, token })
-            process.env.MPMC_ADMIN_PASSWORD = 'password'
-            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const server = buildServer()
+            await DAO.setDequeueToken({ id, token })
 
             setImmediate(() => {
               server.inject({
@@ -615,12 +609,12 @@ describe('mpmc', () => {
 
         describe('token does not matched', () => {
           it('401', async () => {
-            const id = 'id'
-            const token = 'token'
-            setDequeueToken({ id, token })
             process.env.MPMC_ADMIN_PASSWORD = 'password'
             process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
+            const id = 'id'
+            const token = 'token'
             const server = buildServer()
+            await DAO.setDequeueToken({ id, token })
 
             const res = await server.inject({
               method: 'GET'
@@ -636,13 +630,13 @@ describe('mpmc', () => {
       describe('id does not have dequeue tokens', () => {
         describe('id has enqueue tokens', () => {
           it('200', async () => {
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const id = 'id'
             const token = 'token'
             const message = 'message'
-            setEnqueueToken({ id, token })
-            process.env.MPMC_ADMIN_PASSWORD = 'password'
-            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const server = buildServer()
+            await DAO.setEnqueueToken({ id, token })
 
             setImmediate(() => {
               server.inject({
@@ -669,10 +663,10 @@ describe('mpmc', () => {
         describe('id has no tokens', () => {
           describe('DISABLE_NO_TOKENS', () => {
             it('403', async () => {
-              const id = 'id'
               process.env.MPMC_ADMIN_PASSWORD = 'password'
               process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
               process.env.MPMC_DISABLE_NO_TOKENS = 'true'
+              const id = 'id'
               const server = buildServer()
 
               const res = await server.inject({
@@ -686,10 +680,10 @@ describe('mpmc', () => {
 
           describe('not DISABLE_NO_TOKENS', () => {
             it('200', async () => {
-              const id = 'id'
-              const message = 'message'
               process.env.MPMC_ADMIN_PASSWORD = 'password'
               process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
+              const id = 'id'
+              const message = 'message'
               const server = buildServer()
 
               setImmediate(() => {
@@ -719,13 +713,13 @@ describe('mpmc', () => {
       describe('id has enqueue tokens', () => {
         describe('token matched', () => {
           it('204', async () => {
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const id = 'id'
             const token = 'token'
             const message = 'message'
-            setEnqueueToken({ id, token })
-            process.env.MPMC_ADMIN_PASSWORD = 'password'
-            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const server = buildServer()
+            await DAO.setEnqueueToken({ id, token })
 
             setImmediate(() => {
               server.inject({
@@ -750,13 +744,13 @@ describe('mpmc', () => {
 
         describe('token does not matched', () => {
           it('401', async () => {
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const id = 'id'
             const token = 'token'
             const message = 'message'
-            setEnqueueToken({ id, token })
-            process.env.MPMC_ADMIN_PASSWORD = 'password'
-            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const server = buildServer()
+            await DAO.setEnqueueToken({ id, token })
 
             const res = await server.inject({
               method: 'POST'
@@ -776,13 +770,13 @@ describe('mpmc', () => {
       describe('id does not have enqueue tokens', () => {
         describe('id has dequeue tokens', () => {
           it('204', async () => {
+            process.env.MPMC_ADMIN_PASSWORD = 'password'
+            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const id = 'id'
             const token = 'token'
             const message = 'message'
-            setDequeueToken({ id, token })
-            process.env.MPMC_ADMIN_PASSWORD = 'password'
-            process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const server = buildServer()
+            await DAO.setDequeueToken({ id, token })
 
             setImmediate(() => {
               server.inject({
@@ -807,11 +801,11 @@ describe('mpmc', () => {
         describe('id has no tokens', () => {
           describe('DISABLE_NO_TOKENS', () => {
             it('403', async () => {
-              const id = 'id'
-              const message = 'message'
               process.env.MPMC_ADMIN_PASSWORD = 'password'
               process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
               process.env.MPMC_DISABLE_NO_TOKENS = 'true'
+              const id = 'id'
+              const message = 'message'
               const server = buildServer()
 
               const res = await server.inject({
@@ -829,10 +823,10 @@ describe('mpmc', () => {
 
           describe('not DISABLE_NO_TOKENS', () => {
             it('204', async () => {
-              const id = 'id'
-              const message = 'message'
               process.env.MPMC_ADMIN_PASSWORD = 'password'
               process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
+              const id = 'id'
+              const message = 'message'
               const server = buildServer()
 
               setImmediate(() => {
