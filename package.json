@@ -11,11 +11,13 @@
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "coverage": "jest --coverage --config jest.config.js",
     "dev": "nodemon",
+    "dev:http2": "HTTP2=true nodemon",
     "dev:debug": "node --inspect-brk --files -r tsconfig-paths/register -r dotenv/config src/index.ts | pino-pretty",
     "prepublishOnly": "yarn clean && yarn build",
     "clean": "rm -rf lib",
     "build": "cross-env NODE_ENV=production tsc --project tsconfig.build.json && tscpaths -p tsconfig.build.json -s ./src -o ./lib",
     "start": "cross-env NODE_ENV=production node lib/index.js",
+    "start:http2": "cross-env NODE_ENV=production HTTP2=true node lib/index.js",
     "docker:build": "docker build --tag mpmc .",
     "docker:test": "docker-compose -f docker-compose.test.yml run --rm sut"
   },

@@ -360,7 +360,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 
 对token的要求: `^[a-zA-Z0-9\.\-_]{1,256}$`
 
-通过将环境变量`TOKEN_BASED_ACCESS_CONTROL`设置为`true`开启基于token的访问控制.
+通过设置环境变量`TOKEN_BASED_ACCESS_CONTROL=true`开启基于token的访问控制.
 
 基于token的访问控制将根据消息队列具有的token决定其访问规则, 具体行为见下方表格.
 一个消息队列可以有多个token, 每个token可以单独设置入列权限和出列权限.
@@ -534,12 +534,18 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/dequeue/${token}`, {
 })
 ```
 
+## HTTP/2
+
+mpmc提供了HTTP/2支持, 以多路复用反向代理时的连接, 可通过设置环境变量`HTTP2=true`开启.
+
+此HTTP/2支持不提供从HTTP/1.1自动升级的功能, 亦不提供HTTPS.
+因此, 在本地curl里进行测试时, 需要开启`--http2-prior-knowledge`选项.
+
 ## TODO
 - [ ] 中断POST后, 相关消息不应留在服务器内存里
       mpmc在内存中隐式维护队列的行为与patchbay不符
 - [ ] 在更新访问控制规则时, 断开受影响的连接
 - [ ] 通过fastify.decorate解耦底层实现, 以便切换到Redis等分布式服务
       (Redis没有原生提供BLPUSH命令, 因此这仅是为未来而考虑的特性)
-- [ ] 提供开启HTTP/2的环境变量, 以降低反向代理的连接数.
 - [ ] Payload的JSON Schema支持, 用于约束请求内容的格式
 - [ ] 支持设置默认JSON Schema

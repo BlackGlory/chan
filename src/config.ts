@@ -29,5 +29,9 @@ export function TOKEN_BASED_ACCESS_CONTROL() {
 }
 
 export function DISABLE_NO_TOKENS() {
-  return process.env.DISABLE_NO_TOKENS=== 'true'
+  return process.env.DISABLE_NO_TOKENS === 'true'
+}
+
+export function HTTP2() {
+  return process.env.HTTP2 === 'true'
 }
