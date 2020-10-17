@@ -1,9 +1,9 @@
 import * as path from 'path'
-import { migrateToLatest } from './dao/migrate'
+import { migrateToLatest } from '@dao/sqlite3/migrate'
+import { getDatabase } from '@dao/sqlite3/database'
 import { path as appRoot } from 'app-root-path'
 import { buildServer } from './server'
 import { PORT, HOST } from '@src/config'
-import { getDatabase } from './dao/database'
 
 migrateToLatest({
   db: getDatabase()
