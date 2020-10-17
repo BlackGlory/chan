@@ -108,5 +108,5 @@ function insert(db: Database, id: string) {
 }
 
 function select(db: Database, id: string) {
-  return db.prepare(`SELECT * FROM mpmc_blacklist WHERE mpmc_id = $id;`).get({ id })
+  return db.prepare('SELECT * FROM mpmc_blacklist WHERE mpmc_id = $id;').get({ id })
 }
