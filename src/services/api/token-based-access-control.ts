@@ -8,12 +8,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
     '/mpmc-with-tokens'
   , {
       schema: {
-        params: {
-          type: 'object'
-        , properties: {
-            id: idSchema
-          }
-        }
+        params: { id: idSchema }
       , response: {
           200: {
             type: 'array'
@@ -35,12 +30,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
     '/mpmc/:id/tokens'
   , {
       schema: {
-        params: {
-          type: 'object'
-        , properties: {
-            id: idSchema
-          }
-        }
+        params: { id: idSchema }
       , response: {
           200: {
             type: 'array'
@@ -70,11 +60,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
   , {
       schema: {
         params: {
-          type: 'object'
-        , properties: {
-            token: tokenSchema
-          , id: idSchema
-          }
+          token: tokenSchema
+        , id: idSchema
         }
       , response: {
           204: { type: 'null' }
@@ -94,11 +81,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
   , {
       schema: {
         params: {
-          type: 'object'
-        , properties: {
-            token: tokenSchema
-          , id: idSchema
-          }
+          token: tokenSchema
+        , id: idSchema
         }
       , response: {
           204: { type: 'null' }
@@ -119,11 +103,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
   , {
       schema: {
         params: {
-          type: 'object'
-        , properties: {
-            token: tokenSchema
-          , id: idSchema
-          }
+          token: tokenSchema
+        , id: idSchema
         }
       , response: {
           204: { type: 'null' }
@@ -143,11 +124,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
   , {
       schema: {
         params: {
-          type: 'object'
-        , properties: {
-            token: tokenSchema
-          , id: idSchema
-          }
+          token: tokenSchema
+        , id: idSchema
         }
       , response: {
           204: { type: 'null' }

@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify'
-import { idSchema } from '@src/schema'
+import { idSchema, tokenSchema } from '@src/schema'
 import {
   LIST_BASED_ACCESS_CONTROL
 , RBAC
@@ -24,12 +24,8 @@ export const routes: FastifyPluginAsync<{
     '/mpmc/:id'
   , {
       schema: {
-        params: {
-          type: 'object'
-        , properties: {
-            id: idSchema
-          }
-        }
+        params: { id: idSchema }
+      , querystring: { token: tokenSchema }
       , headers: {
           'content-type': {
             type: 'string'

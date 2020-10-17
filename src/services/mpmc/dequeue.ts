@@ -19,18 +19,8 @@ export const routes: FastifyPluginAsync<{
     '/mpmc/:id'
   , {
       schema: {
-        params: {
-          type: 'object'
-        , properties: {
-            id: idSchema
-          }
-        }
-      , querystring: {
-          type: 'object'
-        , properties: {
-            token: tokenSchema
-          }
-        }
+        params: { id: idSchema }
+      , querystring: { token: tokenSchema }
       , response: {
           200: { type: 'null' }
         }

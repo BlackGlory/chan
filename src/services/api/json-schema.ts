@@ -24,12 +24,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
     '/mpmc/:id/json-schema'
   , {
       schema: {
-        params: {
-          type: 'object'
-        , properties: {
-            id: idSchema
-          }
-        }
+        params: { id: idSchema }
       , response: {
           200: { type: 'string' }
         , 404: { type: 'null' }
@@ -49,12 +44,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
     '/mpmc/:id/json-schema'
   , {
       schema: {
-        params: {
-          type: 'object'
-        , properties: {
-            id: idSchema
-          }
-        }
+        params: { id: idSchema }
       , response: {
           204: { type: 'null' }
         }
@@ -72,12 +62,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
     '/mpmc/:id/json-schema'
   , {
       schema: {
-        params: {
-          type: 'object'
-        , properties: {
-            id: idSchema
-          }
-        }
+        params: { id: idSchema }
       , response: {
           204: { type: 'null' }
         }

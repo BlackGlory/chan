@@ -24,12 +24,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
     '/whitelist/:id'
   , {
       schema: {
-        params: {
-          type: 'object'
-        , properties: {
-            id: idSchema
-          }
-        }
+        params: { id: idSchema }
       , response: {
           204: { type: 'null' }
         }
@@ -45,12 +40,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
     '/whitelist/:id'
   , {
       schema: {
-        params: {
-          type: 'object'
-        , properties: {
-            id: idSchema
-          }
-        }
+        params: { id: idSchema }
       , response: {
           204: { type: 'null' }
         }
