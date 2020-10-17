@@ -2,7 +2,7 @@ import { getDatabase } from './database'
 
 export function getAllBlacklistItems(): string[] {
   const result = getDatabase().prepare(`
-    SELECT mpmc_id FROM mpmc_blacklist
+    SELECT mpmc_id FROM mpmc_blacklist;
   `).all()
   return result.map(x => x['mpmc_id'])
 }

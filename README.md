@@ -154,20 +154,6 @@ await fetch(`http://localhost:8080/mpmc/${id}`, {
 })
 ```
 
-#### 添加JSON Schema约束
-
-enqueue可以通过环境变量`MPMC_JSON_SCHEMA`设置默认的JSON Schema约束,
-该设置仅对带有`Content-Type: application/json`的请求有效.
-通过设置`MPMC_JSON_ONLY=true`, 可以强制只接受带有`Content-Type: application/json`的请求.
-
-<!-- ##### 单独为id设置JSON Schema约束
-
-可单独为id设置JSON Schema约束, 在这种情况下, 此id将仅接受`Content-Type: application/json`请求.
-
-`GET /api/mpmc/<id>/json-schema`
-`PUT /api/mpmc/<id>/json-schema`
-`DELETE /api/mpmc/<id>/json-schema` -->
-
 ### dequeue
 
 `GET /mpmc/<id>`
@@ -188,6 +174,114 @@ curl "http://localhost:8080/mpmc/$id"
 JavaScript
 ```js
 await fetch(`http://localhost:8080/mpmc/${id}`).then(res => res.text())
+```
+
+## 为enqueue添加JSON Schema约束
+
+enqueue可以通过环境变量`MPMC_JSON_SCHEMA`设置默认的JSON Schema约束,
+该设置仅对带有`Content-Type: application/json`的请求有效.
+通过设置`MPMC_JSON_ONLY=true`, 可以强制只接受带有`Content-Type: application/json`的请求.
+
+### 单独为id设置JSON Schema约束
+
+可单独为id设置JSON Schema约束, 在这种情况下, 此id将仅接受`Content-Type: application/json`请求.
+
+#### 获取所有具有JSON Schema的消息队列id
+
+`GET /api/mpmc-with-json-schema`
+
+获取所有具有token的消息队列id, 返回由JSON表示的字符串数组`string[]`
+
+##### Example
+
+curl
+```sh
+curl \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
+  "http://localhost:8080/api/mpmc-with-json-schema"
+```
+
+fetch
+```js
+await fetch('http://localhost:8080/api/mpmc-with-json-schema', {
+  headers: {
+    'Authorization': `Bearer ${adminPassword}`
+  }
+}).then(res => res.json())
+```
+
+#### 获取JSON Schema约束
+
+`GET /api/mpmc/<id>/json-schema`
+
+##### Example
+
+curl
+```sh
+curl \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
+  "http://localhost:8080/api/mpmc/$id/json-schema"
+```
+
+fetch
+```js
+await fetch(`http://localhost:8080/api/mpmc/${id}/json-schema`, {
+  headers: {
+    'Authorization': `Bearer ${adminPassword}`
+  }
+}).then(res => res.json())
+```
+
+#### 添加JSON Schema约束
+
+`PUT /api/mpmc/<id>/json-schema`
+
+##### Example
+
+curl
+```sh
+curl \
+  --request PUT \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
+  --header "Content-Type: application/json" \
+  --data "$JSON_SCHEMA" \
+  "http://localhost:8080/api/mpmc/$id/jsonschema"
+```
+
+fetch
+```js
+await fetch(`http://localhost:8080/api/mpmc/${id}/json-schema`, {
+  method: 'PUT'
+, headers: {
+    'Authorization': `Bearer ${adminPassword}`
+    'Content-Type': 'application/json'
+  }
+, body: JSON.stringify(jsonSchema)
+})
+```
+
+#### 移除JSON Schema约束
+
+`DELETE /api/mpmc/<id>/json-schema`
+
+##### Example
+
+curl
+```sh
+curl \
+  --request DELETE \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
+  "http://localhost:8080/api/mpmc/$id/json-schema"
+```
+
+fetch
+```js
+await fetch(`http://localhost:8080/api/mpmc/${id}/json-schema`, {
+  method: 'DELETE'
+, headers: {
+    'Authorization': `Bearer ${adminPassword}`
+  }
+})
 ```
 
 ## 访问控制
