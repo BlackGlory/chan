@@ -1071,14 +1071,13 @@ ajv@^6.10.0, ajv@^6.10.2, ajv@^6.11.0, ajv@^6.12.2, ajv@^6.12.3, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^6.12.6:
-  version "6.12.6"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.6.tgz#baf5a62e802b07d977034586f8c3baf5adf26df4"
-  integrity sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==
+ajv@^7.0.0-beta.1:
+  version "7.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-7.0.0-beta.1.tgz#7427b34592edaf2eaa97655ec398e5d17991b817"
+  integrity sha512-rKX+VjvPBBBTw+fXQ1b37Z9sarOr49/1QP5Clb1PSy/f8pKiU/+cQ2uBIFtX3QanL/3/LW+mKiw/G8gwRdyTEA==
   dependencies:
     fast-deep-equal "^3.1.1"
-    fast-json-stable-stringify "^2.0.0"
-    json-schema-traverse "^0.4.1"
+    json-schema-traverse "^0.5.0"
     uri-js "^4.2.2"
 
 ansi-align@^3.0.0:
@@ -3945,6 +3944,11 @@ json-schema-traverse@^0.4.1:
   resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz#69f6a87d9513ab8bb8fe63bdb0979c448e684660"
   integrity sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==
 
+json-schema-traverse@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.5.0.tgz#1069a6097f9e9a567bfc6cc215e85f606ebf6480"
+  integrity sha512-x+TRJIQFskrNnFKE2Viz9FCSjK1vIh+H/uaBiOYszh/IcZmAFneQ35H4osWDJp1NPXccuV2I0RMXmi2ZS6Kqcg==
+
 json-schema@0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.2.3.tgz#b480c892e59a2f05954ce727bd3f2a4e882f9e13"
@@ -5165,6 +5169,11 @@ return-style@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/return-style/-/return-style-0.10.0.tgz#4b40380af3702dae90d7042d05f63123e39a583d"
   integrity sha512-xKm8askEUlUOFUdWzHsy+ci0SK3eBBoG+YxWLlOZHkHUzrOxrKik+5R0MvybnieH7K/1kSs/GTnUQrZ7h48z2A==
+
+return-style@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/return-style/-/return-style-0.10.1.tgz#f6f056ede4b34ed406a72a3848c44106982ace5a"
+  integrity sha512-L35j+oBANdElKek/cut4bcY9EVHbpTOVOlGQQDvAOIENyPylpLQxIqW0vBGZzmQM8dezFL3xoMS+L7J1STwtEg==
 
 reusify@^1.0.4:
   version "1.0.4"

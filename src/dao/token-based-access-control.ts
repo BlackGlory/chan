@@ -1,6 +1,6 @@
 import { getDatabase } from './database'
 
-export function getAllIds(): string[] {
+export function getAllIdsWithTokens(): string[] {
   const result = getDatabase().prepare(`
     SELECT mpmc_id
       FROM mpmc_tbac;

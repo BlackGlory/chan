@@ -136,7 +136,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
 
   // get all ids
   server.get<{ Params: { id: string }}>(
-    '/api/mpmc'
+    '/api/mpmc-with-tokens'
   , {
       schema: {
         params: {
@@ -154,7 +154,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
       }
     }
   , (req, reply) => {
-      const result = TBAC.getAllIds()
+      const result = TBAC.getAllIdsWithTokens()
       reply.send(result)
     }
   )
@@ -163,7 +163,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
   server.get<{
     Params: { id: string }
   }>(
-    '/api/mpmc/:id'
+    '/api/mpmc/:id/tokens'
   , {
       schema: {
         params: {
@@ -197,7 +197,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
   server.put<{
     Params: { token: string, id: string }
   }>(
-    '/api/mpmc/:id/enqueue/:token'
+    '/api/mpmc/:id/tokens/:token/enqueue'
   , {
       schema: {
         params: {
@@ -221,7 +221,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
   server.delete<{
     Params: { token: string, id: string }
   }>(
-    '/api/mpmc/:id/enqueue/:token'
+    '/api/mpmc/:id/tokens/:token/enqueue'
   , {
       schema: {
         params: {
@@ -246,7 +246,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
   server.put<{
     Params: { token: string, id : string }
   }>(
-    '/api/mpmc/:id/dequeue/:token'
+    '/api/mpmc/:id/tokens/:token/dequeue'
   , {
       schema: {
         params: {
@@ -270,7 +270,7 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
   server.delete<{
     Params: { token: string, id : string }
   }>(
-    '/api/mpmc/:id/dequeue/:token'
+    '/api/mpmc/:id/tokens/:token/dequeue'
   , {
       schema: {
         params: {

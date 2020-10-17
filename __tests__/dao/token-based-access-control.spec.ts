@@ -6,7 +6,7 @@ import 'jest-extended'
 jest.mock('@src/dao/database')
 
 describe('TBAC(token-based access control)', () => {
-  describe('getAllIds(): string[]', () => {
+  describe('getAllIdsWithTokens(): string[]', () => {
     it('return string[]', async () => {
       const db = await prepareDatabase()
       const id1 = 'id-1'
@@ -16,7 +16,7 @@ describe('TBAC(token-based access control)', () => {
       insert(db, { token: token1, id: id1, dequeue: true, enqueue: false })
       insert(db, { token: token2, id: id2, dequeue: false, enqueue: true })
 
-      const result = TBAC.getAllIds()
+      const result = TBAC.getAllIdsWithTokens()
 
       // expect.toStrictEqual is broken, I have no idea
       expect(result).toEqual([id1, id2])
@@ -99,7 +99,7 @@ describe('TBAC(token-based access control)', () => {
       })
     })
 
-    describe('addEnqueueToken({ token: string; id: string })', () => {
+    describe('setEnqueueToken({ token: string; id: string })', () => {
       describe('token exists', () => {
         it('update row', async () => {
           const db = await prepareDatabase()
@@ -130,7 +130,7 @@ describe('TBAC(token-based access control)', () => {
       })
     })
 
-    describe('removeEnqueueToken({ token: string; id: string })', () => {
+    describe('unsetEnqueueToken({ token: string; id: string })', () => {
       describe('token exists', () => {
         it('return undefined', async () => {
           const db = await prepareDatabase()
@@ -218,7 +218,7 @@ describe('TBAC(token-based access control)', () => {
       })
     })
 
-    describe('addDequeueToken(token: string, id: string)', () => {
+    describe('setDequeueToken(token: string, id: string)', () => {
       describe('token exists', () => {
         it('update row', async () => {
           const db = await prepareDatabase()
@@ -249,7 +249,7 @@ describe('TBAC(token-based access control)', () => {
       })
     })
 
-    describe('removeDequeueToken', () => {
+    describe('unsetDequeueToken', () => {
       describe('token exists', () => {
         it('return undefined', async () => {
           const db = await prepareDatabase()

@@ -132,6 +132,7 @@ volumes:
 
 往特定消息队列放入消息, 会阻塞直到此消息出列.
 id用于标识消息队列.
+入列请求的`Content-Type`会在出列时原样返回.
 
 如果开启基于token的访问控制, 则可能需要在Querystring提供具有enqueue权限的token:
 `POST /mpmc/<id>?token=<token>`
@@ -155,7 +156,17 @@ await fetch(`http://localhost:8080/mpmc/${id}`, {
 
 #### 添加JSON Schema约束
 
-enqueue可以通过环境变量`MPMC_JSON_SCHEMA`设置JSON Schema约束, 默认值为`{ "type": "string" }`, 适用于所有文本.
+enqueue可以通过环境变量`MPMC_JSON_SCHEMA`设置默认的JSON Schema约束,
+该设置仅对带有`Content-Type: application/json`的请求有效.
+通过设置`MPMC_JSON_ONLY=true`, 可以强制只接受带有`Content-Type: application/json`的请求.
+
+<!-- ##### 单独为id设置JSON Schema约束
+
+可单独为id设置JSON Schema约束, 在这种情况下, 此id将仅接受`Content-Type: application/json`请求.
+
+`GET /api/mpmc/<id>/json-schema`
+`PUT /api/mpmc/<id>/json-schema`
+`DELETE /api/mpmc/<id>/json-schema` -->
 
 ### dequeue
 
@@ -184,10 +195,7 @@ await fetch(`http://localhost:8080/mpmc/${id}`).then(res => res.text())
 MPMC提供两种访问控制策略, 可以一并使用.
 
 所有访问控制API都使用基于口令的Bearer Token Authentication.
-
 口令需通过环境变量`MPMC_ADMIN_PASSWORD`进行设置.
-`MPMC_ADMIN_PASSWORD`同时也是访问控制的开关, 未提供此环境变量的情况下,
-服务会采取无访问控制的运行模式.
 
 访问控制规则是通过[WAL模式]的SQLite3持久化的, 开启访问控制后,
 服务器的吞吐量和响应速度会受到硬盘性能的影响.
@@ -387,7 +395,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 
 #### 获取所有具有token的消息队列id
 
-`GET /api/mpmc`
+`GET /api/mpmc-with-tokens`
 
 获取所有具有token的消息队列id, 返回由JSON表示的字符串数组`string[]`
 
@@ -397,12 +405,12 @@ curl
 ```sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc"
+  "http://localhost:8080/api/mpmc-with-tokens"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc`, {
+await fetch(`http://localhost:8080/api/mpmc-with-tokens`, {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -411,7 +419,7 @@ await fetch(`http://localhost:8080/api/mpmc`, {
 
 #### 获取特定消息队列的所有token信息
 
-`GET /api/mpmc/<id>`
+`GET /api/mpmc/<id>/tokens`
 
 获取特定消息队列的所有token信息, 返回JSON表示的token信息数组
 `Array<{ token: string, enqueue: boolean, dequeue: boolean }>`.
@@ -422,12 +430,12 @@ curl
 ```sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id"
+  "http://localhost:8080/api/mpmc/$id/tokens"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}`, {
+await fetch(`http://localhost:8080/api/mpmc/${id}/tokens`, {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -436,7 +444,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}`, {
 
 #### 为特定消息队列的token设置入列权限
 
-`PUT /api/mpmc/<id>/enqueue/<token>`
+`PUT /api/mpmc/<id>/tokens/<token>/enqueue`
 
 添加/更新token, 为token设置入列权限.
 
@@ -447,12 +455,12 @@ curl
 curl \
   --request PUT \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/enqueue/$token"
+  "http://localhost:8080/api/mpmc/$id/tokens/$token/enqueue"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/enqueue/$token`, {
+await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/enqueue`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -462,7 +470,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/enqueue/$token`, {
 
 #### 取消特定消息队列的token的入列权限
 
-`DELETE /api/mpmc/<id>/enqueue/<token>`
+`DELETE /api/mpmc/<id>/tokens/<token>/enqueue`
 
 取消token的入列权限.
 
@@ -473,12 +481,12 @@ curl
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/enqueue/$token"
+  "http://localhost:8080/api/mpmc/$id/tokens/$token/enqueue"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/enqueue/${token}`, {
+await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/enqueue`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -488,7 +496,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/enqueue/${token}`, {
 
 #### 为特定消息队列的token设置出列权限
 
-`PUT /api/mpmc/<id>/dequeue/<token>`
+`PUT /api/mpmc/<id>/tokens/<token>/dequeue`
 
 添加/更新token, 为token设置出列权限.
 
@@ -499,12 +507,12 @@ curl
 curl \
   --request PUT \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/dequeue/$token"
+  "http://localhost:8080/api/mpmc/$id/tokens/$token/dequeue"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/dequeue/$token`, {
+await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/dequeue`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -514,7 +522,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/dequeue/$token`, {
 
 #### 取消特定消息队列的token的入列权限
 
-`DELETE /api/mpmc/<id>/dequeue/<token>`
+`DELETE /api/mpmc/<id>/tokens/<token>/dequeue`
 
 取消token的出列权限.
 
@@ -525,12 +533,12 @@ curl
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/dequeue/$token"
+  "http://localhost:8080/api/mpmc/$id/tokens/$token/dequeue"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/dequeue/${token}`, {
+await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/dequeue`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -551,4 +559,3 @@ mpmc提供了HTTP/2支持, 以多路复用反向代理时的连接, 可通过设
 - [ ] 在更新访问控制规则时, 断开受影响的连接
 - [ ] 通过fastify.decorate解耦底层实现, 以便切换到Redis等分布式服务
       (Redis没有原生提供BLPUSH命令, 因此这仅是为未来而考虑的特性)
-- [ ] Payload的JSON Schema支持, 用于约束请求内容的格式

@@ -44,3 +44,7 @@ export function JSON_SCHEMA() {
     return { type: 'string' }
   }
 }
+
+export function JSON_ONLY() {
+  return process.env.MPMC_JSON_ONLY === 'true'
+}
