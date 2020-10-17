@@ -543,4 +543,3 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/dequeue/${token}`, {
 - [ ] 提供开启HTTP/2的环境变量, 以降低反向代理的连接数.
 - [ ] Payload的JSON Schema支持, 用于约束请求内容的格式
 - [ ] 支持设置默认JSON Schema
-- [ ] Swagger documentation
