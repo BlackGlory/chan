@@ -26,12 +26,22 @@ curl http://localhost:8080/mpmc/hello-world # 没有可消费的消息, 阻塞
 curl http://localhost:8080/mpmc/hello-world # 没有可消费的消息, 阻塞
 
 # 打开第三个终端
-curl http://localhost:8080/mpmc/hello-world --data 'hello world1' # 生产消息, 第一个终端返回hello world1
-curl http://localhost:8080/mpmc/hello-world --data 'hello world2' # 生产消息, 第二个终端返回hello world2
-curl http://localhost:8080/mpmc/hello-world --data 'hello world3' # 生产消息, 没有消费者, 阻塞
+curl \
+  --data 'hello world1' \
+  http://localhost:8080/mpmc/hello-world # 生产消息, 第一个终端返回hello world1
+
+curl \
+  --data 'hello world2' \
+  http://localhost:8080/mpmc/hello-world # 生产消息, 第二个终端返回hello world2
+
+curl \
+  --data 'hello world3' \
+  http://localhost:8080/mpmc/hello-world # 生产消息, 没有消费者, 阻塞
 
 # 打开第四个终端
-curl http://localhost:8080/mpmc/hello-world --data 'hello world4' # 生产消息, 没有消费者, 阻塞
+curl \
+  --data 'hello world4' \
+  http://localhost:8080/mpmc/hello-world # 生产消息, 没有消费者, 阻塞
 
 # 打开第五个终端
 curl http://localhost:8080/mpmc/hello-world # 消费消息, 返回hello world3, 第三个终端返回
@@ -130,7 +140,9 @@ id用于标识消息队列.
 
 curl
 ```sh
-curl "http://localhost:8080/mpmc/$id" --data 'message'
+curl \
+  --data 'message' \
+  "http://localhost:8080/mpmc/$id"
 ```
 
 JavaScript
@@ -201,7 +213,7 @@ MPMC提供两种访问控制策略, 可以一并使用.
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIN_PASSWORD" \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/blacklist"
 ```
 
@@ -225,8 +237,8 @@ await fetch('http://localhost:8080/api/blacklist', {
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIN_PASSWORD" \
-  -X PUT \
+  --request PUT \
+  --header "Authorization: Bearer $ADMIN_PASSWORD"
   "http://localhost:8080/api/blacklist/$id"
 ```
 
@@ -251,8 +263,8 @@ await fetch(`http://localhost:8080/api/blacklist/${id}`, {
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIN_PASSWORD" \
-  -X DELETE \
+  --request DELETE \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/blacklist/$id"
 ```
 
@@ -279,7 +291,7 @@ await fetch(`http://localhost:8080/api/blacklist/${id}`, {
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIM_PASSWORD" \
+  --header "Authorization: Bearer $ADMIM_PASSWORD" \
   "http://localhost:8080/api/whitelist"
 ```
 
@@ -303,8 +315,8 @@ await fetch('http://localhost:8080/api/whitelist', {
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIN_PASSWORD" \
-  -X PUT \
+  --request PUT \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/whitelist/$id"
 ```
 
@@ -329,8 +341,8 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIN_PASSWORD" \
-  -X DELETE \
+  --request DELETE \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/whitelist/$id"
 ```
 
@@ -380,7 +392,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIN_PASSWORD" \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/mpmc"
 ```
 
@@ -405,7 +417,7 @@ await fetch(`http://localhost:8080/api/mpmc`, {
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIN_PASSWORD" \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/mpmc/$id"
 ```
 
@@ -429,8 +441,8 @@ await fetch(`http://localhost:8080/api/mpmc/${id}`, {
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIN_PASSWORD" \
-  -X PUT \
+  --request PUT \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/mpmc/$id/enqueue/$token"
 ```
 
@@ -455,8 +467,8 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/enqueue/$token`, {
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIN_PASSWORD" \
-  -X DELETE \
+  --request DELETE \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/mpmc/$id/enqueue/$token"
 ```
 
@@ -481,8 +493,8 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/enqueue/${token}`, {
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIN_PASSWORD" \
-  -X PUT \
+  --request PUT \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/mpmc/$id/dequeue/$token"
 ```
 
@@ -507,8 +519,8 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/dequeue/$token`, {
 curl
 ```sh
 curl \
-  -H "Authorization: Bearer $ADMIN_PASSWORD" \
-  -X DELETE \
+  --request DELETE \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/mpmc/$id/dequeue/$token"
 ```
 
@@ -523,6 +535,12 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/dequeue/${token}`, {
 ```
 
 ## TODO
-- [ ] 中断POST后, 相关消息不应留在服务器内存里.
-      mpmc在内存中隐式维护队列的行为与patchbay不符.
-- [ ] 在更新访问控制规则时, 断开受影响的连接.
+- [ ] 中断POST后, 相关消息不应留在服务器内存里
+      mpmc在内存中隐式维护队列的行为与patchbay不符
+- [ ] 在更新访问控制规则时, 断开受影响的连接
+- [ ] 通过fastify.decorate解耦底层实现, 以便切换到Redis等分布式服务
+      (Redis没有原生提供BLPUSH命令, 因此这仅是为未来而考虑的特性)
+- [ ] 提供开启HTTP/2的环境变量, 以降低反向代理的连接数.
+- [ ] Payload的JSON Schema支持, 用于约束请求内容的格式
+- [ ] 支持设置默认JSON Schema
+- [ ] Swagger documentation
