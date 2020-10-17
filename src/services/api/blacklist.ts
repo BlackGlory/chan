@@ -1,6 +1,6 @@
-import { idSchema } from '@src/schema'
-import * as Blacklist from '@src/dao/blacklist'
 import { FastifyPluginAsync } from 'fastify'
+import { idSchema } from '@src/schema'
+import DAO from '@src/dao'
 
 export const routes: FastifyPluginAsync = async function routes(server, options) {
   server.get(
@@ -15,8 +15,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-    const result = Blacklist.getAllBlacklistItems()
+  , async (req, reply) => {
+    const result = await DAO.getAllBlacklistItems()
     reply.send(result)
   })
 
@@ -35,8 +35,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-      Blacklist.addBlacklistItem(req.params.id)
+  , async (req, reply) => {
+      await DAO.addBlacklistItem(req.params.id)
       reply.status(204).send()
     }
   )
@@ -56,8 +56,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-      Blacklist.removeBlacklistItem(req.params.id)
+  , async (req, reply) => {
+      await DAO.removeBlacklistItem(req.params.id)
       reply.status(204).send()
     }
   )

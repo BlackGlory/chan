@@ -1,6 +1,6 @@
-import { idSchema } from '@src/schema'
-import * as JsonSchema from '@src/dao/json-schema'
 import { FastifyPluginAsync } from 'fastify'
+import { idSchema } from '@src/schema'
+import DAO from '@src/dao'
 
 export const routes: FastifyPluginAsync = async function routes(server, options) {
   server.get(
@@ -15,8 +15,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-    const result = JsonSchema.getAllIdsWithJsonSchema()
+  , async (req, reply) => {
+    const result = await DAO.getAllIdsWithJsonSchema()
     reply.send(result)
   })
 
@@ -36,8 +36,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-    const result = JsonSchema.getJsonSchema(req.params.id)
+  , async (req, reply) => {
+    const result = await DAO.getJsonSchema(req.params.id)
     if (result) {
       reply.header('content-type', 'application/json').send(result)
     } else {
@@ -60,8 +60,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-    JsonSchema.setJsonSchema({
+  , async (req, reply) => {
+    await DAO.setJsonSchema({
       id: req.params.id
     , schema: JSON.stringify(req.body, null, 2)
     })
@@ -83,8 +83,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-    JsonSchema.removeJsonSchema(req.params.id)
+  , async (req, reply) => {
+    await DAO.removeJsonSchema(req.params.id)
     reply.status(204).send()
   })
 }

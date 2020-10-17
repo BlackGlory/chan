@@ -1,6 +1,6 @@
-import { idSchema } from '@src/schema'
-import * as Whitelist from '@src/dao/whitelist'
 import { FastifyPluginAsync } from 'fastify'
+import { idSchema } from '@src/schema'
+import DAO from '@src/dao'
 
 export const routes: FastifyPluginAsync = async function routes(server, options) {
   server.get(
@@ -15,8 +15,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-    const result = Whitelist.getAllWhitelistItems()
+  , async (req, reply) => {
+    const result = await DAO.getAllWhitelistItems()
     reply.send(result)
   })
 
@@ -35,8 +35,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-      Whitelist.addWhitelistItem(req.params.id)
+  , async (req, reply) => {
+      await DAO.addWhitelistItem(req.params.id)
       reply.status(204).send()
     }
   )
@@ -56,8 +56,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-    Whitelist.removeWhitelistItem(req.params.id)
+  , async (req, reply) => {
+    await DAO.removeWhitelistItem(req.params.id)
     reply.status(204).send()
   })
 }

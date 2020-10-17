@@ -18,7 +18,7 @@ export function inBlacklist(id: string): boolean {
   return result['exist_in_blacklist'] === 1
 }
 
-export function addBlacklistItem(id: string): void {
+export function addBlacklistItem(id: string) {
   try {
     getDatabase().prepare(`
       INSERT INTO mpmc_blacklist (mpmc_id)

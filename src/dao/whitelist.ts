@@ -18,7 +18,7 @@ export function inWhitelist(id: string): boolean {
   return result['exist_in_whitelist'] === 1
 }
 
-export function addWhitelistItem(id: string): void {
+export function addWhitelistItem(id: string) {
   try {
     getDatabase().prepare(`
       INSERT INTO mpmc_whitelist (mpmc_id)

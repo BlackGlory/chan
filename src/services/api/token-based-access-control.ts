@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
-import * as TBAC from '@src/dao/token-based-access-control'
 import { idSchema, tokenSchema } from '@src/schema'
+import DAO from '@src/dao'
 
 export const routes: FastifyPluginAsync = async function routes(server, options) {
   // get all ids
@@ -22,8 +22,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-      const result = TBAC.getAllIdsWithTokens()
+  , async (req, reply) => {
+      const result = await DAO.getAllIdsWithTokens()
       reply.send(result)
     }
   )
@@ -56,8 +56,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-      const result = TBAC.getAllTokens(req.params.id)
+  , async (req, reply) => {
+      const result = await DAO.getAllTokens(req.params.id)
       reply.send(result)
     }
   )
@@ -81,8 +81,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-      TBAC.setEnqueueToken({ token: req.params.token, id: req.params.id })
+  , async (req, reply) => {
+      await DAO.setEnqueueToken({ token: req.params.token, id: req.params.id })
       reply.status(204).send()
     }
   )
@@ -105,8 +105,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-      TBAC.unsetEnqueueToken({ token: req.params.token, id: req.params.id })
+  , async (req, reply) => {
+      await DAO.unsetEnqueueToken({ token: req.params.token, id: req.params.id })
       reply.status(204).send()
     }
   )
@@ -130,8 +130,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-      TBAC.setDequeueToken({ token: req.params.token, id: req.params.id })
+  , async (req, reply) => {
+      await DAO.setDequeueToken({ token: req.params.token, id: req.params.id })
       reply.status(204).send()
     }
   )
@@ -154,8 +154,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
         }
       }
     }
-  , (req, reply) => {
-      TBAC.unsetDequeueToken({ token: req.params.token, id: req.params.id })
+  , async (req, reply) => {
+      await DAO.unsetDequeueToken({ token: req.params.token, id: req.params.id })
       reply.status(204).send()
     }
   )
