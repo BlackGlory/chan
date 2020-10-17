@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify'
-import { ChannelManager } from './channel-manager'
+import { ChannelManager } from '@src/core/channel-manager'
 import urlencodedParser from '@src/urlencoded-parser'
 import { idSchema, tokenSchema } from '@src/schema'
 import {
