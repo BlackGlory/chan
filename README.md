@@ -644,7 +644,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/dequeue`, {
 
 ## HTTP/2
 
-mpmc提供了HTTP/2支持, 以多路复用反向代理时的连接, 可通过设置环境变量`MPMC_HTTP2=true`开启.
+MPMC支持HTTP/2, 以多路复用反向代理时的连接, 可通过设置环境变量`MPMC_HTTP2=true`开启.
 
 此HTTP/2支持不提供从HTTP/1.1自动升级的功能, 亦不提供HTTPS.
 因此, 在本地curl里进行测试时, 需要开启`--http2-prior-knowledge`选项.
