@@ -1,9 +1,12 @@
 # MPMC
 
-一个受[patchbay]启发的Web友好的自托管ad-hoc微服务, 提供基于 HTTP 的阻塞式 MPMC 消息队列功能,
-并带有基于token和名单的访问控制策略.
+一个受[patchbay]启发的Web友好的自托管ad-hoc微服务,
+提供基于 HTTP 的阻塞式 MPMC 消息队列功能,
+带有基于token和名单的访问控制策略,
+支持JSON Schema.
 
-基于HTTP的阻塞方式类似于长轮询(long polling), 直到消息入列或出列, 服务器才会返回响应.
+基于HTTP的阻塞方式类似于长轮询(long polling):
+直到消息入列或出列, 服务器才会返回响应.
 未出列的消息位于内存中, 实际的工作方式类似于Golang的Channel.
 
 受原理所限, 此服务不能实现消息的可靠传递(reliable delivery), 也无法重发消息.
@@ -475,7 +478,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 不同消息队列的token不共用.
 
 | 此消息队列存在具有出列权限的token | 此消息队列存在具有入列权限的token | 行为 |
-| - | - | - |
+| --- | --- | --- |
 | YES | YES | 只有使用具有相关权限的token才能执行操作 |
 | YES | NO | 无token可以入列, 只有具有出列权限的token可以出列 |
 | NO | YES | 无token可以出列, 只有具有入列权限的token可以入列 |
