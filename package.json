@@ -19,7 +19,8 @@
     "start": "cross-env NODE_ENV=production node lib/index.js",
     "start:http2": "cross-env NODE_ENV=production MPMC_HTTP2=true node lib/index.js",
     "docker:build": "docker build --tag mpmc .",
-    "docker:test": "docker-compose --file docker-compose.test.yml run --rm sut"
+    "docker:test": "docker-compose --file docker-compose.test.yml run --rm sut",
+    "release": "standard-version"
   },
   "husky": {
     "hooks": {
@@ -51,6 +52,7 @@
     "jest-json-schema": "^2.1.0",
     "nodemon": "^2.0.5",
     "pino-pretty": "^4.3.0",
+    "standard-version": "^9.0.0",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
