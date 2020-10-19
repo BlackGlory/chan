@@ -200,7 +200,7 @@ await fetch(`http://localhost:8080/mpmc/${id}`).then(res => res.text())
 
 `GET /api/mpmc-with-json-schema`
 
-获取所有具有token的消息队列id, 返回由JSON表示的字符串数组`string[]`
+获取所有具有JSON Schema的消息队列id, 返回由JSON表示的字符串数组`string[]`
 
 ##### Example
 
