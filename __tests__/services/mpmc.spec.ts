@@ -40,12 +40,12 @@ describe('mpmc', () => {
     })
 
     describe('POST /mpmc/:id', () => {
-      describe('MPMC_JSON_SCHEMA_VALIDATION=true', () => {
+      describe('MPMC_JSON_VALIDATION=true', () => {
         describe('MPMC_JSON_DEFAULT_SCHEMA', () => {
           describe('Content-Type: application/json', () => {
             describe('valid', () => {
               it('204', async () => {
-                process.env.MPMC_JSON_SCHEMA_VALIDATION = 'true'
+                process.env.MPMC_JSON_VALIDATION = 'true'
                 process.env.MPMC_DEFAULT_JSON_SCHEMA = JSON.stringify({
                   type: 'number'
                 })
@@ -74,7 +74,7 @@ describe('mpmc', () => {
 
             describe('invalid', () => {
               it('400', async () => {
-                process.env.MPMC_JSON_SCHEMA_VALIDATION = 'true'
+                process.env.MPMC_JSON_VALIDATION = 'true'
                 process.env.MPMC_DEFAULT_JSON_SCHEMA = JSON.stringify({
                   type: 'number'
                 })
@@ -104,7 +104,7 @@ describe('mpmc', () => {
 
           describe('other Content-Type', () => {
             it('204', async () => {
-              process.env.MPMC_JSON_SCHEMA_VALIDATION = 'true'
+              process.env.MPMC_JSON_VALIDATION = 'true'
               process.env.MPMC_DEFAULT_JSON_SCHEMA = JSON.stringify({
                 type: 'number'
               })
@@ -136,7 +136,7 @@ describe('mpmc', () => {
           describe('Content-Type: application/json', () => {
             describe('valid JSON', () => {
               it('204', async done => {
-                process.env.MPMC_JSON_SCHEMA_VALIDATION = 'true'
+                process.env.MPMC_JSON_VALIDATION = 'true'
                 const id = 'id'
                 const schema = { type: 'string' }
                 const message = '"message"'
@@ -169,7 +169,7 @@ describe('mpmc', () => {
 
             describe('invalid JSON', () => {
               it('400', async () => {
-                process.env.MPMC_JSON_SCHEMA_VALIDATION = 'true'
+                process.env.MPMC_JSON_VALIDATION = 'true'
                 const id = 'id'
                 const schema = { type: 'string' }
                 const message = 'message'
@@ -195,7 +195,7 @@ describe('mpmc', () => {
 
           describe('other Content-Type', () => {
             it('400', async () => {
-              process.env.MPMC_JSON_SCHEMA_VALIDATION = 'true'
+              process.env.MPMC_JSON_VALIDATION = 'true'
               const id = 'id'
               const schema = { type: 'string' }
               const message = '"message"'
@@ -222,52 +222,30 @@ describe('mpmc', () => {
 
       describe('MPMC_JSON_PAYLOAD_ONLY', () => {
         describe('Content-Type: application/json', () => {
-          describe('valid JSON', () => {
-            it('204', async done => {
-              process.env.MPMC_JSON_PAYLOAD_ONLY = 'true'
-              const server = buildServer()
-              const id = 'id'
-              const message = JSON.stringify('message')
+          it('accept any text, and return 204', async done => {
+            process.env.MPMC_JSON_PAYLOAD_ONLY = 'true'
+            const server = buildServer()
+            const id = 'id'
+            const message = 'message'
 
-              setImmediate(async () => {
-                const res = await server.inject({
-                  method: 'GET'
-                , url: `/mpmc/${id}`
-                })
-                expect(res.headers['content-type']).toMatch('application/json')
-                done()
-              })
+            setImmediate(async () => {
               const res = await server.inject({
-                method: 'POST'
+                method: 'GET'
               , url: `/mpmc/${id}`
-              , payload: message
-              , headers: {
-                  'Content-Type': 'application/json'
-                }
               })
-
-              expect(res.statusCode).toBe(204)
+              expect(res.headers['content-type']).toMatch('application/json')
+              done()
             })
-          })
-
-          describe('invalid JSON', () => {
-            it('400', async () => {
-              process.env.MPMC_JSON_PAYLOAD_ONLY = 'true'
-              const server = buildServer()
-              const id = 'id'
-              const message = 'message'
-
-              const res = await server.inject({
-                method: 'POST'
-              , url: `/mpmc/${id}`
-              , payload: message
-              , headers: {
-                  'Content-Type': 'application/json'
-                }
-              })
-
-              expect(res.statusCode).toBe(400)
+            const res = await server.inject({
+              method: 'POST'
+            , url: `/mpmc/${id}`
+            , payload: message
+            , headers: {
+                'Content-Type': 'application/json'
+              }
             })
+
+            expect(res.statusCode).toBe(204)
           })
         })
 
@@ -292,80 +270,30 @@ describe('mpmc', () => {
         })
       })
 
-      describe('other', () => {
-        describe('Content-Type: application/json', () => {
-          describe('valid JSON', () => {
-            it('204', async done => {
-              const id = 'id'
-              const message = '"message"'
-              const server = buildServer()
+      describe('Content-Type', () => {
+        it('reflect content-type, return 204', async done => {
+          const server = buildServer()
+          const id = 'id'
+          const message = 'message'
 
-              setImmediate(async () => {
-                const res = await server.inject({
-                  method: 'GET'
-                , url: `/mpmc/${id}`
-                })
-                expect(res.headers['content-type']).toMatch('application/json')
-                done()
-              })
-              const res = await server.inject({
-                method: 'POST'
-              , url: `/mpmc/${id}`
-              , payload: message
-              , headers: {
-                  'Content-Type': 'application/json'
-                }
-              })
-
-              expect(res.statusCode).toBe(204)
-            })
-          })
-
-          describe('invalid JSON', () => {
-            it('400', async () => {
-              const server = buildServer()
-              const id = 'id'
-              const message = 'message'
-
-              const res = await server.inject({
-                method: 'POST'
-              , url: `/mpmc/${id}`
-              , payload: message
-              , headers: {
-                  'Content-Type': 'application/json'
-                }
-              })
-
-              expect(res.statusCode).toBe(400)
-            })
-          })
-        })
-
-        describe('other Content-Type', () => {
-          it('204', async done => {
-            const server = buildServer()
-            const id = 'id'
-            const message = 'message'
-
-            setImmediate(async () => {
-              const res = await server.inject({
-                method: 'GET'
-              , url: `/mpmc/${id}`
-              })
-              expect(res.headers['content-type']).toMatch('text/plain')
-              done()
-            })
+          setImmediate(async () => {
             const res = await server.inject({
-              method: 'POST'
+              method: 'GET'
             , url: `/mpmc/${id}`
-            , payload: message
-            , headers: {
-                'Content-Type': 'text/plain'
-              }
             })
-
-            expect(res.statusCode).toBe(204)
+            expect(res.headers['content-type']).toMatch('apple/banana')
+            done()
           })
+          const res = await server.inject({
+            method: 'POST'
+          , url: `/mpmc/${id}`
+          , payload: message
+          , headers: {
+              'Content-Type': 'apple/banana'
+            }
+          })
+
+          expect(res.statusCode).toBe(204)
         })
       })
     })

@@ -5,17 +5,29 @@ import {
 , RBAC
 , TOKEN_BASED_ACCESS_CONTROL
 , DISABLE_NO_TOKENS
-, JSON_SCHEMA_VALIDATION
+, JSON_VALIDATION
 , DEFAULT_JSON_SCHEMA
 , JSON_PAYLOAD_ONLY
 } from '@config'
 import Ajv from 'ajv'
 import DAO from '@dao'
 import type { ChannelManager } from '@src/core/channel-manager'
+import { getErrorResult } from 'return-style'
 
 export const routes: FastifyPluginAsync<{
   manager: ChannelManager<{ type?: string; payload: string }>
 }> = async function routes(server, { manager }) {
+  // overwrite application/json parser
+  server.addContentTypeParser(
+    'application/json'
+  , { parseAs: 'string' }
+  , (req, body, done) => done(null, body))
+
+  server.addContentTypeParser(
+    '*'
+  , { parseAs: 'string' }
+  , (req, body, done) => done(null, body))
+
   server.post<{
     Params: { id: string }
     Querystring: { token?: string }
@@ -27,16 +39,9 @@ export const routes: FastifyPluginAsync<{
         params: { id: idSchema }
       , querystring: { token: tokenSchema }
       , headers: {
-          'content-type': {
-            type: 'string'
-          , enum: JSON_PAYLOAD_ONLY()
-                ? ['application/json']
-                : [
-                    'application/json'
-                  , 'text/plain'
-                  , 'application/x-www-form-urlencoded'
-                  ]
-          }
+          'content-type': JSON_PAYLOAD_ONLY()
+                          ? { const: 'application/json' }
+                          : { type: 'string' }
         }
       , response: {
           204: { type: 'null' }
@@ -67,13 +72,16 @@ export const routes: FastifyPluginAsync<{
         }
       }
 
-      if (JSON_SCHEMA_VALIDATION()) {
+      if (JSON_VALIDATION()) {
         const specificJsonSchema= await DAO.getJsonSchema(req.params.id)
-        if (req.headers['content-type']?.includes('application/json')) {
+        if (req.headers['content-type']?.toLowerCase().includes('application/json')) {
+          const [err, json] = getErrorResult(() => JSON.parse(req.body))
+          if (err) return reply.status(400).send(err.message)
+
           const schema = specificJsonSchema ?? DEFAULT_JSON_SCHEMA()
           if (schema) {
             const ajv = new Ajv()
-            const valid = ajv.validate(JSON.parse(schema), req.body)
+            const valid = ajv.validate(JSON.parse(schema), json)
             if (!valid) {
               return reply.status(400).send(ajv.errorsText())
             }

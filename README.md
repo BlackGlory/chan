@@ -181,11 +181,16 @@ await fetch(`http://localhost:8080/mpmc/${id}`).then(res => res.text())
 
 ## 为enqueue添加JSON Schema验证
 
-通过设置环境变量`MPMC_JSON_SCHEMA_VALIDATION=true`可开启enqueue的JSON Schema验证功能.
+通过设置环境变量`MPMC_JSON_VALIDATION=true`可开启enqueue的JSON验证功能.
+任何带有`Content-Type: application/json`的请求都会被验证,
+即使没有设置JSON Schema, 也会拒绝不合法的JSON文本.
 
-通过环境变量`MPMC_DEFAULT_JSON_SCHEMA`可设置默认的JSON Schema, 该验证仅对带有`Content-Type: application/json`的请求有效.
+在开启验证功能的情况下, 通过环境变量`MPMC_DEFAULT_JSON_SCHEMA`可设置默认的JSON Schema,
+该验证仅对带有`Content-Type: application/json`的请求有效.
 
-通过设置环境变量`MPMC_JSON_PAYLOAD_ONLY=true`, 可以强制enqueue只接受带有`Content-Type: application/json`的请求, 此设置在未开启JSON Schema验证的情况下也有效.
+通过设置环境变量`MPMC_JSON_PAYLOAD_ONLY=true`,
+可以强制enqueue只接受带有`Content-Type: application/json`的请求.
+此设置在未开启JSON Schema验证的情况下也有效, 但在这种情况下服务器能够接受不合法的JSON.
 
 ### 单独为id设置JSON Schema
 

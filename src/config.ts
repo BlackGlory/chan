@@ -36,8 +36,8 @@ export function HTTP2() {
   return process.env.MPMC_HTTP2 === 'true'
 }
 
-export function JSON_SCHEMA_VALIDATION() {
-  return process.env.MPMC_JSON_SCHEMA_VALIDATION === 'true'
+export function JSON_VALIDATION() {
+  return process.env.MPMC_JSON_VALIDATION === 'true'
 }
 
 export function DEFAULT_JSON_SCHEMA() {

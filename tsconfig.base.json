@@ -9,6 +9,7 @@
     , "@dao": ["src/dao/index"]
     , "@dao/*": ["src/dao/*"]
     , "@config": ["src/config"]
+    , "@parser/*": ["src/parser/*"]
     , "@test/*": ["__tests__/*"]
     , "@services/*": ["src/services/*"]
     }
