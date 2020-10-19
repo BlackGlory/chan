@@ -74,7 +74,7 @@ export const routes: FastifyPluginAsync<{
 
       if (JSON_VALIDATION()) {
         const specificJsonSchema= await DAO.getJsonSchema(req.params.id)
-        if (req.headers['content-type']?.toLowerCase().includes('application/json')) {
+        if (req.headers['content-type']?.toLowerCase().startsWith('application/json')) {
           const [err, json] = getErrorResult(() => JSON.parse(req.body))
           if (err) return reply.status(400).send(err.message)
 

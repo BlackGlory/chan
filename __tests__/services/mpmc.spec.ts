@@ -222,7 +222,7 @@ describe('mpmc', () => {
 
       describe('MPMC_JSON_PAYLOAD_ONLY', () => {
         describe('Content-Type: application/json', () => {
-          it('accept any text, and return 204', async done => {
+          it('accept any plaintext, return 204', async done => {
             process.env.MPMC_JSON_PAYLOAD_ONLY = 'true'
             const server = buildServer()
             const id = 'id'
@@ -271,7 +271,7 @@ describe('mpmc', () => {
       })
 
       describe('Content-Type', () => {
-        it('reflect content-type, return 204', async done => {
+        it('reflect content-type', async done => {
           const server = buildServer()
           const id = 'id'
           const message = 'message'
