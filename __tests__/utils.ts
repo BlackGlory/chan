@@ -1,12 +1,9 @@
-import { path as appRoot } from 'app-root-path'
-import * as path from 'path'
-import { getDatabase, reconnectDatabase } from '@dao/sqlite3/database'
-import { migrateToLatest } from '@dao/sqlite3/migrate'
+import { getDatabase, reconnectDatabase, migrateDatabase } from '@dao/sqlite3/database'
 
 export async function prepareDatabase() {
   reconnectDatabase()
   const db = getDatabase()
-  await migrateToLatest({ db, migrationsPath: path.join(appRoot, 'migrations') })
+  await migrateDatabase()
   return db
 }
 
