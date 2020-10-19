@@ -1,7 +1,7 @@
 import fastify from 'fastify'
 import cors from 'fastify-cors'
-import { routes as mpmc } from '@src/services/mpmc'
-import { routes as api } from '@src/services/api'
+import { routes as mpmc } from '@services/mpmc'
+import { routes as api } from '@services/api'
 import { HTTP2 } from '@config'
 
 export function buildServer({ logger = false }: Partial<{ logger: boolean }> = {}) {
