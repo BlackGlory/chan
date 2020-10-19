@@ -184,6 +184,7 @@ await fetch(`http://localhost:8080/mpmc/${id}`).then(res => res.text())
 通过设置环境变量`MPMC_JSON_VALIDATION=true`可开启enqueue的JSON验证功能.
 任何带有`Content-Type: application/json`的请求都会被验证,
 即使没有设置JSON Schema, 也会拒绝不合法的JSON文本.
+JSON验证仅用于验证, 不会重新序列化消息, 因此subscribe得到的消息会与publish发送的消息相同.
 
 在开启验证功能的情况下, 通过环境变量`MPMC_DEFAULT_JSON_SCHEMA`可设置默认的JSON Schema,
 该验证仅对带有`Content-Type: application/json`的请求有效.

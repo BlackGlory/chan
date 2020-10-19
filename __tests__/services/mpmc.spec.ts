@@ -80,14 +80,8 @@ describe('mpmc', () => {
                 })
                 const server = buildServer()
                 const id = 'id'
-                const message = '"message"'
+                const message = ' "message" '
 
-                setImmediate(() => {
-                  server.inject({
-                    method: 'GET'
-                  , url: `/mpmc/${id}`
-                  })
-                })
                 const res = await server.inject({
                   method: 'POST'
                 , url: `/mpmc/${id}`
@@ -139,7 +133,7 @@ describe('mpmc', () => {
                 process.env.MPMC_JSON_VALIDATION = 'true'
                 const id = 'id'
                 const schema = { type: 'string' }
-                const message = '"message"'
+                const message = ' "message" '
                 const server = buildServer()
                 await DAO.setJsonSchema({
                   id
@@ -152,6 +146,7 @@ describe('mpmc', () => {
                   , url: `/mpmc/${id}`
                   })
                   expect(res.headers['content-type']).toMatch('application/json')
+                  expect(res.body).toBe(message)
                   done()
                 })
                 const res = await server.inject({
@@ -198,7 +193,7 @@ describe('mpmc', () => {
               process.env.MPMC_JSON_VALIDATION = 'true'
               const id = 'id'
               const schema = { type: 'string' }
-              const message = '"message"'
+              const message = ' "message" '
               const server = buildServer()
               await DAO.setJsonSchema({
                 id
@@ -215,6 +210,64 @@ describe('mpmc', () => {
               })
 
               expect(res.statusCode).toBe(400)
+            })
+          })
+        })
+
+        describe('id does not have JSON Schema', () => {
+          describe('Content-Type: application/json', () => {
+            describe('valid JSON', () => {
+              it('204', async done => {
+                process.env.MPMC_JSON_VALIDATION = 'true'
+                const id = 'id'
+                const schema = { type: 'string' }
+                const message = ' "message" '
+                const server = buildServer()
+                await DAO.setJsonSchema({
+                  id
+                , schema: JSON.stringify(schema)
+                })
+
+                setImmediate(async () => {
+                  const res = await server.inject({
+                    method: 'GET'
+                  , url: `/mpmc/${id}`
+                  })
+                  expect(res.headers['content-type']).toMatch('application/json')
+                  expect(res.body).toBe(message)
+                  done()
+                })
+                const res = await server.inject({
+                  method: 'POST'
+                , url: `/mpmc/${id}`
+                , payload: message
+                , headers: {
+                    'Content-Type': 'application/json'
+                  }
+                })
+
+                expect(res.statusCode).toBe(204)
+              })
+            })
+
+            describe('invalid JSON', () => {
+              it('400', async () => {
+                process.env.MPMC_JSON_VALIDATION = 'true'
+                const id = 'id'
+                const message = 'message'
+                const server = buildServer()
+
+                const res = await server.inject({
+                  method: 'POST'
+                , url: `/mpmc/${id}`
+                , payload: message
+                , headers: {
+                    'Content-Type': 'application/json'
+                  }
+                })
+
+                expect(res.statusCode).toBe(400)
+              })
             })
           })
         })
