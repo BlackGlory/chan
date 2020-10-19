@@ -40,7 +40,7 @@ export const routes: FastifyPluginAsync<{
       , querystring: { token: tokenSchema }
       , headers: {
           'content-type': JSON_PAYLOAD_ONLY()
-                          ? { const: 'application/json' }
+                          ? { type: 'string', pattern: '^application/json' }
                           : { type: 'string' }
         }
       , response: {
