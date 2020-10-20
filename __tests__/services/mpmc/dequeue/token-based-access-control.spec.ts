@@ -89,7 +89,6 @@ describe('token-based access control', () => {
         const res = await server.inject({
           method: 'GET'
         , url: `/mpmc/${id}`
-        , query: { token }
         })
 
         expect(res.statusCode).toBe(200)
