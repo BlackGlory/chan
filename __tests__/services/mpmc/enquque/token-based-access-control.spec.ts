@@ -67,6 +67,29 @@ describe('token-based access control', () => {
         expect(res.statusCode).toBe(401)
       })
     })
+
+    describe('no token', () => {
+      it('401', async () => {
+        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
+        const id = 'id'
+        const token = 'token'
+        const message = 'message'
+        const server = buildServer()
+        await DAO.setEnqueueToken({ id, token })
+
+        const res = await server.inject({
+          method: 'POST'
+        , url: `/mpmc/${id}`
+        , headers: {
+            'Content-Type': 'text/plain'
+          }
+        , payload: message
+        })
+
+        expect(res.statusCode).toBe(401)
+      })
+    })
   })
 
   describe('id does not have enqueue tokens', () => {
