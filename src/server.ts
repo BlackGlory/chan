@@ -4,7 +4,7 @@ import { routes as mpmc } from '@services/mpmc'
 import { routes as api } from '@services/api'
 import { HTTP2 } from '@config'
 import { DAO } from '@dao'
-import { MPMCFactory } from '@core'
+import { createMPMC } from '@core'
 
 export async function buildServer({ logger = false }: Partial<{ logger: boolean }> = {}) {
   const server = fastify(({
@@ -14,7 +14,7 @@ export async function buildServer({ logger = false }: Partial<{ logger: boolean 
   , http2: HTTP2()
   }))
   server.register(cors, { origin: true })
-  server.register(mpmc, { DAO, MPMC: await MPMCFactory.create<{ type?: string; payload: string }>() })
+  server.register(mpmc, { DAO, MPMC: await createMPMC<{ type?: string; payload: string }>() })
   server.register(api, { DAO })
   return server
 }

@@ -1,6 +1,4 @@
-interface IMPMCFactory {
-  create<T>(): Promise<IMPMC<T>>
-}
+type IMPMCFactory = <T>() => Promise<IMPMC<T>>
 
 interface IMPMC<T> {
   dequeue(key: string): Promise<T>
