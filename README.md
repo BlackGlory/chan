@@ -355,7 +355,7 @@ curl
 ```sh
 curl \
   --request PUT \
-  --header "Authorization: Bearer $ADMIN_PASSWORD"
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/blacklist/$id"
 ```
 
