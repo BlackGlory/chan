@@ -6,7 +6,7 @@ import { routes as blacklistRoutes } from './blacklist'
 import { routes as whitelistRoutes } from './whitelist'
 import { routes as tokenBasedAccessControl } from './token-based-access-control'
 
-export const routes: FastifyPluginAsync = async function routes(server, options) {
+export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async function routes(server, { DAO }) {
   server.addContentTypeParser(
     'application/x-www-form-urlencoded'
   , { parseAs: 'string' }
@@ -20,8 +20,8 @@ export const routes: FastifyPluginAsync = async function routes(server, options)
     }
   })
 
-  server.register(jsonSchemaRoutes, { prefix: '/api' })
-  server.register(blacklistRoutes, { prefix: '/api' })
-  server.register(whitelistRoutes, { prefix: '/api' })
-  server.register(tokenBasedAccessControl, { prefix: '/api' })
+  server.register(jsonSchemaRoutes, { prefix: '/api', DAO })
+  server.register(blacklistRoutes, { prefix: '/api', DAO })
+  server.register(whitelistRoutes, { prefix: '/api', DAO })
+  server.register(tokenBasedAccessControl, { prefix: '/api', DAO })
 }

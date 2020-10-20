@@ -1,8 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { idSchema, tokenSchema } from '@src/schema'
-import DAO from '@dao'
 
-export const routes: FastifyPluginAsync = async function routes(server, options) {
+export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async function routes(server, { DAO }) {
   // get all ids
   server.get<{ Params: { id: string }}>(
     '/mpmc-with-tokens'

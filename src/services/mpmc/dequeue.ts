@@ -6,12 +6,11 @@ import {
 , TOKEN_BASED_ACCESS_CONTROL
 , DISABLE_NO_TOKENS
 } from '@config'
-import DAO from '@dao'
-import type { ChannelManager } from '@src/core/channel-manager'
 
 export const routes: FastifyPluginAsync<{
-  manager: ChannelManager<{ type?: string; payload: string }>
-}> = async function routes(server, { manager }) {
+  mpmc: IMPMC<{ type?: string; payload: string }>
+  DAO: IDataAccessObject
+}> = async function routes(server, { mpmc, DAO }) {
   server.get<{
     Params: { id: string }
     Querystring: { token?: string }
@@ -50,7 +49,7 @@ export const routes: FastifyPluginAsync<{
         }
       }
 
-      const value = await manager.take(id)
+      const value = await mpmc.dequeue(id)
       if (value.type) reply.header('content-type', value.type)
       reply.send(value.payload)
     }

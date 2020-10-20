@@ -3,28 +3,28 @@ import * as Whitelist from './whitelist'
 import * as JsonSchema from './json-schema'
 import * as TokenBasedAccessControl from './token-based-access-control'
 
-const BlacklistDAO: BlacklistDAO = {
+const BlacklistDAO: IBlacklistDAO = {
   addBlacklistItem: asyncify(Blacklist.addBlacklistItem)
 , getAllBlacklistItems: asyncify(Blacklist.getAllBlacklistItems)
 , inBlacklist: asyncify(Blacklist.inBlacklist)
 , removeBlacklistItem: asyncify(Blacklist.removeBlacklistItem)
 }
 
-const WhitelistDAO: WhitelistDAO = {
+const WhitelistDAO: IWhitelistDAO = {
   addWhitelistItem: asyncify(Whitelist.addWhitelistItem)
 , getAllWhitelistItems: asyncify(Whitelist.getAllWhitelistItems)
 , inWhitelist: asyncify(Whitelist.inWhitelist)
 , removeWhitelistItem: asyncify(Whitelist.removeWhitelistItem)
 }
 
-const JsonSchemaDAO: JsonSchemaDAO = {
+const JsonSchemaDAO: IJsonSchemaDAO = {
   getAllIdsWithJsonSchema: asyncify(JsonSchema.getAllIdsWithJsonSchema)
 , getJsonSchema: asyncify(JsonSchema.getJsonSchema)
 , removeJsonSchema: asyncify(JsonSchema.removeJsonSchema)
 , setJsonSchema: asyncify(JsonSchema.setJsonSchema)
 }
 
-const TokenBasedAccessControlDAO: TokenBasedAccessControlDAO = {
+const TokenBasedAccessControlDAO: ITokenBasedAccessControlDAO = {
   getAllIdsWithTokens: asyncify(TokenBasedAccessControl.getAllIdsWithTokens)
 , getAllTokens: asyncify(TokenBasedAccessControl.getAllTokens)
 
@@ -39,7 +39,7 @@ const TokenBasedAccessControlDAO: TokenBasedAccessControlDAO = {
 , unsetDequeueToken: asyncify(TokenBasedAccessControl.unsetDequeueToken)
 }
 
-const DAO: DataAccessObject = {
+const DAO: IDataAccessObject = {
   ...BlacklistDAO
 , ...WhitelistDAO
 , ...JsonSchemaDAO

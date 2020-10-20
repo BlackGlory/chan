@@ -1,8 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { idSchema } from '@src/schema'
-import DAO from '@dao'
 
-export const routes: FastifyPluginAsync = async function routes(server, options) {
+export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async function routes(server, { DAO }) {
   server.get(
     '/mpmc-with-json-schema'
   , {

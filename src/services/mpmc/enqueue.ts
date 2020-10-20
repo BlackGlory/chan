@@ -10,13 +10,12 @@ import {
 , JSON_PAYLOAD_ONLY
 } from '@config'
 import Ajv from 'ajv'
-import DAO from '@dao'
-import type { ChannelManager } from '@src/core/channel-manager'
 import { getErrorResult } from 'return-style'
 
 export const routes: FastifyPluginAsync<{
-  manager: ChannelManager<{ type?: string; payload: string }>
-}> = async function routes(server, { manager }) {
+  mpmc: IMPMC<{ type?: string; payload: string }>
+  DAO: IDataAccessObject
+}> = async function routes(server, { mpmc, DAO }) {
   // overwrite application/json parser
   server.addContentTypeParser(
     'application/json'
@@ -91,7 +90,7 @@ export const routes: FastifyPluginAsync<{
         }
       }
 
-      await manager.put(req.params.id, {
+      await mpmc.enqueue(req.params.id, {
         type: req.headers['content-type']
       , payload: req.body
       })
