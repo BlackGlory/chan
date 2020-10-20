@@ -39,14 +39,12 @@ const TokenBasedAccessControlDAO: ITokenBasedAccessControlDAO = {
 , unsetDequeueToken: asyncify(TokenBasedAccessControl.unsetDequeueToken)
 }
 
-const DAO: IDataAccessObject = {
+export const DAO: IDataAccessObject = {
   ...BlacklistDAO
 , ...WhitelistDAO
 , ...JsonSchemaDAO
 , ...TokenBasedAccessControlDAO
 }
-
-export default DAO
 
 function asyncify<T extends any[], U>(fn: (...args: T) => U): (...args: T) => Promise<U> {
   return async function (this: unknown, ...args: T): Promise<U> {

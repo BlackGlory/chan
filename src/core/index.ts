@@ -1,0 +1,1 @@
+export { MPMCFactory } from './memory'

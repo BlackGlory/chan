@@ -1,1 +1,1 @@
-export { default } from './sqlite3'
+export { DAO } from './sqlite3'

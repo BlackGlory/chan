@@ -13,9 +13,9 @@ import Ajv from 'ajv'
 import { getErrorResult } from 'return-style'
 
 export const routes: FastifyPluginAsync<{
-  mpmc: IMPMC<{ type?: string; payload: string }>
+  MPMC: IMPMC<{ type?: string; payload: string }>
   DAO: IDataAccessObject
-}> = async function routes(server, { mpmc, DAO }) {
+}> = async function routes(server, { MPMC, DAO }) {
   // overwrite application/json parser
   server.addContentTypeParser(
     'application/json'
@@ -90,7 +90,7 @@ export const routes: FastifyPluginAsync<{
         }
       }
 
-      await mpmc.enqueue(req.params.id, {
+      await MPMC.enqueue(req.params.id, {
         type: req.headers['content-type']
       , payload: req.body
       })

@@ -2,7 +2,7 @@
 import { buildServer } from '@src/server'
 import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
-import DAO from '@dao'
+import { DAO } from '@dao'
 
 jest.mock('@dao/sqlite3/database')
 expect.extend(matchers)
@@ -17,7 +17,7 @@ describe('json schema', () => {
     describe('auth', () => {
       it('200', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -35,7 +35,7 @@ describe('json schema', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = buildServer()
+        const server = await buildServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -49,7 +49,7 @@ describe('json schema', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -67,7 +67,7 @@ describe('json schema', () => {
       describe('exist', () => {
         it('200', async () => {
           process.env.MPMC_ADMIN_PASSWORD = 'password'
-          const server = buildServer()
+          const server = await buildServer()
           const id = 'id'
           const schema = { type: 'number' }
           await DAO.setJsonSchema({
@@ -89,7 +89,7 @@ describe('json schema', () => {
       describe('not exist', () => {
         it('404', async () => {
           process.env.MPMC_ADMIN_PASSWORD = 'password'
-          const server = buildServer()
+          const server = await buildServer()
           const id = 'id'
 
           const res = await server.inject({
@@ -105,7 +105,7 @@ describe('json schema', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
@@ -120,7 +120,7 @@ describe('json schema', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
@@ -139,7 +139,7 @@ describe('json schema', () => {
       describe('valid JSON', () => {
         it('204', async () => {
           process.env.MPMC_ADMIN_PASSWORD = 'password'
-          const server = buildServer()
+          const server = await buildServer()
           const id = 'id'
           const schema = { type: 'number' }
 
@@ -160,7 +160,7 @@ describe('json schema', () => {
       describe('invalid JSON', () => {
         it('400', async () => {
           process.env.MPMC_ADMIN_PASSWORD = 'password'
-          const server = buildServer()
+          const server = await buildServer()
           const id = 'id'
 
           const res = await server.inject({
@@ -180,7 +180,7 @@ describe('json schema', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const schema = { type: 'number' }
 
@@ -198,7 +198,7 @@ describe('json schema', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const schema = { type: 'number' }
 
@@ -221,7 +221,7 @@ describe('json schema', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
@@ -236,7 +236,7 @@ describe('json schema', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
@@ -251,7 +251,7 @@ describe('json schema', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({

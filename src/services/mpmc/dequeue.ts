@@ -8,9 +8,9 @@ import {
 } from '@config'
 
 export const routes: FastifyPluginAsync<{
-  mpmc: IMPMC<{ type?: string; payload: string }>
+  MPMC: IMPMC<{ type?: string; payload: string }>
   DAO: IDataAccessObject
-}> = async function routes(server, { mpmc, DAO }) {
+}> = async function routes(server, { MPMC, DAO }) {
   server.get<{
     Params: { id: string }
     Querystring: { token?: string }
@@ -49,7 +49,7 @@ export const routes: FastifyPluginAsync<{
         }
       }
 
-      const value = await mpmc.dequeue(id)
+      const value = await MPMC.dequeue(id)
       if (value.type) reply.header('content-type', value.type)
       reply.send(value.payload)
     }

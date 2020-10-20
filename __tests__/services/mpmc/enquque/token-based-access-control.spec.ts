@@ -1,7 +1,7 @@
 import { buildServer } from '@src/server'
 import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
-import DAO from '@dao'
+import { DAO } from '@dao'
 
 jest.mock('@dao/sqlite3/database')
 expect.extend(matchers)
@@ -20,7 +20,7 @@ describe('token-based access control', () => {
         const id = 'id'
         const token = 'token'
         const message = 'message'
-        const server = buildServer()
+        const server = await buildServer()
         await DAO.setEnqueueToken({ id, token })
 
         setImmediate(() => {
@@ -51,7 +51,7 @@ describe('token-based access control', () => {
         const id = 'id'
         const token = 'token'
         const message = 'message'
-        const server = buildServer()
+        const server = await buildServer()
         await DAO.setEnqueueToken({ id, token })
 
         const res = await server.inject({
@@ -75,7 +75,7 @@ describe('token-based access control', () => {
         const id = 'id'
         const token = 'token'
         const message = 'message'
-        const server = buildServer()
+        const server = await buildServer()
         await DAO.setEnqueueToken({ id, token })
 
         const res = await server.inject({
@@ -100,7 +100,7 @@ describe('token-based access control', () => {
         const id = 'id'
         const token = 'token'
         const message = 'message'
-        const server = buildServer()
+        const server = await buildServer()
         await DAO.setDequeueToken({ id, token })
 
         setImmediate(() => {
@@ -131,7 +131,7 @@ describe('token-based access control', () => {
           process.env.MPMC_DISABLE_NO_TOKENS = 'true'
           const id = 'id'
           const message = 'message'
-          const server = buildServer()
+          const server = await buildServer()
 
           const res = await server.inject({
             method: 'POST'
@@ -152,7 +152,7 @@ describe('token-based access control', () => {
           process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
           const id = 'id'
           const message = 'message'
-          const server = buildServer()
+          const server = await buildServer()
 
           setImmediate(() => {
             server.inject({

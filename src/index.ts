@@ -5,7 +5,8 @@ import { PORT, HOST } from '@config'
 ;(async () => {
   await migrateDatabase()
 
-  buildServer({ logger: true }).listen(PORT(), HOST(), (err, address) => {
+  const server = await buildServer({ logger: true })
+  server.listen(PORT(), HOST(), (err, address) => {
     if (err) throw err
   })
 })()

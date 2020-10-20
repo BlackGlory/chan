@@ -1,7 +1,7 @@
 import { buildServer } from '@src/server'
 import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
-import DAO from '@dao'
+import { DAO } from '@dao'
 
 jest.mock('@dao/sqlite3/database')
 expect.extend(matchers)
@@ -13,7 +13,7 @@ beforeEach(async () => {
 
 describe('no access control', () => {
   it('200', async () => {
-    const server = buildServer()
+    const server = await buildServer()
     const id = 'id'
     const message = 'message'
 

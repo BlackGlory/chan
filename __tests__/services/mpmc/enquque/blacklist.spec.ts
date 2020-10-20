@@ -1,7 +1,7 @@
 import { buildServer } from '@src/server'
 import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
-import DAO from '@dao'
+import { DAO } from '@dao'
 
 jest.mock('@dao/sqlite3/database')
 expect.extend(matchers)
@@ -18,7 +18,7 @@ describe('blacklist', () => {
       process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
       const id = 'id'
       const message = 'message'
-      const server = buildServer()
+      const server = await buildServer()
       await DAO.addBlacklistItem(id)
 
       const res = await server.inject({
@@ -40,7 +40,7 @@ describe('blacklist', () => {
       process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
       const id = 'id'
       const message = 'message'
-      const server = buildServer()
+      const server = await buildServer()
 
       setImmediate(() => {
         server.inject({

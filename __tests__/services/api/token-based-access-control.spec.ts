@@ -16,7 +16,7 @@ describe('TBAC', () => {
     describe('auth', () => {
       it('200', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -34,7 +34,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = buildServer()
+        const server = await buildServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -48,7 +48,7 @@ describe('TBAC', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -65,7 +65,7 @@ describe('TBAC', () => {
     describe('auth', () => {
       it('200', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
@@ -91,7 +91,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
@@ -106,7 +106,7 @@ describe('TBAC', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
@@ -124,7 +124,7 @@ describe('TBAC', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
@@ -140,7 +140,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
@@ -156,7 +156,7 @@ describe('TBAC', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
@@ -175,7 +175,7 @@ describe('TBAC', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
@@ -191,7 +191,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
@@ -207,7 +207,7 @@ describe('TBAC', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
@@ -226,7 +226,7 @@ describe('TBAC', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
@@ -242,7 +242,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
@@ -258,7 +258,7 @@ describe('TBAC', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
@@ -277,7 +277,7 @@ describe('TBAC', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
@@ -293,7 +293,7 @@ describe('TBAC', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
@@ -309,7 +309,7 @@ describe('TBAC', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
-        const server = buildServer()
+        const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
