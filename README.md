@@ -6,8 +6,8 @@
 支持JSON Schema.
 
 基于HTTP的阻塞方式类似于长轮询(long polling):
-直到消息入列或出列, 服务器才会返回响应.
-未出列的消息位于内存中, 实际的工作方式类似于Golang的Channel.
+直到消息enqueue或dequeue, 服务器才会返回响应.
+未dequeue的消息位于内存中, 实际的工作方式类似于Golang的Channel.
 
 受原理所限, 此服务不能实现消息的可靠传递(reliable delivery), 也无法重发消息.
 因此当遭遇网络故障时, 消息可能会丢失.
@@ -97,8 +97,13 @@ services:
     restart: always
     environment:
       - MPMC_HOST=0.0.0.0
+    volumes:
+      - 'mpmc-data:/data'
     ports:
       - '8080:8080'
+
+volumes:
+  mpmc-data:
 ```
 
 ##### 私人服务器
@@ -133,9 +138,9 @@ volumes:
 
 `POST /mpmc/<id>`
 
-往特定消息队列放入消息, 会阻塞直到此消息出列.
+往特定消息队列放入消息, 会阻塞直到此消息dequeue.
 id用于标识消息队列.
-入列请求的`Content-Type`会在出列时原样返回.
+enqueue请求的`Content-Type`会在dequeue时原样返回.
 
 如果开启基于token的访问控制, 则可能需要在Querystring提供具有enqueue权限的token:
 `POST /mpmc/<id>?token=<token>`
@@ -161,7 +166,7 @@ await fetch(`http://localhost:8080/mpmc/${id}`, {
 
 `GET /mpmc/<id>`
 
-从特定消息队列取出消息, 如果消息队列为空, 则阻塞直到有新消息入列.
+从特定消息队列取出消息, 如果消息队列为空, 则阻塞直到有新消息enqueue.
 id用于标识消息队列.
 
 如果开启基于token的访问控制, 则可能需要在Querystring提供具有dequeue权限的token:
@@ -480,15 +485,15 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 通过设置环境变量`MPMC_TOKEN_BASED_ACCESS_CONTROL=true`开启基于token的访问控制.
 
 基于token的访问控制将根据消息队列具有的token决定其访问规则, 具体行为见下方表格.
-一个消息队列可以有多个token, 每个token可以单独设置入列权限和出列权限.
+一个消息队列可以有多个token, 每个token可以单独设置enqueue权限和dequeue权限.
 不同消息队列的token不共用.
 
-| 此消息队列存在具有出列权限的token | 此消息队列存在具有入列权限的token | 行为 |
+| 此消息队列存在具有dequeue权限的token | 此消息队列存在具有enqueue权限的token | 行为 |
 | --- | --- | --- |
 | YES | YES | 只有使用具有相关权限的token才能执行操作 |
-| YES | NO | 无token可以入列, 只有具有出列权限的token可以出列 |
-| NO | YES | 无token可以出列, 只有具有入列权限的token可以入列 |
-| NO | NO | 无token可以入列和出列 |
+| YES | NO | 无token可以enqueue, 只有具有dequeue权限的token可以dequeue |
+| NO | YES | 无token可以dequeue, 只有具有enqueue权限的token可以enqueue |
+| NO | NO | 无token可以enqueue和dequeue |
 
 在开启基于token的访问控制时,
 可以通过将环境变量`MPMC_DISABLE_NO_TOKENS`设置为`true`将无token的消息队列禁用.
@@ -547,11 +552,11 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens`, {
 }).then(res => res.json())
 ```
 
-#### 为特定消息队列的token设置入列权限
+#### 为特定消息队列的token设置enqueue权限
 
 `PUT /api/mpmc/<id>/tokens/<token>/enqueue`
 
-添加/更新token, 为token设置入列权限.
+添加/更新token, 为token设置enqueue权限.
 
 ##### Example
 
@@ -573,11 +578,11 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/enqueue`, {
 })
 ```
 
-#### 取消特定消息队列的token的入列权限
+#### 取消特定消息队列的token的enqueue权限
 
 `DELETE /api/mpmc/<id>/tokens/<token>/enqueue`
 
-取消token的入列权限.
+取消token的enqueue权限.
 
 ##### Example
 
@@ -599,11 +604,11 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/enqueue`, {
 })
 ```
 
-#### 为特定消息队列的token设置出列权限
+#### 为特定消息队列的token设置dequeue权限
 
 `PUT /api/mpmc/<id>/tokens/<token>/dequeue`
 
-添加/更新token, 为token设置出列权限.
+添加/更新token, 为token设置dequeue权限.
 
 ##### Example
 
@@ -625,11 +630,11 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/dequeue`, {
 })
 ```
 
-#### 取消特定消息队列的token的入列权限
+#### 取消特定消息队列的token的enqueue权限
 
 `DELETE /api/mpmc/<id>/tokens/<token>/dequeue`
 
-取消token的出列权限.
+取消token的dequeue权限.
 
 ##### Example
 
@@ -658,7 +663,20 @@ MPMC支持HTTP/2, 以多路复用反向代理时的连接, 可通过设置环境
 此HTTP/2支持不提供从HTTP/1.1自动升级的功能, 亦不提供HTTPS.
 因此, 在本地curl里进行测试时, 需要开启`--http2-prior-knowledge`选项.
 
+## 特殊用例
+
+### 发送/接收文本文件
+
+```sh
+# 发送
+cat filename | curl "http://localhost:8080/mpmc/$id" --data-binary @-
+
+# 接收
+curl "http://localhost:8080/mpmc/$id" > filename
+```
+
 ## TODO
 - [ ] 中断POST后, 相关消息不应留在服务器内存里
       mpmc在内存中隐式维护队列的行为与patchbay不符
 - [ ] 在更新访问控制规则时, 断开受影响的连接
+- [ ] Payload大小环境变量
