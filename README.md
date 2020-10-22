@@ -663,7 +663,7 @@ MPMC支持HTTP/2, 以多路复用反向代理时的连接, 可通过设置环境
 此HTTP/2支持不提供从HTTP/1.1自动升级的功能, 亦不提供HTTPS.
 因此, 在本地curl里进行测试时, 需要开启`--http2-prior-knowledge`选项.
 
-## 特殊用例
+## 用例展柜
 
 ### 发送/接收文本文件
 
@@ -674,9 +674,3 @@ cat filename | curl "http://localhost:8080/mpmc/$id" --data-binary @-
 # 接收
 curl "http://localhost:8080/mpmc/$id" > filename
 ```
-
-## TODO
-- [ ] 中断POST后, 相关消息不应留在服务器内存里
-      mpmc在内存中隐式维护队列的行为与patchbay不符
-- [ ] 在更新访问控制规则时, 断开受影响的连接
-- [ ] Payload大小环境变量
