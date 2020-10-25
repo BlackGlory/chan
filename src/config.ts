@@ -61,7 +61,7 @@ export function PAYLOAD_LIMIT(): number {
 }
 
 export function ENQUEUE_PAYLOAD_LIMIT(): number {
-  if (process.env.ENQUEUE_PAYLOAD_LIMIT) {
+  if (process.env.MPMC_ENQUEUE_PAYLOAD_LIMIT) {
     return Number(process.env.MPMC_ENQUEUE_PAYLOAD_LIMIT)
   } else {
     return PAYLOAD_LIMIT()
