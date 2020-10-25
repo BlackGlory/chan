@@ -8,6 +8,7 @@ import {
 , JSON_VALIDATION
 , DEFAULT_JSON_SCHEMA
 , JSON_PAYLOAD_ONLY
+, ENQUEUE_PAYLOAD_LIMIT
 } from '@config'
 import Ajv from 'ajv'
 import { getErrorResult } from 'return-style'
@@ -46,6 +47,7 @@ export const routes: FastifyPluginAsync<{
           204: { type: 'null' }
         }
       }
+    , bodyLimit: ENQUEUE_PAYLOAD_LIMIT()
     }
   , async (req, reply) => {
       const id = req.params.id
