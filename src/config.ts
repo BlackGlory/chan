@@ -47,3 +47,7 @@ export function DEFAULT_JSON_SCHEMA() {
 export function JSON_PAYLOAD_ONLY() {
   return process.env.MPMC_JSON_PAYLOAD_ONLY === 'true'
 }
+
+export function CI() {
+  return process.env.CI
+}
