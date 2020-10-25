@@ -6,8 +6,6 @@ import { PORT, HOST, CI } from '@config'
   await migrateDatabase()
 
   const server = await buildServer({ logger: true })
-  server.listen(PORT(), HOST(), async (err, address) => {
-    if (err) throw err
-    if (CI()) await server.close()
-  })
+  await server.listen(PORT(), HOST())
+  if (CI()) await server.close()
 })()
