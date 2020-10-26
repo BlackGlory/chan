@@ -5,7 +5,7 @@ import { PORT, HOST, CI } from '@env'
 ;(async () => {
   await migrateDatabase()
 
-  const server = await buildServer({ logger: true })
+  const server = await buildServer()
   await server.listen(PORT(), HOST())
   if (CI()) await server.close()
 })()

@@ -2,7 +2,7 @@ import { FastifyPluginAsync } from 'fastify'
 import { idSchema, tokenSchema } from '@src/schema'
 import {
   LIST_BASED_ACCESS_CONTROL
-, RBAC
+, ListBasedAccessControl
 , TOKEN_BASED_ACCESS_CONTROL
 , DISABLE_NO_TOKENS
 , JSON_VALIDATION
@@ -53,9 +53,9 @@ export const routes: FastifyPluginAsync<{
       const id = req.params.id
       const token = req.query.token
 
-      if (LIST_BASED_ACCESS_CONTROL() === RBAC.Blacklist) {
+      if (LIST_BASED_ACCESS_CONTROL() === ListBasedAccessControl.Blacklist) {
         if (await DAO.inBlacklist(req.params.id)) return reply.status(403).send()
-      } else if (LIST_BASED_ACCESS_CONTROL() === RBAC.Whitelist) {
+      } else if (LIST_BASED_ACCESS_CONTROL() === ListBasedAccessControl.Whitelist) {
         if (!await DAO.inWhitelist(req.params.id)) return reply.status(403).send()
       }
 

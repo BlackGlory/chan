@@ -3,13 +3,13 @@ import cors from 'fastify-cors'
 import { routes as mpmc } from '@services/mpmc'
 import { routes as api } from '@services/api'
 import { routes as stats } from '@services/stats'
-import { HTTP2, PAYLOAD_LIMIT } from '@env'
+import { HTTP2, PAYLOAD_LIMIT, NODE_ENV, NodeEnv } from '@env'
 import { DAO } from '@dao'
 import { createMPMC } from '@core'
 
-export async function buildServer({ logger = false }: Partial<{ logger: boolean }> = {}) {
+export async function buildServer() {
   const server = fastify(({
-    logger
+    logger: getLoggerOptions()
   , maxParamLength: 600
     /* @ts-ignore */
   , http2: HTTP2()
@@ -20,4 +20,12 @@ export async function buildServer({ logger = false }: Partial<{ logger: boolean 
   server.register(api, { DAO })
   server.register(stats)
   return server
+}
+
+function getLoggerOptions() {
+  switch (NODE_ENV()) {
+    case NodeEnv.Test: return false
+    case NodeEnv.Production: return { level: 'error' }
+    case NodeEnv.Development: return { level: 'trace' }
+  }
 }

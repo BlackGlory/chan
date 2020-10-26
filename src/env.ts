@@ -1,7 +1,21 @@
-export enum RBAC {
+export enum ListBasedAccessControl {
   Disable
 , Whitelist
 , Blacklist
+}
+
+export enum NodeEnv {
+  Test
+, Development
+, Production
+}
+
+export function NODE_ENV(): NodeEnv | undefined {
+  switch (process.env.NODE_ENV) {
+    case 'test': return NodeEnv.Test
+    case 'development': return NodeEnv.Development
+    case 'production': return NodeEnv.Production
+  }
 }
 
 export function PORT(): number {
@@ -16,11 +30,11 @@ export function ADMIN_PASSWORD(): string | undefined {
   return process.env.MPMC_ADMIN_PASSWORD
 }
 
-export function LIST_BASED_ACCESS_CONTROL(): RBAC {
+export function LIST_BASED_ACCESS_CONTROL(): ListBasedAccessControl {
   switch (process.env.MPMC_LIST_BASED_ACCESS_CONTROL) {
-    case 'whitelist': return RBAC.Whitelist
-    case 'blacklist': return RBAC.Blacklist
-    default: return RBAC.Disable
+    case 'whitelist': return ListBasedAccessControl.Whitelist
+    case 'blacklist': return ListBasedAccessControl.Blacklist
+    default: return ListBasedAccessControl.Disable
   }
 }
 
