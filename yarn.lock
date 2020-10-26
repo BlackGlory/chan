@@ -1096,10 +1096,10 @@ ajv@^6.10.0, ajv@^6.10.2, ajv@^6.11.0, ajv@^6.12.2, ajv@^6.12.3, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^7.0.0-beta.1:
-  version "7.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-7.0.0-beta.1.tgz#7427b34592edaf2eaa97655ec398e5d17991b817"
-  integrity sha512-rKX+VjvPBBBTw+fXQ1b37Z9sarOr49/1QP5Clb1PSy/f8pKiU/+cQ2uBIFtX3QanL/3/LW+mKiw/G8gwRdyTEA==
+ajv@^7.0.0-beta.2:
+  version "7.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-7.0.0-beta.2.tgz#709980b7850183a027631160c01954409c05cfac"
+  integrity sha512-QNYgGgTZ370cYyxsIpQWt8HG7fxBlYrb3wW/SVxsAJ9qqVh8bmbszwNWut93EEhK+rTOY2IKj+SOQRo/7mvQiw==
   dependencies:
     fast-deep-equal "^3.1.1"
     json-schema-traverse "^0.5.0"
