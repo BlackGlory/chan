@@ -1,32 +1,32 @@
-import * as DAO from '@dao/sqlite3/whitelist'
+import * as DAO from '@src/dao/config/blacklist'
 import { Database } from 'better-sqlite3'
 import { prepareDatabase } from '@test/utils'
 import 'jest-extended'
 
-jest.mock('@dao/sqlite3/database')
+jest.mock('@dao/config/database')
 
-describe('whitelist', () => {
-  describe('getAllWhitelistItems(): string[]', () => {
+describe('blacklist', () => {
+  describe('getAllBlacklistItems(): string[]', () => {
     it('return string[]', async () => {
       const db = await prepareDatabase()
       const id = 'id-1'
       insert(db, id)
 
-      const result = DAO.getAllWhitelistItems()
+      const result = DAO.getAllBlacklistItems()
 
       // expect.toStrictEqual is broken, I have no idea
       expect(result).toEqual([id])
     })
   })
 
-  describe('inWhitelist(id: string): boolean', () => {
+  describe('inBlacklist(id: string): boolean', () => {
     describe('exist', () => {
       it('return true', async () => {
         const db = await prepareDatabase()
         const id = 'id-1'
         insert(db, id)
 
-        const result = DAO.inWhitelist(id)
+        const result = DAO.inBlacklist(id)
 
         expect(result).toBeTrue()
       })
@@ -37,21 +37,21 @@ describe('whitelist', () => {
         const db = await prepareDatabase()
         const id = 'id-1'
 
-        const result = DAO.inWhitelist(id)
+        const result = DAO.inBlacklist(id)
 
         expect(result).toBeFalse()
       })
     })
   })
 
-  describe('addWhitelistItem', () => {
+  describe('addBlacklistItem', () => {
     describe('exist', () => {
       it('return undefined', async () => {
         const db = await prepareDatabase()
         const id = 'id-1'
         insert(db, id)
 
-        const result = DAO.addWhitelistItem(id)
+        const result = DAO.addBlacklistItem(id)
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeTrue()
@@ -63,7 +63,7 @@ describe('whitelist', () => {
         const db = await prepareDatabase()
         const id = 'id-1'
 
-        const result = DAO.addWhitelistItem(id)
+        const result = DAO.addBlacklistItem(id)
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeTrue()
@@ -71,14 +71,14 @@ describe('whitelist', () => {
     })
   })
 
-  describe('removeWhitelistItem', () => {
+  describe('removeBlacklistItem', () => {
     describe('exist', () => {
       it('return undefined', async () => {
         const db = await prepareDatabase()
         const id = 'id-1'
         insert(db, id)
 
-        const result = DAO.removeWhitelistItem(id)
+        const result = DAO.removeBlacklistItem(id)
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeFalse()
@@ -90,7 +90,7 @@ describe('whitelist', () => {
         const db = await prepareDatabase()
         const id = 'id-1'
 
-        const result = DAO.removeWhitelistItem(id)
+        const result = DAO.removeBlacklistItem(id)
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeFalse()
@@ -104,9 +104,9 @@ function exist(db: Database, id: string) {
 }
 
 function insert(db: Database, id: string) {
-  db.prepare('INSERT INTO mpmc_whitelist (mpmc_id) VALUES ($id);').run({ id });
+  db.prepare('INSERT INTO mpmc_blacklist (mpmc_id) VALUES ($id);').run({ id });
 }
 
 function select(db: Database, id: string) {
-  return db.prepare('SELECT * FROM mpmc_whitelist WHERE mpmc_id = $id;').get({ id })
+  return db.prepare('SELECT * FROM mpmc_blacklist WHERE mpmc_id = $id;').get({ id })
 }

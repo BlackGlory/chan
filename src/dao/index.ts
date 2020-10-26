@@ -1,1 +1,1 @@
-export { DAO } from './sqlite3'
+export { DAO } from './config'

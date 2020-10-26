@@ -1,9 +1,9 @@
-import * as DAO from '@dao/sqlite3/token-based-access-control'
+import * as DAO from '@src/dao/config/token-based-access-control'
 import { prepareDatabase } from '@test/utils'
 import { Database } from 'better-sqlite3'
 import 'jest-extended'
 
-jest.mock('@dao/sqlite3/database')
+jest.mock('@dao/config/database')
 
 describe('TBAC(token-based access control)', () => {
   describe('getAllIdsWithTokens(): string[]', () => {

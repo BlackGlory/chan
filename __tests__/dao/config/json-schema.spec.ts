@@ -1,9 +1,9 @@
-import * as DAO from '@dao/sqlite3/json-schema'
+import * as DAO from '@src/dao/config/json-schema'
 import { Database } from 'better-sqlite3'
 import { prepareDatabase } from '@test/utils'
 import 'jest-extended'
 
-jest.mock('@dao/sqlite3/database')
+jest.mock('@dao/config/database')
 
 describe('JSON Schema', () => {
   describe('getAllIdsWithJsonSchema(): string[]', () => {

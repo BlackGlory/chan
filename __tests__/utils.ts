@@ -1,4 +1,4 @@
-import { getDatabase, reconnectDatabase, migrateDatabase } from '@dao/sqlite3/database'
+import { getDatabase, reconnectDatabase, migrateDatabase } from '@dao/config/database'
 
 export async function prepareDatabase() {
   reconnectDatabase()

@@ -1,4 +1,4 @@
-import { migrateDatabase } from '@dao/sqlite3/database'
+import { migrateDatabase } from '@src/dao/config/database'
 import { buildServer } from './server'
 import { PORT, HOST, CI } from '@env'
 

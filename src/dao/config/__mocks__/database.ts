@@ -1,15 +1,11 @@
-import Database = require('better-sqlite3')
-import { path as appRoot } from 'app-root-path'
 import * as path from 'path'
-import * as fs from 'fs-extra'
+import { path as appRoot } from 'app-root-path'
 import { readMigrations } from 'migrations-file'
 import { migrate } from '@blackglory/better-sqlite3-migrations'
+import Database = require('better-sqlite3')
 
-const migrationsPath = path.join(appRoot, 'migrations')
-const dataPath = path.join(appRoot, 'data')
-const dataFilename = path.join(dataPath, 'database.sqlite')
-fs.ensureDirSync(dataPath)
-let db = new Database(dataFilename)
+const migrationsPath = path.join(appRoot, 'migrations/config')
+let db = new Database(':memory:')
 
 export function getDatabase() {
   if (!db.open) reconnectDatabase()
@@ -18,7 +14,7 @@ export function getDatabase() {
 
 export function reconnectDatabase() {
   db.close()
-  db = new Database(dataFilename)
+  db = new Database(':memory:')
 }
 
 export async function migrateDatabase() {

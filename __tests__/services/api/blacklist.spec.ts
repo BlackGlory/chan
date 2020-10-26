@@ -2,7 +2,7 @@ import { buildServer } from '@src/server'
 import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 
-jest.mock('@dao/sqlite3/database')
+jest.mock('@dao/config/database')
 expect.extend(matchers)
 
 beforeEach(async () => {
