@@ -9,7 +9,7 @@ import {
 , DEFAULT_JSON_SCHEMA
 , JSON_PAYLOAD_ONLY
 , ENQUEUE_PAYLOAD_LIMIT
-} from '@config'
+} from '@env'
 import Ajv from 'ajv'
 import { getErrorResult } from 'return-style'
 

@@ -1,6 +1,6 @@
 import { migrateDatabase } from '@dao/sqlite3/database'
 import { buildServer } from './server'
-import { PORT, HOST, CI } from '@config'
+import { PORT, HOST, CI } from '@env'
 
 ;(async () => {
   await migrateDatabase()
