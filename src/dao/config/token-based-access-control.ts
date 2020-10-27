@@ -114,7 +114,8 @@ export function unsetDequeueToken({ token, id }: { token: string; id: string }) 
     db.prepare(`
       UPDATE mpmc_tbac
         SET dequeue_permission = 0
-      WHERE token = $token AND mpmc_id = $id;
+      WHERE token = $token
+        AND mpmc_id = $id;
     `).run({ token, id })
     deleteNoPermissionToken({ token, id })
   })()
