@@ -32,7 +32,8 @@ export function hasEnqueueTokens(id: string): boolean {
     SELECT EXISTS(
              SELECT *
                FROM mpmc_tbac
-               WHERE mpmc_id = $id AND enqueue_permission=1
+              WHERE mpmc_id = $id
+                AND enqueue_permission=1
            ) AS enqueue_tokens_exist
   `).get({ id })
   return result['enqueue_tokens_exist'] === 1
@@ -46,7 +47,9 @@ export function matchEnqueueToken({ token, id }: {
     SELECT EXISTS(
              SELECT *
                FROM mpmc_tbac
-               WHERE mpmc_id = $id AND token = $token AND enqueue_permission=1
+              WHERE mpmc_id = $id
+                AND token = $token
+                AND enqueue_permission=1
            ) AS matched
   `).get({ token, id })
   return result['matched'] === 1
@@ -79,7 +82,8 @@ export function hasDequeueTokens(id: string): boolean {
     SELECT EXISTS(
              SELECT *
                FROM mpmc_tbac
-               WHERE mpmc_id = $id AND dequeue_permission=1
+              WHERE mpmc_id = $id
+                AND dequeue_permission=1
            ) AS dequeue_tokens_exist
   `).get({ id })
   return result['dequeue_tokens_exist'] === 1
@@ -92,8 +96,10 @@ export function matchDequeueToken({ token, id }: {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
-               FROM mpmc_tbac
-               WHERE mpmc_id = $id AND token = $token AND dequeue_permission=1
+              FROM mpmc_tbac
+             WHERE mpmc_id = $id
+               AND token = $token
+               AND dequeue_permission = 1
            ) AS matched
   `).get({ token, id })
   return result['matched'] === 1
