@@ -29,26 +29,6 @@ CREATE TABLE mpmc_tbac (
 , UNIQUE (token, mpmc_id)
 );
 
-CREATE TRIGGER auto_delete_after_insert_mpmc_tbac
- AFTER INSERT ON mpmc_tbac
-  WHEN NEW.dequeue_permission = 0
-   AND NEW.enqueue_permission = 0
-BEGIN
-  DELETE FROM mpmc_tbac
-   WHERE mpmc_tbac.token = NEW.token
-     AND mpmc_tbac.mpmc_id = NEW.mpmc_id;
-END;
-
-CREATE TRIGGER auto_delete_after_update_mpmc_tbac
- AFTER UPDATE ON mpmc_tbac
-  WHEN NEW.dequeue_permission = 0
-   AND NEW.enqueue_permission = 0
-BEGIN
-  DELETE FROM mpmc_tbac
-   WHERE mpmc_tbac.token = NEW.token
-     AND mpmc_tbac.mpmc_id = NEW.mpmc_id;
-END;
-
 --------------------------------------------------------------------------------
 -- Down
 --------------------------------------------------------------------------------
