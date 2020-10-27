@@ -33,7 +33,7 @@ export function hasEnqueueTokens(id: string): boolean {
              SELECT *
                FROM mpmc_tbac
               WHERE mpmc_id = $id
-                AND enqueue_permission=1
+                AND enqueue_permission = 1
            ) AS enqueue_tokens_exist
   `).get({ id })
   return result['enqueue_tokens_exist'] === 1
@@ -49,7 +49,7 @@ export function matchEnqueueToken({ token, id }: {
                FROM mpmc_tbac
               WHERE mpmc_id = $id
                 AND token = $token
-                AND enqueue_permission=1
+                AND enqueue_permission = 1
            ) AS matched
   `).get({ token, id })
   return result['matched'] === 1
@@ -69,9 +69,9 @@ export function unsetEnqueueToken({ token, id }: { token: string; id: string }) 
   db.transaction(() => {
     db.prepare(`
       UPDATE mpmc_tbac
-        SET enqueue_permission = 0
-      WHERE token = $token
-        AND mpmc_id = $id;
+         SET enqueue_permission = 0
+       WHERE token = $token
+         AND mpmc_id = $id;
     `).run({ token, id })
     deleteNoPermissionToken({ token, id })
   })()
@@ -83,7 +83,7 @@ export function hasDequeueTokens(id: string): boolean {
              SELECT *
                FROM mpmc_tbac
               WHERE mpmc_id = $id
-                AND dequeue_permission=1
+                AND dequeue_permission = 1
            ) AS dequeue_tokens_exist
   `).get({ id })
   return result['dequeue_tokens_exist'] === 1
@@ -96,10 +96,10 @@ export function matchDequeueToken({ token, id }: {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
-              FROM mpmc_tbac
-             WHERE mpmc_id = $id
-               AND token = $token
-               AND dequeue_permission = 1
+               FROM mpmc_tbac
+              WHERE mpmc_id = $id
+                AND token = $token
+                AND dequeue_permission = 1
            ) AS matched
   `).get({ token, id })
   return result['matched'] === 1
@@ -119,9 +119,9 @@ export function unsetDequeueToken({ token, id }: { token: string; id: string }) 
   db.transaction(() => {
     db.prepare(`
       UPDATE mpmc_tbac
-        SET dequeue_permission = 0
-      WHERE token = $token
-        AND mpmc_id = $id;
+         SET dequeue_permission = 0
+       WHERE token = $token
+         AND mpmc_id = $id;
     `).run({ token, id })
     deleteNoPermissionToken({ token, id })
   })()
@@ -130,9 +130,9 @@ export function unsetDequeueToken({ token, id }: { token: string; id: string }) 
 function deleteNoPermissionToken({ token, id }: { token: string, id: string }) {
   getDatabase().prepare(`
     DELETE FROM mpmc_tbac
-      WHERE token = $token
-        AND mpmc_id = $id
-        AND dequeue_permission = 0
-        AND enqueue_permission = 0;
+     WHERE token = $token
+       AND mpmc_id = $id
+       AND dequeue_permission = 0
+       AND enqueue_permission = 0;
   `).run({ token, id })
 }
