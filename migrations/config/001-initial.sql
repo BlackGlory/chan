@@ -24,8 +24,8 @@ CREATE TABLE mpmc_whitelist (
 CREATE TABLE mpmc_tbac (
   token              VARCHAR(255) NOT NULL
 , mpmc_id            VARCHAR(255) NOT NULL
-, dequeue_permission BOOLEAN      NOT NULL CHECK(dequeue_permission IN (0,1))
-, enqueue_permission BOOLEAN      NOT NULL CHECK(enqueue_permission IN (0,1))
+, dequeue_permission BOOLEAN      NOT NULL DEFAULT 0 CHECK(dequeue_permission IN (0,1))
+, enqueue_permission BOOLEAN      NOT NULL DEFAULT 0 CHECK(enqueue_permission IN (0,1))
 , UNIQUE (token, mpmc_id)
 );
 

@@ -69,8 +69,8 @@ export function setEnqueueToken({ token, id }: { token: string; id: string }) {
     }
   } else {
     db.prepare(`
-      INSERT INTO mpmc_tbac (token, mpmc_id, dequeue_permission, enqueue_permission)
-      VALUES ($token, $id, 0, 1);
+      INSERT INTO mpmc_tbac (token, mpmc_id, enqueue_permission)
+      VALUES ($token, $id, 1);
     `).run({ token, id })
   }
 }
@@ -125,8 +125,8 @@ export function setDequeueToken({ token, id }: { token: string; id: string }) {
     }
   } else {
     db.prepare(`
-      INSERT INTO mpmc_tbac (token, mpmc_id, dequeue_permission, enqueue_permission)
-      VALUES ($token, $id, 1, 0);
+      INSERT INTO mpmc_tbac (token, mpmc_id, dequeue_permission)
+      VALUES ($token, $id, 1);
     `).run({ token, id })
   }
 }
