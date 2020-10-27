@@ -53,26 +53,12 @@ export function matchEnqueueToken({ token, id }: {
 }
 
 export function setEnqueueToken({ token, id }: { token: string; id: string }) {
-  const db = getDatabase()
-  const row = db.prepare(`
-    SELECT enqueue_permission
-      FROM mpmc_tbac
-     WHERE token = $token AND mpmc_id = $id;
-  `).get({ token, id })
-  if (row) {
-    if (row['enqueue_permission'] === 0) {
-      db.prepare(`
-        UPDATE mpmc_tbac
-           SET enqueue_permission = 1
-         WHERE token = $token AND mpmc_id = $id;
-      `).run({ token, id })
-    }
-  } else {
-    db.prepare(`
-      INSERT INTO mpmc_tbac (token, mpmc_id, enqueue_permission)
-      VALUES ($token, $id, 1);
-    `).run({ token, id })
-  }
+  getDatabase().prepare(`
+    INSERT INTO mpmc_tbac (token, mpmc_id, enqueue_permission)
+    VALUES ($token, $id, 1)
+        ON CONFLICT (token, mpmc_id) DO UPDATE
+                                           SET enqueue_permission = 1;
+  `).run({ token, id })
 }
 
 export function unsetEnqueueToken({ token, id }: { token: string; id: string }) {
@@ -114,26 +100,12 @@ export function matchDequeueToken({ token, id }: {
 }
 
 export function setDequeueToken({ token, id }: { token: string; id: string }) {
-  const db = getDatabase()
-  const row = db.prepare(`
-    SELECT dequeue_permission
-      FROM mpmc_tbac
-     WHERE token = $token AND mpmc_id = $id;
-  `).get({ token, id })
-  if (row) {
-    if (row['dequeue_permission'] === 0) {
-      db.prepare(`
-        UPDATE mpmc_tbac
-           SET dequeue_permission = 1
-         WHERE token = $token AND mpmc_id = $id;
-      `).run({ token, id })
-    }
-  } else {
-    db.prepare(`
-      INSERT INTO mpmc_tbac (token, mpmc_id, dequeue_permission)
-      VALUES ($token, $id, 1);
-    `).run({ token, id })
-  }
+  getDatabase().prepare(`
+    INSERT INTO mpmc_tbac (token, mpmc_id, dequeue_permission)
+    VALUES ($token, $id, 1)
+        ON CONFLICT (token, mpmc_id) DO UPDATE
+                                           SET dequeue_permission = 1;
+  `).run({ token, id })
 }
 
 export function unsetDequeueToken({ token, id }: { token: string; id: string }) {
