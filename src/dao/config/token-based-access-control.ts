@@ -56,8 +56,8 @@ export function setEnqueueToken({ token, id }: { token: string; id: string }) {
   getDatabase().prepare(`
     INSERT INTO mpmc_tbac (token, mpmc_id, enqueue_permission)
     VALUES ($token, $id, 1)
-        ON CONFLICT (token, mpmc_id) DO UPDATE
-                                           SET enqueue_permission = 1;
+        ON CONFLICT (token, mpmc_id)
+        DO UPDATE SET enqueue_permission = 1;
   `).run({ token, id })
 }
 
@@ -103,8 +103,8 @@ export function setDequeueToken({ token, id }: { token: string; id: string }) {
   getDatabase().prepare(`
     INSERT INTO mpmc_tbac (token, mpmc_id, dequeue_permission)
     VALUES ($token, $id, 1)
-        ON CONFLICT (token, mpmc_id) DO UPDATE
-                                           SET dequeue_permission = 1;
+        ON CONFLICT (token, mpmc_id)
+        DO UPDATE SET dequeue_permission = 1;
   `).run({ token, id })
 }
 
