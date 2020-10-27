@@ -19,7 +19,7 @@ export function getJsonSchema(id: string): string | null {
 export function setJsonSchema({ id, schema }: { id: string; schema: string }): void {
   getDatabase().prepare(`
     INSERT INTO mpmc_json_schema (mpmc_id, json_schema)
-    VALUES($id, $schema)
+    VALUES ($id, $schema)
         ON CONFLICT(mpmc_id)
         DO UPDATE SET json_schema = $schema;
   `).run({ id, schema })
