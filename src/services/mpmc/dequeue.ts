@@ -36,15 +36,15 @@ export const routes: FastifyPluginAsync<{
       }
 
       if (TOKEN_BASED_ACCESS_CONTROL()) {
-        if (await DAO.hasDequeueTokens(id)) {
+        if (await DAO.hasReadTokens(id)) {
           if (token) {
-            if (!await DAO.matchDequeueToken({ token, id })) return reply.status(401).send()
+            if (!await DAO.matchReadToken({ token, id })) return reply.status(401).send()
           } else {
             return reply.status(401).send()
           }
         } else {
           if (DISABLE_NO_TOKENS()) {
-            if (!await DAO.hasEnqueueTokens(id)) return reply.status(403).send()
+            if (!await DAO.hasWriteTokens(id)) return reply.status(403).send()
           }
         }
       }

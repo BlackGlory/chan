@@ -55,7 +55,7 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
   server.put<{
     Params: { token: string, id: string }
   }>(
-    '/mpmc/:id/tokens/:token/enqueue'
+    '/mpmc/:id/tokens/:token/write'
   , {
       schema: {
         params: {
@@ -68,7 +68,7 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      await DAO.setEnqueueToken({ token: req.params.token, id: req.params.id })
+      await DAO.setWriteToken({ token: req.params.token, id: req.params.id })
       reply.status(204).send()
     }
   )
@@ -76,7 +76,7 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
   server.delete<{
     Params: { token: string, id: string }
   }>(
-    '/mpmc/:id/tokens/:token/enqueue'
+    '/mpmc/:id/tokens/:token/write'
   , {
       schema: {
         params: {
@@ -89,7 +89,7 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      await DAO.unsetEnqueueToken({ token: req.params.token, id: req.params.id })
+      await DAO.unsetWriteToken({ token: req.params.token, id: req.params.id })
       reply.status(204).send()
     }
   )
@@ -98,7 +98,7 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
   server.put<{
     Params: { token: string, id : string }
   }>(
-    '/mpmc/:id/tokens/:token/dequeue'
+    '/mpmc/:id/tokens/:token/read'
   , {
       schema: {
         params: {
@@ -111,7 +111,7 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      await DAO.setDequeueToken({ token: req.params.token, id: req.params.id })
+      await DAO.setReadToken({ token: req.params.token, id: req.params.id })
       reply.status(204).send()
     }
   )
@@ -119,7 +119,7 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
   server.delete<{
     Params: { token: string, id : string }
   }>(
-    '/mpmc/:id/tokens/:token/dequeue'
+    '/mpmc/:id/tokens/:token/read'
   , {
       schema: {
         params: {
@@ -132,7 +132,7 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      await DAO.unsetDequeueToken({ token: req.params.token, id: req.params.id })
+      await DAO.unsetReadToken({ token: req.params.token, id: req.params.id })
       reply.status(204).send()
     }
   )

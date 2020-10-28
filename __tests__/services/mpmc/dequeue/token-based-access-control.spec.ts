@@ -21,7 +21,7 @@ describe('token-based access control', () => {
         const token = 'token'
         const message = 'message'
         const server = await buildServer()
-        await DAO.setDequeueToken({ id, token })
+        await DAO.setReadToken({ id, token })
 
         setImmediate(() => {
           server.inject({
@@ -51,7 +51,7 @@ describe('token-based access control', () => {
         const id = 'id'
         const token = 'token'
         const server = await buildServer()
-        await DAO.setDequeueToken({ id, token })
+        await DAO.setReadToken({ id, token })
 
         const res = await server.inject({
           method: 'GET'
@@ -70,7 +70,7 @@ describe('token-based access control', () => {
         const id = 'id'
         const token = 'token'
         const server = await buildServer()
-        await DAO.setDequeueToken({ id, token })
+        await DAO.setReadToken({ id, token })
 
         const res = await server.inject({
           method: 'GET'
@@ -91,7 +91,7 @@ describe('token-based access control', () => {
         const token = 'token'
         const message = 'message'
         const server = await buildServer()
-        await DAO.setEnqueueToken({ id, token })
+        await DAO.setWriteToken({ id, token })
 
         setImmediate(() => {
           server.inject({

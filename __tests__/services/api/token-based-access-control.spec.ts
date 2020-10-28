@@ -120,7 +120,7 @@ describe('TBAC', () => {
     })
   })
 
-  describe('PUT /api/mpmc/:id/tokens/:token/enqueue', () => {
+  describe('PUT /api/mpmc/:id/tokens/:token/write', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
@@ -130,7 +130,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/enqueue`
+        , url: `/api/mpmc/${id}/tokens/${token}/write`
         , headers: createAuthHeaders()
         })
 
@@ -146,7 +146,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/enqueue`
+        , url: `/api/mpmc/${id}/tokens/${token}/write`
         })
 
         expect(res.statusCode).toBe(401)
@@ -162,7 +162,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/enqueue`
+        , url: `/api/mpmc/${id}/tokens/${token}/write`
         , headers: createAuthHeaders('bad')
         })
 
@@ -171,7 +171,7 @@ describe('TBAC', () => {
     })
   })
 
-  describe('DELETE /api/mpmc/:id/tokens/:token/enqueue', () => {
+  describe('DELETE /api/mpmc/:id/tokens/:token/write', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
@@ -181,7 +181,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/enqueue`
+        , url: `/api/mpmc/${id}/tokens/${token}/write`
         , headers: createAuthHeaders()
         })
 
@@ -197,7 +197,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/enqueue`
+        , url: `/api/mpmc/${id}/tokens/${token}/write`
         })
 
         expect(res.statusCode).toBe(401)
@@ -213,7 +213,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/enqueue`
+        , url: `/api/mpmc/${id}/tokens/${token}/write`
         , headers: createAuthHeaders('bad')
         })
 
@@ -222,7 +222,7 @@ describe('TBAC', () => {
     })
   })
 
-  describe('PUT /api/mpmc/:id/tokens/:token/dequeue', () => {
+  describe('PUT /api/mpmc/:id/tokens/:token/read', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
@@ -232,7 +232,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/dequeue`
+        , url: `/api/mpmc/${id}/tokens/${token}/read`
         , headers: createAuthHeaders()
         })
 
@@ -248,7 +248,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/dequeue`
+        , url: `/api/mpmc/${id}/tokens/${token}/read`
         })
 
         expect(res.statusCode).toBe(401)
@@ -264,7 +264,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/dequeue`
+        , url: `/api/mpmc/${id}/tokens/${token}/read`
         , headers: createAuthHeaders('bad')
         })
 
@@ -273,7 +273,7 @@ describe('TBAC', () => {
     })
   })
 
-  describe('DELETE /api/mpmc/:id/tokens/:token/dequeue', () => {
+  describe('DELETE /api/mpmc/:id/tokens/:token/read', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
@@ -283,7 +283,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/dequeue`
+        , url: `/api/mpmc/${id}/tokens/${token}/read`
         , headers: createAuthHeaders()
         })
 
@@ -299,7 +299,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/dequeue`
+        , url: `/api/mpmc/${id}/tokens/${token}/read`
         })
 
         expect(res.statusCode).toBe(401)
@@ -315,7 +315,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/dequeue`
+        , url: `/api/mpmc/${id}/tokens/${token}/read`
         , headers: createAuthHeaders('bad')
         })
 

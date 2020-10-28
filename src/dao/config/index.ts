@@ -28,15 +28,15 @@ const TokenBasedAccessControlDAO: ITokenBasedAccessControlDAO = {
   getAllIdsWithTokens: asyncify(TokenBasedAccessControl.getAllIdsWithTokens)
 , getAllTokens: asyncify(TokenBasedAccessControl.getAllTokens)
 
-, hasEnqueueTokens: asyncify(TokenBasedAccessControl.hasEnqueueTokens)
-, matchEnqueueToken: asyncify(TokenBasedAccessControl.matchEnqueueToken)
-, setEnqueueToken: asyncify(TokenBasedAccessControl.setEnqueueToken)
-, unsetEnqueueToken: asyncify(TokenBasedAccessControl.unsetEnqueueToken)
+, hasWriteTokens: asyncify(TokenBasedAccessControl.hasWriteTokens)
+, matchWriteToken: asyncify(TokenBasedAccessControl.matchWriteToken)
+, setWriteToken: asyncify(TokenBasedAccessControl.setWriteToken)
+, unsetWriteToken: asyncify(TokenBasedAccessControl.unsetWriteToken)
 
-, hasDequeueTokens: asyncify(TokenBasedAccessControl.hasDequeueTokens)
-, matchDequeueToken: asyncify(TokenBasedAccessControl.matchDequeueToken)
-, setDequeueToken: asyncify(TokenBasedAccessControl.setDequeueToken)
-, unsetDequeueToken: asyncify(TokenBasedAccessControl.unsetDequeueToken)
+, hasReadTokens: asyncify(TokenBasedAccessControl.hasReadTokens)
+, matchReadToken: asyncify(TokenBasedAccessControl.matchReadToken)
+, setReadToken: asyncify(TokenBasedAccessControl.setReadToken)
+, unsetReadToken: asyncify(TokenBasedAccessControl.unsetReadToken)
 }
 
 export const DAO: IDataAccessObject = {

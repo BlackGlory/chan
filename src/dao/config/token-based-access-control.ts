@@ -8,38 +8,38 @@ export function getAllIdsWithTokens(): string[] {
   return result.map(x => x['mpmc_id'])
 }
 
-export function getAllTokens(id: string): Array<{ token: string, enqueue: boolean, dequeue: boolean }> {
+export function getAllTokens(id: string): Array<{ token: string, write: boolean, read: boolean }> {
   const result: Array<{
     token: string
-    'enqueue_permission': number
-    'dequeue_permission': number
+    'write_permission': number
+    'read_permission': number
   }> = getDatabase().prepare(`
     SELECT token
-         , enqueue_permission
-         , dequeue_permission
+         , write_permission
+         , read_permission
       FROM mpmc_tbac
      WHERE mpmc_id = $id;
   `).all({ id })
   return result.map(x => ({
     token: x['token']
-  , enqueue: x['enqueue_permission'] === 1
-  , dequeue: x['dequeue_permission'] === 1
+  , write: x['write_permission'] === 1
+  , read: x['read_permission'] === 1
   }))
 }
 
-export function hasEnqueueTokens(id: string): boolean {
+export function hasWriteTokens(id: string): boolean {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
                FROM mpmc_tbac
               WHERE mpmc_id = $id
-                AND enqueue_permission = 1
-           ) AS enqueue_tokens_exist
+                AND write_permission = 1
+           ) AS write_tokens_exist
   `).get({ id })
-  return result['enqueue_tokens_exist'] === 1
+  return result['write_tokens_exist'] === 1
 }
 
-export function matchEnqueueToken({ token, id }: {
+export function matchWriteToken({ token, id }: {
   token: string
   id: string
 }): boolean {
@@ -49,27 +49,27 @@ export function matchEnqueueToken({ token, id }: {
                FROM mpmc_tbac
               WHERE mpmc_id = $id
                 AND token = $token
-                AND enqueue_permission = 1
+                AND write_permission = 1
            ) AS matched
   `).get({ token, id })
   return result['matched'] === 1
 }
 
-export function setEnqueueToken({ token, id }: { token: string; id: string }) {
+export function setWriteToken({ token, id }: { token: string; id: string }) {
   getDatabase().prepare(`
-    INSERT INTO mpmc_tbac (token, mpmc_id, enqueue_permission)
+    INSERT INTO mpmc_tbac (token, mpmc_id, write_permission)
     VALUES ($token, $id, 1)
         ON CONFLICT (token, mpmc_id)
-        DO UPDATE SET enqueue_permission = 1;
+        DO UPDATE SET write_permission = 1;
   `).run({ token, id })
 }
 
-export function unsetEnqueueToken({ token, id }: { token: string; id: string }) {
+export function unsetWriteToken({ token, id }: { token: string; id: string }) {
   const db = getDatabase()
   db.transaction(() => {
     db.prepare(`
       UPDATE mpmc_tbac
-         SET enqueue_permission = 0
+         SET write_permission = 0
        WHERE token = $token
          AND mpmc_id = $id;
     `).run({ token, id })
@@ -77,19 +77,19 @@ export function unsetEnqueueToken({ token, id }: { token: string; id: string }) 
   })()
 }
 
-export function hasDequeueTokens(id: string): boolean {
+export function hasReadTokens(id: string): boolean {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
                FROM mpmc_tbac
               WHERE mpmc_id = $id
-                AND dequeue_permission = 1
-           ) AS dequeue_tokens_exist
+                AND read_permission = 1
+           ) AS read_tokens_exist
   `).get({ id })
-  return result['dequeue_tokens_exist'] === 1
+  return result['read_tokens_exist'] === 1
 }
 
-export function matchDequeueToken({ token, id }: {
+export function matchReadToken({ token, id }: {
   token: string;
   id: string
 }): boolean {
@@ -99,27 +99,27 @@ export function matchDequeueToken({ token, id }: {
                FROM mpmc_tbac
               WHERE mpmc_id = $id
                 AND token = $token
-                AND dequeue_permission = 1
+                AND read_permission = 1
            ) AS matched
   `).get({ token, id })
   return result['matched'] === 1
 }
 
-export function setDequeueToken({ token, id }: { token: string; id: string }) {
+export function setReadToken({ token, id }: { token: string; id: string }) {
   getDatabase().prepare(`
-    INSERT INTO mpmc_tbac (token, mpmc_id, dequeue_permission)
+    INSERT INTO mpmc_tbac (token, mpmc_id, read_permission)
     VALUES ($token, $id, 1)
         ON CONFLICT (token, mpmc_id)
-        DO UPDATE SET dequeue_permission = 1;
+        DO UPDATE SET read_permission = 1;
   `).run({ token, id })
 }
 
-export function unsetDequeueToken({ token, id }: { token: string; id: string }) {
+export function unsetReadToken({ token, id }: { token: string; id: string }) {
   const db = getDatabase()
   db.transaction(() => {
     db.prepare(`
       UPDATE mpmc_tbac
-         SET dequeue_permission = 0
+         SET read_permission = 0
        WHERE token = $token
          AND mpmc_id = $id;
     `).run({ token, id })
@@ -132,7 +132,7 @@ function deleteNoPermissionToken({ token, id }: { token: string, id: string }) {
     DELETE FROM mpmc_tbac
      WHERE token = $token
        AND mpmc_id = $id
-       AND dequeue_permission = 0
-       AND enqueue_permission = 0;
+       AND read_permission = 0
+       AND write_permission = 0;
   `).run({ token, id })
 }

@@ -142,7 +142,7 @@ volumes:
 id用于标识消息队列.
 enqueue请求的`Content-Type`会在dequeue时原样返回.
 
-如果开启基于token的访问控制, 则可能需要在Querystring提供具有enqueue权限的token:
+如果开启基于token的访问控制, 则可能需要在Querystring提供具有write权限的token:
 `POST /mpmc/<id>?token=<token>`
 
 #### Example
@@ -169,7 +169,7 @@ await fetch(`http://localhost:8080/mpmc/${id}`, {
 从特定消息队列取出消息, 如果消息队列为空, 则阻塞直到有新消息enqueue.
 id用于标识消息队列.
 
-如果开启基于token的访问控制, 则可能需要在Querystring提供具有dequeue权限的token:
+如果开启基于token的访问控制, 则可能需要在Querystring提供具有read权限的token:
 `GET /mpmc/<id>?token=<token>`
 
 #### Example
@@ -485,20 +485,20 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 通过设置环境变量`MPMC_TOKEN_BASED_ACCESS_CONTROL=true`开启基于token的访问控制.
 
 基于token的访问控制将根据消息队列具有的token决定其访问规则, 具体行为见下方表格.
-一个消息队列可以有多个token, 每个token可以单独设置enqueue权限和dequeue权限.
+一个消息队列可以有多个token, 每个token可以单独设置write和read权限.
 不同消息队列的token不共用.
 
-| 此消息队列存在具有dequeue权限的token | 此消息队列存在具有enqueue权限的token | 行为 |
+| 此消息队列存在具有read权限的token | 此消息队列存在具有write权限的token | 行为 |
 | --- | --- | --- |
-| YES | YES | 只有使用具有相关权限的token才能执行操作 |
-| YES | NO | 无token可以enqueue, 只有具有dequeue权限的token可以dequeue |
-| NO | YES | 无token可以dequeue, 只有具有enqueue权限的token可以enqueue |
+| YES | YES | 有write权限才能enqueue, 有read权限才能dequeue |
+| YES | NO | 无token可以enqueue, 有read权限才能dequeue |
+| NO | YES | 无token可以dequeue, 有write权限才能enqueue |
 | NO | NO | 无token可以enqueue和dequeue |
 
 在开启基于token的访问控制时,
 可以通过将环境变量`MPMC_DISABLE_NO_TOKENS`设置为`true`将无token的消息队列禁用.
 
-基于token的访问控制作出了如下假定, 因此不使用加密和消息验证码(MAC):
+基于token的访问控制作出了以下假设, 因此不使用加密和消息验证码(MAC):
 - token的传输过程是安全的
 - token难以被猜测
 - token的意外泄露可以被迅速处理
@@ -532,7 +532,7 @@ await fetch(`http://localhost:8080/api/mpmc-with-tokens`, {
 `GET /api/mpmc/<id>/tokens`
 
 获取特定消息队列的所有token信息, 返回JSON表示的token信息数组
-`Array<{ token: string, enqueue: boolean, dequeue: boolean }>`.
+`Array<{ token: string, write: boolean, read: boolean }>`.
 
 ##### Example
 
@@ -552,11 +552,11 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens`, {
 }).then(res => res.json())
 ```
 
-#### 为特定消息队列的token设置enqueue权限
+#### 为特定消息队列的token设置write权限
 
-`PUT /api/mpmc/<id>/tokens/<token>/enqueue`
+`PUT /api/mpmc/<id>/tokens/<token>/write`
 
-添加/更新token, 为token设置enqueue权限.
+添加/更新token, 为token设置write权限.
 
 ##### Example
 
@@ -565,12 +565,12 @@ curl
 curl \
   --request PUT \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/tokens/$token/enqueue"
+  "http://localhost:8080/api/mpmc/$id/tokens/$token/write"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/enqueue`, {
+await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/write`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -578,11 +578,11 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/enqueue`, {
 })
 ```
 
-#### 取消特定消息队列的token的enqueue权限
+#### 取消特定消息队列的token的write权限
 
-`DELETE /api/mpmc/<id>/tokens/<token>/enqueue`
+`DELETE /api/mpmc/<id>/tokens/<token>/write`
 
-取消token的enqueue权限.
+取消token的write权限.
 
 ##### Example
 
@@ -591,12 +591,12 @@ curl
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/tokens/$token/enqueue"
+  "http://localhost:8080/api/mpmc/$id/tokens/$token/write"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/enqueue`, {
+await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/write`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -604,11 +604,11 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/enqueue`, {
 })
 ```
 
-#### 为特定消息队列的token设置dequeue权限
+#### 为特定消息队列的token设置read权限
 
-`PUT /api/mpmc/<id>/tokens/<token>/dequeue`
+`PUT /api/mpmc/<id>/tokens/<token>/read`
 
-添加/更新token, 为token设置dequeue权限.
+添加/更新token, 为token设置read权限.
 
 ##### Example
 
@@ -617,12 +617,12 @@ curl
 curl \
   --request PUT \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/tokens/$token/dequeue"
+  "http://localhost:8080/api/mpmc/$id/tokens/$token/read"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/dequeue`, {
+await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/read`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -630,11 +630,11 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/dequeue`, {
 })
 ```
 
-#### 取消特定消息队列的token的enqueue权限
+#### 取消特定消息队列的token的write权限
 
-`DELETE /api/mpmc/<id>/tokens/<token>/dequeue`
+`DELETE /api/mpmc/<id>/tokens/<token>/write`
 
-取消token的dequeue权限.
+取消token的read权限.
 
 ##### Example
 
@@ -643,12 +643,12 @@ curl
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/tokens/$token/dequeue"
+  "http://localhost:8080/api/mpmc/$id/tokens/$token/read"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/dequeue`, {
+await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/read`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
