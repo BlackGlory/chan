@@ -1,4 +1,4 @@
-import * as DAO from '@src/dao/config/whitelist'
+import * as DAO from '@dao/config/whitelist'
 import { Database } from 'better-sqlite3'
 import { prepareDatabase } from '@test/utils'
 import 'jest-extended'
