@@ -2,6 +2,8 @@ import { migrateDatabase } from '@src/dao/config/database'
 import { buildServer } from './server'
 import { PORT, HOST, CI } from '@env'
 
+process.on('SIGHUP', () => process.exit(1))
+
 ;(async () => {
   await migrateDatabase()
 
