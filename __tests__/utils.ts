@@ -2,13 +2,13 @@ import {
   getDatabase as getAccessControlDatabase
 , reconnectDatabase as reconnectAccessControlDatabase
 , migrateDatabase as migrateAccessControlDatabase
-} from '@src/dao/access-control/database'
+} from '@dao/access-control/database'
 
 import {
   getDatabase as getJsonSchemaDatabase
 , reconnectDatabase as reconnectJsonSchemaDatabase
 , migrateDatabase as migrateJsonSchemaDatabase
-} from '@src/dao/json-schema/database'
+} from '@dao/json-schema/database'
 
 export async function prepareAccessControlDatabase() {
   reconnectAccessControlDatabase()
