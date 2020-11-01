@@ -18,6 +18,7 @@ RUN yarn build \
  && ln -s /data data
 
 ENV CHAN_HOST=0.0.0.0
+ENV CHAN_PORT=8080
 EXPOSE 8080
 ENTRYPOINT ["yarn"]
 CMD ["--silent", "start"]
