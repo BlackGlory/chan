@@ -38,7 +38,8 @@ interface ITokenBasedAccessControlDAO {
   unsetReadToken(props: { token: string; id: string }): Promise<void>
 }
 
-interface IDataAccessObject extends IBlacklistDAO
-                                  , IWhitelistDAO
-                                  , IJsonSchemaDAO
-                                  , ITokenBasedAccessControlDAO {}
+interface IConfigDAO extends
+  IBlacklistDAO
+, IWhitelistDAO
+, IJsonSchemaDAO
+, ITokenBasedAccessControlDAO {}
