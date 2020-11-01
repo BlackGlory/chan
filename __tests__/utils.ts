@@ -1,9 +1,26 @@
-import { getDatabase, reconnectDatabase, migrateDatabase } from '@dao/config/database'
+import {
+  getDatabase as getAccessControlDatabase
+, reconnectDatabase as reconnectAccessControlDatabase
+, migrateDatabase as migrateAccessControlDatabase
+} from '@src/dao/access-control/database'
 
-export async function prepareDatabase() {
-  reconnectDatabase()
-  const db = getDatabase()
-  await migrateDatabase()
+import {
+  getDatabase as getJsonSchemaDatabase
+, reconnectDatabase as reconnectJsonSchemaDatabase
+, migrateDatabase as migrateJsonSchemaDatabase
+} from '@src/dao/json-schema/database'
+
+export async function prepareAccessControlDatabase() {
+  reconnectAccessControlDatabase()
+  const db = getAccessControlDatabase()
+  await migrateAccessControlDatabase()
+  return db
+}
+
+export async function prepareJsonSchemaDatabase() {
+  reconnectJsonSchemaDatabase()
+  const db = getJsonSchemaDatabase()
+  await migrateJsonSchemaDatabase()
   return db
 }
 

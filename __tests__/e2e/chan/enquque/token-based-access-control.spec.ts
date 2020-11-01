@@ -1,14 +1,14 @@
 import { buildServer } from '@src/server'
-import { prepareDatabase, resetEnvironment } from '@test/utils'
+import { prepareAccessControlDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
-import { ConfigDAO } from '@dao'
+import { AccessControlDAO } from '@dao'
 
-jest.mock('@dao/config/database')
+jest.mock('@dao/access-control/database')
 expect.extend(matchers)
 
 beforeEach(async () => {
   resetEnvironment()
-  await prepareDatabase()
+  await prepareAccessControlDatabase()
 })
 
 describe('token-based access control', () => {
@@ -21,7 +21,7 @@ describe('token-based access control', () => {
         const token = 'token'
         const message = 'message'
         const server = await buildServer()
-        await ConfigDAO.setWriteToken({ id, token })
+        await AccessControlDAO.setWriteToken({ id, token })
 
         setImmediate(() => {
           server.inject({
@@ -52,7 +52,7 @@ describe('token-based access control', () => {
         const token = 'token'
         const message = 'message'
         const server = await buildServer()
-        await ConfigDAO.setWriteToken({ id, token })
+        await AccessControlDAO.setWriteToken({ id, token })
 
         const res = await server.inject({
           method: 'POST'
@@ -76,7 +76,7 @@ describe('token-based access control', () => {
         const token = 'token'
         const message = 'message'
         const server = await buildServer()
-        await ConfigDAO.setWriteToken({ id, token })
+        await AccessControlDAO.setWriteToken({ id, token })
 
         const res = await server.inject({
           method: 'POST'
@@ -101,7 +101,7 @@ describe('token-based access control', () => {
         const token = 'token'
         const message = 'message'
         const server = await buildServer()
-        await ConfigDAO.setReadToken({ id, token })
+        await AccessControlDAO.setReadToken({ id, token })
 
         setImmediate(() => {
           server.inject({

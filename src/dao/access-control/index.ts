@@ -1,6 +1,5 @@
 import * as Blacklist from './blacklist'
 import * as Whitelist from './whitelist'
-import * as JsonSchema from './json-schema'
 import * as TokenBasedAccessControl from './token-based-access-control'
 
 const BlacklistDAO: IBlacklistDAO = {
@@ -15,13 +14,6 @@ const WhitelistDAO: IWhitelistDAO = {
 , getAllWhitelistItems: asyncify(Whitelist.getAllWhitelistItems)
 , inWhitelist: asyncify(Whitelist.inWhitelist)
 , removeWhitelistItem: asyncify(Whitelist.removeWhitelistItem)
-}
-
-const JsonSchemaDAO: IJsonSchemaDAO = {
-  getAllIdsWithJsonSchema: asyncify(JsonSchema.getAllIdsWithJsonSchema)
-, getJsonSchema: asyncify(JsonSchema.getJsonSchema)
-, removeJsonSchema: asyncify(JsonSchema.removeJsonSchema)
-, setJsonSchema: asyncify(JsonSchema.setJsonSchema)
 }
 
 const TokenBasedAccessControlDAO: ITokenBasedAccessControlDAO = {
@@ -39,10 +31,9 @@ const TokenBasedAccessControlDAO: ITokenBasedAccessControlDAO = {
 , unsetReadToken: asyncify(TokenBasedAccessControl.unsetReadToken)
 }
 
-export const ConfigDAO: IConfigDAO = {
+export const AccessControlDAO: IAccessControlDAO = {
   ...BlacklistDAO
 , ...WhitelistDAO
-, ...JsonSchemaDAO
 , ...TokenBasedAccessControlDAO
 }
 

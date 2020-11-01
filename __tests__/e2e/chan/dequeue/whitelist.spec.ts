@@ -1,14 +1,14 @@
 import { buildServer } from '@src/server'
-import { prepareDatabase, resetEnvironment } from '@test/utils'
+import { prepareAccessControlDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
-import { ConfigDAO } from '@dao'
+import { AccessControlDAO } from '@dao'
 
-jest.mock('@dao/config/database')
+jest.mock('@dao/access-control/database')
 expect.extend(matchers)
 
 beforeEach(async () => {
   resetEnvironment()
-  await prepareDatabase()
+  await prepareAccessControlDatabase()
 })
 
 describe('whitelist', () => {
@@ -19,7 +19,7 @@ describe('whitelist', () => {
       const id = 'id'
       const message = 'message'
       const server = await buildServer()
-      await ConfigDAO.addWhitelistItem(id)
+      await AccessControlDAO.addWhitelistItem(id)
 
       setImmediate(() => {
         server.inject({

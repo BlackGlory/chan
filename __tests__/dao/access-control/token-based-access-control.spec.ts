@@ -1,14 +1,14 @@
-import * as DAO from '@dao/config/token-based-access-control'
-import { prepareDatabase } from '@test/utils'
+import * as DAO from '@dao/access-control/token-based-access-control'
+import { prepareAccessControlDatabase } from '@test/utils'
 import { Database } from 'better-sqlite3'
 import 'jest-extended'
 
-jest.mock('@dao/config/database')
+jest.mock('@dao/access-control/database')
 
 describe('TBAC(token-based access control)', () => {
   describe('getAllIdsWithTokens(): string[]', () => {
     it('return string[]', async () => {
-      const db = await prepareDatabase()
+      const db = await prepareAccessControlDatabase()
       const id1 = 'id-1'
       const token1 = 'token-1'
       const id2 = 'id-2'
@@ -25,7 +25,7 @@ describe('TBAC(token-based access control)', () => {
 
   describe('getAllTokens(id: string): Array<{ token: string; enqueue: boolean; dequeue: boolean }>', () => {
     it('return Array<{ token: string; write: boolean; read: boolean }>', async () => {
-      const db = await prepareDatabase()
+      const db = await prepareAccessControlDatabase()
       const id = 'id-1'
       const token1 = 'token-1'
       const token2 = 'token-2'
@@ -46,7 +46,7 @@ describe('TBAC(token-based access control)', () => {
     describe('hasWriteTokens(id: string): boolean', () => {
       describe('tokens exist', () => {
         it('return true', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: false, write: true })
@@ -59,7 +59,7 @@ describe('TBAC(token-based access control)', () => {
 
       describe('tokens do not exist', () => {
         it('return false', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: true, write: false })
@@ -74,7 +74,7 @@ describe('TBAC(token-based access control)', () => {
     describe('matchWriteToken({ token: string; id: string }): boolean', () => {
       describe('token exist', () => {
         it('return true', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: false, write: true })
@@ -87,7 +87,7 @@ describe('TBAC(token-based access control)', () => {
 
       describe('token does not exist', () => {
         it('return false', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: true, write: false })
@@ -102,7 +102,7 @@ describe('TBAC(token-based access control)', () => {
     describe('setWriteToken({ token: string; id: string })', () => {
       describe('token exists', () => {
         it('update row', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: true, write: false })
@@ -117,7 +117,7 @@ describe('TBAC(token-based access control)', () => {
 
       describe('token does not exist', () => {
         it('insert row', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
 
@@ -133,7 +133,7 @@ describe('TBAC(token-based access control)', () => {
     describe('unsetWriteToken({ token: string; id: string })', () => {
       describe('token exists', () => {
         it('return undefined', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: true, write: true })
@@ -148,7 +148,7 @@ describe('TBAC(token-based access control)', () => {
 
       describe('token does not exist', () => {
         it('return undefined', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
 
@@ -165,7 +165,7 @@ describe('TBAC(token-based access control)', () => {
     describe('hasReadTokens(id: string): boolean', () => {
       describe('tokens exist', () => {
         it('return true', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: true, write: false })
@@ -178,7 +178,7 @@ describe('TBAC(token-based access control)', () => {
 
       describe('tokens do not exist', () => {
         it('return false', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: false, write: true })
@@ -193,7 +193,7 @@ describe('TBAC(token-based access control)', () => {
     describe('matchReadToken({ token: string; id: string }): boolean', () => {
       describe('tokens exist', () => {
         it('return true', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: true, write: false })
@@ -206,7 +206,7 @@ describe('TBAC(token-based access control)', () => {
 
       describe('tokens do not exist', () => {
         it('return false', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: false, write: true })
@@ -221,7 +221,7 @@ describe('TBAC(token-based access control)', () => {
     describe('setReadToken(token: string, id: string)', () => {
       describe('token exists', () => {
         it('update row', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: false, write: true })
@@ -236,7 +236,7 @@ describe('TBAC(token-based access control)', () => {
 
       describe('token does not exist', () => {
         it('insert row', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
 
@@ -252,7 +252,7 @@ describe('TBAC(token-based access control)', () => {
     describe('unsetReadToken', () => {
       describe('token exists', () => {
         it('return undefined', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
           insert(db, { token, id, read: true, write: true })
@@ -267,7 +267,7 @@ describe('TBAC(token-based access control)', () => {
 
       describe('token does not exist', () => {
         it('return undefined', async () => {
-          const db = await prepareDatabase()
+          const db = await prepareAccessControlDatabase()
           const token = 'token-1'
           const id = 'id-1'
 

@@ -1,21 +1,21 @@
-import { ConfigDAO } from '@dao'
+import { AccessControlDAO } from '@dao'
 import { LIST_BASED_ACCESS_CONTROL, ListBasedAccessControl } from '@env'
 import { Forbidden } from './error'
 
 export function getAll(): Promise<string[]> {
-  return ConfigDAO.getAllWhitelistItems()
+  return AccessControlDAO.getAllWhitelistItems()
 }
 
 export function add(id: string): Promise<void> {
-  return ConfigDAO.addWhitelistItem(id)
+  return AccessControlDAO.addWhitelistItem(id)
 }
 
 export function remove(id: string): Promise<void> {
-  return ConfigDAO.removeWhitelistItem(id)
+  return AccessControlDAO.removeWhitelistItem(id)
 }
 
 export async function isBlocked(id: string): Promise<boolean> {
-  return !await ConfigDAO.inWhitelist(id)
+  return !await AccessControlDAO.inWhitelist(id)
 }
 
 export function isEnabled() {

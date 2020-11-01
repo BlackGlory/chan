@@ -5,9 +5,9 @@ import * as fs from 'fs-extra'
 import { readMigrations } from 'migrations-file'
 import { migrate } from '@blackglory/better-sqlite3-migrations'
 
-const migrationsPath = path.join(appRoot, 'migrations/config')
+const migrationsPath = path.join(appRoot, 'migrations/access-control')
 const dataPath = path.join(appRoot, 'data')
-const dataFilename = path.join(dataPath, 'config.db')
+const dataFilename = path.join(dataPath, 'access-control.db')
 fs.ensureDirSync(dataPath)
 let db = new Database(dataFilename)
 

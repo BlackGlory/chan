@@ -12,13 +12,6 @@ interface IWhitelistDAO {
   removeWhitelistItem(id: string): Promise<void>
 }
 
-interface IJsonSchemaDAO {
-  getAllIdsWithJsonSchema(): Promise<string[]>
-  getJsonSchema(id: string): Promise<string | null>
-  setJsonSchema(props: { id: string; schema: string }): Promise<void>
-  removeJsonSchema(id: string): Promise<void>
-}
-
 interface ITokenBasedAccessControlDAO {
   getAllIdsWithTokens(): Promise<string[]>
   getAllTokens(id: string): Promise<Array<{
@@ -38,8 +31,7 @@ interface ITokenBasedAccessControlDAO {
   unsetReadToken(props: { token: string; id: string }): Promise<void>
 }
 
-interface IConfigDAO extends
+interface IAccessControlDAO extends
   IBlacklistDAO
 , IWhitelistDAO
-, IJsonSchemaDAO
 , ITokenBasedAccessControlDAO {}

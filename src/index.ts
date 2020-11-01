@@ -1,4 +1,4 @@
-import { migrateDatabase } from '@src/dao/config/database'
+import { migrateDatabase } from '@src/dao/access-control/database'
 import { buildServer } from './server'
 import { PORT, HOST, CI } from '@env'
 

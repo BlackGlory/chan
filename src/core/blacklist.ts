@@ -1,17 +1,17 @@
-import { ConfigDAO } from '@dao'
+import { AccessControlDAO } from '@dao'
 import { LIST_BASED_ACCESS_CONTROL, ListBasedAccessControl } from '@env'
 import { Forbidden } from './error'
 
 export function getAll(): Promise<string[]> {
-  return ConfigDAO.getAllBlacklistItems()
+  return AccessControlDAO.getAllBlacklistItems()
 }
 
 export function add(id: string): Promise<void> {
-  return ConfigDAO.addBlacklistItem(id)
+  return AccessControlDAO.addBlacklistItem(id)
 }
 
 export function remove(id: string): Promise<void> {
-  return ConfigDAO.removeBlacklistItem(id)
+  return AccessControlDAO.removeBlacklistItem(id)
 }
 
 export function isEnabled(): boolean {
@@ -19,7 +19,7 @@ export function isEnabled(): boolean {
 }
 
 export async function isBlocked(id: string): Promise<boolean> {
-  return await ConfigDAO.inBlacklist(id)
+  return await AccessControlDAO.inBlacklist(id)
 }
 
 export async function check(id: string): Promise<void> {
