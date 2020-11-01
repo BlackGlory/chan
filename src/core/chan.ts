@@ -1,9 +1,9 @@
-import { MPMCDAO } from '@dao'
+import { ChanDAO } from '@dao'
 
 export function enqueue(id: string, payload: unknown): Promise<void> {
-  return MPMCDAO.enqueue(id, payload)
+  return ChanDAO.enqueue(id, payload)
 }
 
 export function dequeue(id: string): Promise<unknown> {
-  return MPMCDAO.dequeue(id)
+  return ChanDAO.dequeue(id)
 }

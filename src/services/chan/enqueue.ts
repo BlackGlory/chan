@@ -20,7 +20,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
     Querystring: { token?: string }
     Body: string
   }>(
-    '/mpmc/:id'
+    '/chan/:id'
   , {
       schema: {
         params: { id: idSchema }
@@ -65,7 +65,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
         type: req.headers['content-type'] ?? 'application/octet-stream'
       , payload
       }
-      await Core.MPMC.enqueue(id, pkg)
+      await Core.Chan.enqueue(id, pkg)
       reply.status(204).send()
 
       function isJSONPayload(): boolean {

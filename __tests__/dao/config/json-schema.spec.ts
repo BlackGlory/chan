@@ -113,9 +113,9 @@ function exist(db: Database, id: string) {
 }
 
 function insert(db: Database, { id, schema }:{ id: string; schema: string }) {
-  db.prepare('INSERT INTO mpmc_json_schema (mpmc_id, json_schema) VALUES ($id, $schema);').run({ id, schema })
+  db.prepare('INSERT INTO chan_json_schema (chan_id, json_schema) VALUES ($id, $schema);').run({ id, schema })
 }
 
 function select(db: Database, id: string) {
-  return db.prepare('SELECT * FROM mpmc_json_schema WHERE mpmc_id = $id;').get({ id })
+  return db.prepare('SELECT * FROM chan_json_schema WHERE chan_id = $id;').get({ id })
 }

@@ -13,15 +13,15 @@ beforeEach(async () => {
 })
 
 describe('json schema', () => {
-  describe('GET /api/mpmc-with-json-schema', () => {
+  describe('GET /api/chan-with-json-schema', () => {
     describe('auth', () => {
       it('200', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
 
         const res = await server.inject({
           method: 'GET'
-        , url: '/api/mpmc-with-json-schema'
+        , url: '/api/chan-with-json-schema'
         , headers: createAuthHeaders()
         })
 
@@ -39,7 +39,7 @@ describe('json schema', () => {
 
         const res = await server.inject({
           method: 'GET'
-        , url: '/api/mpmc-with-json-schema'
+        , url: '/api/chan-with-json-schema'
         })
 
         expect(res.statusCode).toBe(401)
@@ -48,12 +48,12 @@ describe('json schema', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
 
         const res = await server.inject({
           method: 'GET'
-        , url: '/api/mpmc-with-json-schema'
+        , url: '/api/chan-with-json-schema'
         , headers: createAuthHeaders('bad')
         })
 
@@ -62,11 +62,11 @@ describe('json schema', () => {
     })
   })
 
-  describe('GET /api/mpmc/<id>/json-schema', () => {
+  describe('GET /api/chan/<id>/json-schema', () => {
     describe('auth', () => {
       describe('exist', () => {
         it('200', async () => {
-          process.env.MPMC_ADMIN_PASSWORD = 'password'
+          process.env.CHAN_ADMIN_PASSWORD = 'password'
           const server = await buildServer()
           const id = 'id'
           const schema = { type: 'number' }
@@ -77,7 +77,7 @@ describe('json schema', () => {
 
           const res = await server.inject({
             method: 'GET'
-          , url: `/api/mpmc/${id}/json-schema`
+          , url: `/api/chan/${id}/json-schema`
           , headers: createAuthHeaders()
           })
 
@@ -88,13 +88,13 @@ describe('json schema', () => {
 
       describe('not exist', () => {
         it('404', async () => {
-          process.env.MPMC_ADMIN_PASSWORD = 'password'
+          process.env.CHAN_ADMIN_PASSWORD = 'password'
           const server = await buildServer()
           const id = 'id'
 
           const res = await server.inject({
             method: 'GET'
-          , url: `/api/mpmc/${id}/json-schema`
+          , url: `/api/chan/${id}/json-schema`
           , headers: createAuthHeaders()
           })
 
@@ -110,7 +110,7 @@ describe('json schema', () => {
 
         const res = await server.inject({
           method: 'GET'
-        , url: `/api/mpmc/${id}/json-schema`
+        , url: `/api/chan/${id}/json-schema`
         })
 
         expect(res.statusCode).toBe(401)
@@ -119,13 +119,13 @@ describe('json schema', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
           method: 'GET'
-        , url: `/api/mpmc/${id}/json-schema`
+        , url: `/api/chan/${id}/json-schema`
         , headers: createAuthHeaders('bad')
         })
 
@@ -134,18 +134,18 @@ describe('json schema', () => {
     })
   })
 
-  describe('PUT /api/mpmc/<id>/json-schema', () => {
+  describe('PUT /api/chan/<id>/json-schema', () => {
     describe('auth', () => {
       describe('valid JSON', () => {
         it('204', async () => {
-          process.env.MPMC_ADMIN_PASSWORD = 'password'
+          process.env.CHAN_ADMIN_PASSWORD = 'password'
           const server = await buildServer()
           const id = 'id'
           const schema = { type: 'number' }
 
           const res = await server.inject({
             method: 'PUT'
-          , url: `/api/mpmc/${id}/json-schema`
+          , url: `/api/chan/${id}/json-schema`
           , headers: {
               ...createAuthHeaders()
             , ...createJsonHeaders()
@@ -159,13 +159,13 @@ describe('json schema', () => {
 
       describe('invalid JSON', () => {
         it('400', async () => {
-          process.env.MPMC_ADMIN_PASSWORD = 'password'
+          process.env.CHAN_ADMIN_PASSWORD = 'password'
           const server = await buildServer()
           const id = 'id'
 
           const res = await server.inject({
             method: 'PUT'
-          , url: `/api/mpmc/${id}/json-schema`
+          , url: `/api/chan/${id}/json-schema`
           , headers: {
               ...createAuthHeaders()
             , ...createJsonHeaders()
@@ -186,7 +186,7 @@ describe('json schema', () => {
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/json-schema`
+        , url: `/api/chan/${id}/json-schema`
         , headers: createJsonHeaders()
         , payload: schema
         })
@@ -197,14 +197,14 @@ describe('json schema', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
         const schema = { type: 'number' }
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/json-schema`
+        , url: `/api/chan/${id}/json-schema`
         , headers: {
             ...createAuthHeaders('bad')
           , ...createJsonHeaders()
@@ -217,16 +217,16 @@ describe('json schema', () => {
     })
   })
 
-  describe('DELETE /api/mpmc/<id>/json-schema', () => {
+  describe('DELETE /api/chan/<id>/json-schema', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/json-schema`
+        , url: `/api/chan/${id}/json-schema`
         , headers: createAuthHeaders()
         })
 
@@ -241,7 +241,7 @@ describe('json schema', () => {
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/json-schema`
+        , url: `/api/chan/${id}/json-schema`
         })
 
         expect(res.statusCode).toBe(401)
@@ -250,13 +250,13 @@ describe('json schema', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/json-schema`
+        , url: `/api/chan/${id}/json-schema`
         , headers: createAuthHeaders('bad')
         })
 
@@ -268,7 +268,7 @@ describe('json schema', () => {
 
 function createAuthHeaders(adminPassword?: string) {
   return {
-    'Authorization': `Bearer ${ adminPassword ?? process.env.MPMC_ADMIN_PASSWORD }`
+    'Authorization': `Bearer ${ adminPassword ?? process.env.CHAN_ADMIN_PASSWORD }`
   }
 }
 

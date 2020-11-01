@@ -3,7 +3,7 @@ import { idSchema } from '@src/schema'
 
 export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   server.get(
-    '/mpmc-with-json-schema'
+    '/chan-with-json-schema'
   , {
       schema: {
         response: {
@@ -21,7 +21,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
   )
 
   server.get<{ Params: { id: string }}>(
-    '/mpmc/:id/json-schema'
+    '/chan/:id/json-schema'
   , {
       schema: {
         params: { id: idSchema }
@@ -43,7 +43,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
   )
 
   server.put<{ Params: { id: string }; Body: any }>(
-    '/mpmc/:id/json-schema'
+    '/chan/:id/json-schema'
   , {
       schema: {
         params: { id: idSchema }
@@ -61,7 +61,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
   )
 
   server.delete<{ Params: { id: string }}>(
-    '/mpmc/:id/json-schema'
+    '/chan/:id/json-schema'
   , {
       schema: {
         params: { id: idSchema }

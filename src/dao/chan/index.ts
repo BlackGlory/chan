@@ -1,7 +1,7 @@
 import { enqueue } from './enqueue'
 import { dequeue } from './dequeue'
 
-export const MPMCDAO: IMPMCDAO<unknown> = {
+export const ChanDAO: IChanDAO<unknown> = {
   enqueue
 , dequeue
 }

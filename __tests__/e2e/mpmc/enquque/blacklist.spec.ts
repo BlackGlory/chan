@@ -14,8 +14,8 @@ beforeEach(async () => {
 describe('blacklist', () => {
   describe('id in blacklist', () => {
     it('403', async () => {
-      process.env.MPMC_ADMIN_PASSWORD = 'password'
-      process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
+      process.env.CHAN_ADMIN_PASSWORD = 'password'
+      process.env.CHAN_LIST_BASED_ACCESS_CONTROL = 'blacklist'
       const id = 'id'
       const message = 'message'
       const server = await buildServer()
@@ -23,7 +23,7 @@ describe('blacklist', () => {
 
       const res = await server.inject({
         method: 'POST'
-      , url: `/mpmc/${id}`
+      , url: `/chan/${id}`
       , headers: {
           'Content-Type': 'text/plain'
         }
@@ -36,8 +36,8 @@ describe('blacklist', () => {
 
   describe('id not in blacklist', () => {
     it('204', async () => {
-      process.env.MPMC_ADMIN_PASSWORD = 'password'
-      process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'blacklist'
+      process.env.CHAN_ADMIN_PASSWORD = 'password'
+      process.env.CHAN_LIST_BASED_ACCESS_CONTROL = 'blacklist'
       const id = 'id'
       const message = 'message'
       const server = await buildServer()
@@ -45,12 +45,12 @@ describe('blacklist', () => {
       setImmediate(() => {
         server.inject({
           method: 'GET'
-        , url: `/mpmc/${id}`
+        , url: `/chan/${id}`
         })
       })
       const res = await server.inject({
         method: 'POST'
-      , url: `/mpmc/${id}`
+      , url: `/chan/${id}`
       , headers: {
           'Content-Type': 'text/plain'
         }

@@ -15,7 +15,7 @@ interface ICore {
     resourceUsage: NodeJS.ResourceUsage
   }
 
-  MPMC: {
+  Chan: {
     enqueue(id: string, payload: unknown): Promise<void>
     dequeue(id: string): Promise<unknown>
   }

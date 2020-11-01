@@ -15,8 +15,8 @@ describe('token-based access control', () => {
   describe('id has enqueue tokens', () => {
     describe('token matched', () => {
       it('204', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
-        process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
         const id = 'id'
         const token = 'token'
         const message = 'message'
@@ -26,13 +26,13 @@ describe('token-based access control', () => {
         setImmediate(() => {
           server.inject({
             method: 'GET'
-          , url: `/mpmc/${id}`
+          , url: `/chan/${id}`
           , query: { token }
           })
         })
         const res = await server.inject({
           method: 'POST'
-        , url: `/mpmc/${id}`
+        , url: `/chan/${id}`
         , query: { token }
         , headers: {
             'Content-Type': 'text/plain'
@@ -46,8 +46,8 @@ describe('token-based access control', () => {
 
     describe('token does not matched', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
-        process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
         const id = 'id'
         const token = 'token'
         const message = 'message'
@@ -56,7 +56,7 @@ describe('token-based access control', () => {
 
         const res = await server.inject({
           method: 'POST'
-        , url: `/mpmc/${id}`
+        , url: `/chan/${id}`
         , query: { token: 'bad' }
         , headers: {
             'Content-Type': 'text/plain'
@@ -70,8 +70,8 @@ describe('token-based access control', () => {
 
     describe('no token', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
-        process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
         const id = 'id'
         const token = 'token'
         const message = 'message'
@@ -80,7 +80,7 @@ describe('token-based access control', () => {
 
         const res = await server.inject({
           method: 'POST'
-        , url: `/mpmc/${id}`
+        , url: `/chan/${id}`
         , headers: {
             'Content-Type': 'text/plain'
           }
@@ -95,8 +95,8 @@ describe('token-based access control', () => {
   describe('id does not have enqueue tokens', () => {
     describe('id has dequeue tokens', () => {
       it('204', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
-        process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
         const id = 'id'
         const token = 'token'
         const message = 'message'
@@ -106,13 +106,13 @@ describe('token-based access control', () => {
         setImmediate(() => {
           server.inject({
             method: 'GET'
-          , url: `/mpmc/${id}`
+          , url: `/chan/${id}`
           , query: { token }
           })
         })
         const res = await server.inject({
           method: 'POST'
-        , url: `/mpmc/${id}`
+        , url: `/chan/${id}`
         , headers: {
             'Content-Type': 'text/plain'
           }
@@ -126,16 +126,16 @@ describe('token-based access control', () => {
     describe('id has no tokens', () => {
       describe('DISABLE_NO_TOKENS', () => {
         it('403', async () => {
-          process.env.MPMC_ADMIN_PASSWORD = 'password'
-          process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
-          process.env.MPMC_DISABLE_NO_TOKENS = 'true'
+          process.env.CHAN_ADMIN_PASSWORD = 'password'
+          process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
+          process.env.CHAN_DISABLE_NO_TOKENS = 'true'
           const id = 'id'
           const message = 'message'
           const server = await buildServer()
 
           const res = await server.inject({
             method: 'POST'
-          , url: `/mpmc/${id}`
+          , url: `/chan/${id}`
           , headers: {
               'Content-Type': 'text/plain'
             }
@@ -148,8 +148,8 @@ describe('token-based access control', () => {
 
       describe('not DISABLE_NO_TOKENS', () => {
         it('204', async () => {
-          process.env.MPMC_ADMIN_PASSWORD = 'password'
-          process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
+          process.env.CHAN_ADMIN_PASSWORD = 'password'
+          process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
           const id = 'id'
           const message = 'message'
           const server = await buildServer()
@@ -157,12 +157,12 @@ describe('token-based access control', () => {
           setImmediate(() => {
             server.inject({
               method: 'GET'
-            , url: `/mpmc/${id}`
+            , url: `/chan/${id}`
             })
           })
           const res = await server.inject({
             method: 'POST'
-          , url: `/mpmc/${id}`
+          , url: `/chan/${id}`
           , headers: {
               'Content-Type': 'text/plain'
             }

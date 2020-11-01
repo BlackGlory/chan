@@ -12,15 +12,15 @@ beforeEach(async () => {
 })
 
 describe('TBAC', () => {
-  describe('GET /api/mpmc-with-tokens', () => {
+  describe('GET /api/chan-with-tokens', () => {
     describe('auth', () => {
       it('200', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
 
         const res = await server.inject({
           method: 'GET'
-        , url: '/api/mpmc-with-tokens'
+        , url: '/api/chan-with-tokens'
         , headers: createAuthHeaders()
         })
 
@@ -38,7 +38,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'GET'
-        , url: '/api/mpmc-with-tokens'
+        , url: '/api/chan-with-tokens'
         })
 
         expect(res.statusCode).toBe(401)
@@ -47,12 +47,12 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
 
         const res = await server.inject({
           method: 'GET'
-        , url: '/api/mpmc-with-tokens'
+        , url: '/api/chan-with-tokens'
         , headers: createAuthHeaders('bad')
         })
 
@@ -61,16 +61,16 @@ describe('TBAC', () => {
     })
   })
 
-  describe('GET /api/mpmc/:id/tokens', () => {
+  describe('GET /api/chan/:id/tokens', () => {
     describe('auth', () => {
       it('200', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
           method: 'GET'
-        , url: `/api/mpmc/${id}/tokens`
+        , url: `/api/chan/${id}/tokens`
         , headers: createAuthHeaders()
         })
 
@@ -96,7 +96,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'GET'
-        , url: `/api/mpmc/${id}/tokens`
+        , url: `/api/chan/${id}/tokens`
         })
 
         expect(res.statusCode).toBe(401)
@@ -105,13 +105,13 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
 
         const res = await server.inject({
           method: 'GET'
-        , url: `/api/mpmc/${id}/tokens`
+        , url: `/api/chan/${id}/tokens`
         , headers: createAuthHeaders('bad')
         })
 
@@ -120,17 +120,17 @@ describe('TBAC', () => {
     })
   })
 
-  describe('PUT /api/mpmc/:id/tokens/:token/write', () => {
+  describe('PUT /api/chan/:id/tokens/:token/write', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/write`
+        , url: `/api/chan/${id}/tokens/${token}/write`
         , headers: createAuthHeaders()
         })
 
@@ -146,7 +146,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/write`
+        , url: `/api/chan/${id}/tokens/${token}/write`
         })
 
         expect(res.statusCode).toBe(401)
@@ -155,14 +155,14 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/write`
+        , url: `/api/chan/${id}/tokens/${token}/write`
         , headers: createAuthHeaders('bad')
         })
 
@@ -171,17 +171,17 @@ describe('TBAC', () => {
     })
   })
 
-  describe('DELETE /api/mpmc/:id/tokens/:token/write', () => {
+  describe('DELETE /api/chan/:id/tokens/:token/write', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/write`
+        , url: `/api/chan/${id}/tokens/${token}/write`
         , headers: createAuthHeaders()
         })
 
@@ -197,7 +197,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/write`
+        , url: `/api/chan/${id}/tokens/${token}/write`
         })
 
         expect(res.statusCode).toBe(401)
@@ -206,14 +206,14 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/write`
+        , url: `/api/chan/${id}/tokens/${token}/write`
         , headers: createAuthHeaders('bad')
         })
 
@@ -222,17 +222,17 @@ describe('TBAC', () => {
     })
   })
 
-  describe('PUT /api/mpmc/:id/tokens/:token/read', () => {
+  describe('PUT /api/chan/:id/tokens/:token/read', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/read`
+        , url: `/api/chan/${id}/tokens/${token}/read`
         , headers: createAuthHeaders()
         })
 
@@ -248,7 +248,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/read`
+        , url: `/api/chan/${id}/tokens/${token}/read`
         })
 
         expect(res.statusCode).toBe(401)
@@ -257,14 +257,14 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
         const res = await server.inject({
           method: 'PUT'
-        , url: `/api/mpmc/${id}/tokens/${token}/read`
+        , url: `/api/chan/${id}/tokens/${token}/read`
         , headers: createAuthHeaders('bad')
         })
 
@@ -273,17 +273,17 @@ describe('TBAC', () => {
     })
   })
 
-  describe('DELETE /api/mpmc/:id/tokens/:token/read', () => {
+  describe('DELETE /api/chan/:id/tokens/:token/read', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/read`
+        , url: `/api/chan/${id}/tokens/${token}/read`
         , headers: createAuthHeaders()
         })
 
@@ -299,7 +299,7 @@ describe('TBAC', () => {
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/read`
+        , url: `/api/chan/${id}/tokens/${token}/read`
         })
 
         expect(res.statusCode).toBe(401)
@@ -308,14 +308,14 @@ describe('TBAC', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
         const id = 'id'
         const token = 'token'
 
         const res = await server.inject({
           method: 'DELETE'
-        , url: `/api/mpmc/${id}/tokens/${token}/read`
+        , url: `/api/chan/${id}/tokens/${token}/read`
         , headers: createAuthHeaders('bad')
         })
 
@@ -327,6 +327,6 @@ describe('TBAC', () => {
 
 function createAuthHeaders(adminPassword?: string) {
   return {
-    'Authorization': `Bearer ${ adminPassword ?? process.env.MPMC_ADMIN_PASSWORD }`
+    'Authorization': `Bearer ${ adminPassword ?? process.env.CHAN_ADMIN_PASSWORD }`
   }
 }

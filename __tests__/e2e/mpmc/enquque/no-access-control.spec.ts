@@ -12,13 +12,13 @@ beforeEach(async () => {
 })
 
 describe('no access control', () => {
-  describe('MPMC_JSON_VALIDATION=true', () => {
-    describe('MPMC_JSON_DEFAULT_SCHEMA', () => {
+  describe('CHAN_JSON_VALIDATION=true', () => {
+    describe('CHAN_JSON_DEFAULT_SCHEMA', () => {
       describe('Content-Type: application/json', () => {
         describe('valid', () => {
           it('204', async () => {
-            process.env.MPMC_JSON_VALIDATION = 'true'
-            process.env.MPMC_DEFAULT_JSON_SCHEMA = JSON.stringify({
+            process.env.CHAN_JSON_VALIDATION = 'true'
+            process.env.CHAN_DEFAULT_JSON_SCHEMA = JSON.stringify({
               type: 'number'
             })
             const server = await buildServer()
@@ -28,12 +28,12 @@ describe('no access control', () => {
             setImmediate(() => {
               server.inject({
                 method: 'GET'
-              , url: `/mpmc/${id}`
+              , url: `/chan/${id}`
               })
             })
             const res = await server.inject({
               method: 'POST'
-            , url: `/mpmc/${id}`
+            , url: `/chan/${id}`
             , payload: message
             , headers: {
                 'Content-Type': 'application/json'
@@ -46,8 +46,8 @@ describe('no access control', () => {
 
         describe('invalid', () => {
           it('400', async () => {
-            process.env.MPMC_JSON_VALIDATION = 'true'
-            process.env.MPMC_DEFAULT_JSON_SCHEMA = JSON.stringify({
+            process.env.CHAN_JSON_VALIDATION = 'true'
+            process.env.CHAN_DEFAULT_JSON_SCHEMA = JSON.stringify({
               type: 'number'
             })
             const server = await buildServer()
@@ -56,7 +56,7 @@ describe('no access control', () => {
 
             const res = await server.inject({
               method: 'POST'
-            , url: `/mpmc/${id}`
+            , url: `/chan/${id}`
             , payload: message
             , headers: {
                 'Content-Type': 'application/json'
@@ -70,8 +70,8 @@ describe('no access control', () => {
 
       describe('other Content-Type', () => {
         it('204', async () => {
-          process.env.MPMC_JSON_VALIDATION = 'true'
-          process.env.MPMC_DEFAULT_JSON_SCHEMA = JSON.stringify({
+          process.env.CHAN_JSON_VALIDATION = 'true'
+          process.env.CHAN_DEFAULT_JSON_SCHEMA = JSON.stringify({
             type: 'number'
           })
           const server = await buildServer()
@@ -81,12 +81,12 @@ describe('no access control', () => {
           setImmediate(() => {
             server.inject({
               method: 'GET'
-            , url: `/mpmc/${id}`
+            , url: `/chan/${id}`
             })
           })
           const res = await server.inject({
             method: 'POST'
-          , url: `/mpmc/${id}`
+          , url: `/chan/${id}`
           , payload: message
           , headers: {
               'Content-Type': 'text/plain'
@@ -102,7 +102,7 @@ describe('no access control', () => {
       describe('Content-Type: application/json', () => {
         describe('valid JSON', () => {
           it('204', async done => {
-            process.env.MPMC_JSON_VALIDATION = 'true'
+            process.env.CHAN_JSON_VALIDATION = 'true'
             const id = 'id'
             const schema = { type: 'string' }
             const message = ' "message" '
@@ -115,7 +115,7 @@ describe('no access control', () => {
             setImmediate(async () => {
               const res = await server.inject({
                 method: 'GET'
-              , url: `/mpmc/${id}`
+              , url: `/chan/${id}`
               })
               expect(res.headers['content-type']).toMatch('application/json')
               expect(res.body).toBe(message)
@@ -123,7 +123,7 @@ describe('no access control', () => {
             })
             const res = await server.inject({
               method: 'POST'
-            , url: `/mpmc/${id}`
+            , url: `/chan/${id}`
             , payload: message
             , headers: {
                 'Content-Type': 'application/json'
@@ -136,7 +136,7 @@ describe('no access control', () => {
 
         describe('invalid JSON', () => {
           it('400', async () => {
-            process.env.MPMC_JSON_VALIDATION = 'true'
+            process.env.CHAN_JSON_VALIDATION = 'true'
             const id = 'id'
             const schema = { type: 'string' }
             const message = 'message'
@@ -148,7 +148,7 @@ describe('no access control', () => {
 
             const res = await server.inject({
               method: 'POST'
-            , url: `/mpmc/${id}`
+            , url: `/chan/${id}`
             , payload: message
             , headers: {
                 'Content-Type': 'application/json'
@@ -162,7 +162,7 @@ describe('no access control', () => {
 
       describe('other Content-Type', () => {
         it('400', async () => {
-          process.env.MPMC_JSON_VALIDATION = 'true'
+          process.env.CHAN_JSON_VALIDATION = 'true'
           const id = 'id'
           const schema = { type: 'string' }
           const message = ' "message" '
@@ -174,7 +174,7 @@ describe('no access control', () => {
 
           const res = await server.inject({
             method: 'POST'
-          , url: `/mpmc/${id}`
+          , url: `/chan/${id}`
           , payload: message
           , headers: {
               'Content-Type': 'text/plain'
@@ -190,7 +190,7 @@ describe('no access control', () => {
       describe('Content-Type: application/json', () => {
         describe('valid JSON', () => {
           it('204', async done => {
-            process.env.MPMC_JSON_VALIDATION = 'true'
+            process.env.CHAN_JSON_VALIDATION = 'true'
             const id = 'id'
             const schema = { type: 'string' }
             const message = ' "message" '
@@ -203,7 +203,7 @@ describe('no access control', () => {
             setImmediate(async () => {
               const res = await server.inject({
                 method: 'GET'
-              , url: `/mpmc/${id}`
+              , url: `/chan/${id}`
               })
               expect(res.headers['content-type']).toMatch('application/json')
               expect(res.body).toBe(message)
@@ -211,7 +211,7 @@ describe('no access control', () => {
             })
             const res = await server.inject({
               method: 'POST'
-            , url: `/mpmc/${id}`
+            , url: `/chan/${id}`
             , payload: message
             , headers: {
                 'Content-Type': 'application/json'
@@ -224,14 +224,14 @@ describe('no access control', () => {
 
         describe('invalid JSON', () => {
           it('400', async () => {
-            process.env.MPMC_JSON_VALIDATION = 'true'
+            process.env.CHAN_JSON_VALIDATION = 'true'
             const id = 'id'
             const message = 'message'
             const server = await buildServer()
 
             const res = await server.inject({
               method: 'POST'
-            , url: `/mpmc/${id}`
+            , url: `/chan/${id}`
             , payload: message
             , headers: {
                 'Content-Type': 'application/json'
@@ -245,10 +245,10 @@ describe('no access control', () => {
     })
   })
 
-  describe('MPMC_JSON_PAYLOAD_ONLY', () => {
+  describe('CHAN_JSON_PAYLOAD_ONLY', () => {
     describe('Content-Type: application/json', () => {
       it('accept any plaintext, return 204', async done => {
-        process.env.MPMC_JSON_PAYLOAD_ONLY = 'true'
+        process.env.CHAN_JSON_PAYLOAD_ONLY = 'true'
         const server = await buildServer()
         const id = 'id'
         const message = 'message'
@@ -256,14 +256,14 @@ describe('no access control', () => {
         setImmediate(async () => {
           const res = await server.inject({
             method: 'GET'
-          , url: `/mpmc/${id}`
+          , url: `/chan/${id}`
           })
           expect(res.headers['content-type']).toMatch('application/json')
           done()
         })
         const res = await server.inject({
           method: 'POST'
-        , url: `/mpmc/${id}`
+        , url: `/chan/${id}`
         , payload: message
         , headers: {
             'Content-Type': 'application/json'
@@ -276,14 +276,14 @@ describe('no access control', () => {
 
     describe('other Content-Type', () => {
       it('400', async () => {
-        process.env.MPMC_JSON_PAYLOAD_ONLY = 'true'
+        process.env.CHAN_JSON_PAYLOAD_ONLY = 'true'
         const server = await buildServer()
         const id = 'id'
         const message = 'message'
 
         const res = await server.inject({
           method: 'POST'
-        , url: `/mpmc/${id}`
+        , url: `/chan/${id}`
         , payload: message
         , headers: {
             'Content-Type': 'text/plain'
@@ -304,14 +304,14 @@ describe('no access control', () => {
       setImmediate(async () => {
         const res = await server.inject({
           method: 'GET'
-        , url: `/mpmc/${id}`
+        , url: `/chan/${id}`
         })
         expect(res.headers['content-type']).toMatch('apple/banana')
         done()
       })
       const res = await server.inject({
         method: 'POST'
-      , url: `/mpmc/${id}`
+      , url: `/chan/${id}`
       , payload: message
       , headers: {
           'Content-Type': 'apple/banana'

@@ -14,7 +14,7 @@ describe('whitelist', () => {
   describe('GET /api/whitelist', () => {
     describe('auth', () => {
       it('200', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
 
         const res = await server.inject({
@@ -46,7 +46,7 @@ describe('whitelist', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const server = await buildServer()
 
         const res = await server.inject({
@@ -63,7 +63,7 @@ describe('whitelist', () => {
   describe('PUT /api/whitelist/:id', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = await buildServer()
 
@@ -93,7 +93,7 @@ describe('whitelist', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = await buildServer()
 
@@ -111,7 +111,7 @@ describe('whitelist', () => {
   describe('DELETE /api/whitelist/:id', () => {
     describe('auth', () => {
       it('204', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = await buildServer()
 
@@ -141,7 +141,7 @@ describe('whitelist', () => {
 
     describe('bad auth', () => {
       it('401', async () => {
-        process.env.MPMC_ADMIN_PASSWORD = 'password'
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
         const server = await buildServer()
 
@@ -159,6 +159,6 @@ describe('whitelist', () => {
 
 function createAuthHeaders(adminPassword?: string) {
   return {
-    'Authorization': `Bearer ${ adminPassword ?? process.env.MPMC_ADMIN_PASSWORD }`
+    'Authorization': `Bearer ${ adminPassword ?? process.env.CHAN_ADMIN_PASSWORD }`
   }
 }

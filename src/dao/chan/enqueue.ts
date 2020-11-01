@@ -1,6 +1,6 @@
-import { getMPMCChannelManager } from './mpmc-channel-manager'
+import { getCHANChannelManager } from './chan-channel-manager'
 
 export function enqueue(key: string, value: unknown): Promise<void> {
-  const manager = getMPMCChannelManager()
+  const manager = getCHANChannelManager()
   return manager.enqueue(key, value)
 }

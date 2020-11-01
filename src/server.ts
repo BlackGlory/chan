@@ -1,6 +1,6 @@
 import fastify from 'fastify'
 import cors from 'fastify-cors'
-import { routes as mpmc } from '@services/mpmc'
+import { routes as chan } from '@services/chan'
 import { routes as api } from '@services/api'
 import { routes as stats } from '@services/stats'
 import { HTTP2, PAYLOAD_LIMIT, NODE_ENV, NodeEnv } from '@env'
@@ -15,7 +15,7 @@ export async function buildServer() {
   , bodyLimit: PAYLOAD_LIMIT()
   }))
   server.register(cors, { origin: true })
-  server.register(mpmc, { Core })
+  server.register(chan, { Core })
   server.register(api, { Core })
   server.register(stats, { Core })
   return server

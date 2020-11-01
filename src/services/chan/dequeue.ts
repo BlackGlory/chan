@@ -7,7 +7,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
     Params: { id: string }
     Querystring: { token?: string }
   }>(
-    '/mpmc/:id'
+    '/chan/:id'
   , {
       schema: {
         params: { id: idSchema }
@@ -32,7 +32,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
         throw e
       }
 
-      const value = await Core.MPMC.dequeue(id) as Package
+      const value = await Core.Chan.dequeue(id) as Package
       if (value.type) reply.header('content-type', value.type)
       reply.send(value.payload)
     }

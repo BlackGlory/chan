@@ -288,8 +288,8 @@ function exist(db: Database, { token, id }: { token: string; id: string }) {
 function select(db: Database, { token, id }: { token: string; id: string }) {
   return db.prepare(`
     SELECT *
-      FROM mpmc_tbac
-     WHERE token = $token AND mpmc_id = $id;
+      FROM chan_tbac
+     WHERE token = $token AND chan_id = $id;
   `).get({ token, id })
 }
 
@@ -303,7 +303,7 @@ function insert(
   }
 ) {
   db.prepare(`
-    INSERT INTO mpmc_tbac (token, mpmc_id, read_permission, write_permission)
+    INSERT INTO chan_tbac (token, chan_id, read_permission, write_permission)
     VALUES ($token, $id, $read, $write);
   `).run({
     token

@@ -1,4 +1,4 @@
-# MPMC
+# Chan
 
 一个受[patchbay]启发的Web友好的自托管ad-hoc微服务,
 提供基于 HTTP 的阻塞式 MPMC 消息队列功能,
@@ -20,46 +20,46 @@
 
 ```sh
 # 运行
-docker run --detach --publish 8080:8080 blackglory/mpmc
+docker run --detach --publish 8080:8080 blackglory/chan
 
 # 打开第一个终端
-curl http://localhost:8080/mpmc/hello-world # 没有可消费的消息, 阻塞
+curl http://localhost:8080/chan/hello-world # 没有可消费的消息, 阻塞
 
 # 打开第二个终端
-curl http://localhost:8080/mpmc/hello-world # 没有可消费的消息, 阻塞
+curl http://localhost:8080/chan/hello-world # 没有可消费的消息, 阻塞
 
 # 打开第三个终端
 curl \
   --data 'hello world1' \
-  http://localhost:8080/mpmc/hello-world # 生产消息, 第一个终端返回hello world1
+  http://localhost:8080/chan/hello-world # 生产消息, 第一个终端返回hello world1
 
 curl \
   --data 'hello world2' \
-  http://localhost:8080/mpmc/hello-world # 生产消息, 第二个终端返回hello world2
+  http://localhost:8080/chan/hello-world # 生产消息, 第二个终端返回hello world2
 
 curl \
   --data 'hello world3' \
-  http://localhost:8080/mpmc/hello-world # 生产消息, 没有消费者, 阻塞
+  http://localhost:8080/chan/hello-world # 生产消息, 没有消费者, 阻塞
 
 # 打开第四个终端
 curl \
   --data 'hello world4' \
-  http://localhost:8080/mpmc/hello-world # 生产消息, 没有消费者, 阻塞
+  http://localhost:8080/chan/hello-world # 生产消息, 没有消费者, 阻塞
 
 # 打开第五个终端
-curl http://localhost:8080/mpmc/hello-world # 消费消息, 返回hello world3, 第三个终端返回
-curl http://localhost:8080/mpmc/hello-world # 消费消息, 返回hello world4, 第四个终端返回
+curl http://localhost:8080/chan/hello-world # 消费消息, 返回hello world3, 第三个终端返回
+curl http://localhost:8080/chan/hello-world # 消费消息, 返回hello world4, 第四个终端返回
 ```
 
 ## Install & Run
 
 ### 从源代码运行
 
-可以使用环境变量`MPMC_HOST`和`MPMC_PORT`决定服务器监听的地址和端口, 默认值为localhost和8080.
+可以使用环境变量`CHAN_HOST`和`CHAN_PORT`决定服务器监听的地址和端口, 默认值为localhost和8080.
 
 ```sh
-git clone https://github.com/BlackGlory/mpmc
-cd mpmc
+git clone https://github.com/BlackGlory/chan
+cd chan
 yarn install
 yarn build
 yarn --silent start
@@ -71,14 +71,14 @@ yarn --silent start
 docker run \
   --detach \
   --publish 8080:8080 \
-  blackglory/mpmc
+  blackglory/chan
 ```
 
 #### 从源代码构建
 
 ```sh
-git clone https://github.com/BlackGlory/mpmc
-cd mpmc
+git clone https://github.com/BlackGlory/chan
+cd chan
 yarn install
 yarn docker:build
 ```
@@ -92,18 +92,18 @@ docker-compose.yml
 version: '3.8'
 
 services:
-  mpmc:
-    image: 'blackglory/mpmc'
+  chan:
+    image: 'blackglory/chan'
     restart: always
     environment:
-      - MPMC_HOST=0.0.0.0
+      - CHAN_HOST=0.0.0.0
     volumes:
-      - 'mpmc-data:/data'
+      - 'chan-data:/data'
     ports:
       - '8080:8080'
 
 volumes:
-  mpmc-data:
+  chan-data:
 ```
 
 ##### 私人服务器
@@ -113,21 +113,21 @@ docker-compose.yml
 version: '3.8'
 
 services:
-  mpmc:
-    image: 'blackglory/mpmc'
+  chan:
+    image: 'blackglory/chan'
     restart: always
     environment:
-      - MPMC_HOST=0.0.0.0
-      - MPMC_ADMIN_PASSWORD=password
-      - MPMC_TOKEN_BASED_ACCESS_CONTROL=true
-      - MPMC_DISABLE_NO_TOKENS=true
+      - CHAN_HOST=0.0.0.0
+      - CHAN_ADMIN_PASSWORD=password
+      - CHAN_TOKEN_BASED_ACCESS_CONTROL=true
+      - CHAN_DISABLE_NO_TOKENS=true
     volumes:
-      - 'mpmc-data:/data'
+      - 'chan-data:/data'
     ports:
       - '8080:8080'
 
 volumes:
-  mpmc-data:
+  chan-data:
 ```
 
 ## Usage
@@ -136,14 +136,14 @@ volumes:
 
 ### enqueue
 
-`POST /mpmc/<id>`
+`POST /chan/<id>`
 
 往特定消息队列放入消息, 会阻塞直到此消息dequeue.
 id用于标识消息队列.
 enqueue请求的`Content-Type`会在dequeue时原样返回.
 
 如果开启基于token的访问控制, 则可能需要在Querystring提供具有write权限的token:
-`POST /mpmc/<id>?token=<token>`
+`POST /chan/<id>?token=<token>`
 
 #### Example
 
@@ -151,12 +151,12 @@ curl
 ```sh
 curl \
   --data 'message' \
-  "http://localhost:8080/mpmc/$id"
+  "http://localhost:8080/chan/$id"
 ```
 
 JavaScript
 ```js
-await fetch(`http://localhost:8080/mpmc/${id}`, {
+await fetch(`http://localhost:8080/chan/${id}`, {
   method: 'POST'
 , body: 'message'
 })
@@ -164,37 +164,37 @@ await fetch(`http://localhost:8080/mpmc/${id}`, {
 
 ### dequeue
 
-`GET /mpmc/<id>`
+`GET /chan/<id>`
 
 从特定消息队列取出消息, 如果消息队列为空, 则阻塞直到有新消息enqueue.
 id用于标识消息队列.
 
 如果开启基于token的访问控制, 则可能需要在Querystring提供具有read权限的token:
-`GET /mpmc/<id>?token=<token>`
+`GET /chan/<id>?token=<token>`
 
 #### Example
 
 curl
 ```sh
-curl "http://localhost:8080/mpmc/$id"
+curl "http://localhost:8080/chan/$id"
 ```
 
 JavaScript
 ```js
-await fetch(`http://localhost:8080/mpmc/${id}`).then(res => res.text())
+await fetch(`http://localhost:8080/chan/${id}`).then(res => res.text())
 ```
 
 ## 为enqueue添加JSON Schema验证
 
-通过设置环境变量`MPMC_JSON_VALIDATION=true`可开启enqueue的JSON验证功能.
+通过设置环境变量`CHAN_JSON_VALIDATION=true`可开启enqueue的JSON验证功能.
 任何带有`Content-Type: application/json`的请求都会被验证,
 即使没有设置JSON Schema, 也会拒绝不合法的JSON文本.
 JSON验证仅用于验证, 不会重新序列化消息, 因此subscribe得到的消息会与publish发送的消息相同.
 
-在开启验证功能的情况下, 通过环境变量`MPMC_DEFAULT_JSON_SCHEMA`可设置默认的JSON Schema,
+在开启验证功能的情况下, 通过环境变量`CHAN_DEFAULT_JSON_SCHEMA`可设置默认的JSON Schema,
 该验证仅对带有`Content-Type: application/json`的请求有效.
 
-通过设置环境变量`MPMC_JSON_PAYLOAD_ONLY=true`,
+通过设置环境变量`CHAN_JSON_PAYLOAD_ONLY=true`,
 可以强制enqueue只接受带有`Content-Type: application/json`的请求.
 此设置在未开启JSON Schema验证的情况下也有效, 但在这种情况下服务器能够接受不合法的JSON.
 
@@ -204,7 +204,7 @@ JSON验证仅用于验证, 不会重新序列化消息, 因此subscribe得到的
 
 #### 获取所有具有JSON Schema的消息队列id
 
-`GET /api/mpmc-with-json-schema`
+`GET /api/chan-with-json-schema`
 
 获取所有具有JSON Schema的消息队列id, 返回由JSON表示的字符串数组`string[]`
 
@@ -214,12 +214,12 @@ curl
 ```sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc-with-json-schema"
+  "http://localhost:8080/api/chan-with-json-schema"
 ```
 
 fetch
 ```js
-await fetch('http://localhost:8080/api/mpmc-with-json-schema', {
+await fetch('http://localhost:8080/api/chan-with-json-schema', {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -228,7 +228,7 @@ await fetch('http://localhost:8080/api/mpmc-with-json-schema', {
 
 #### 获取JSON Schema
 
-`GET /api/mpmc/<id>/json-schema`
+`GET /api/chan/<id>/json-schema`
 
 ##### Example
 
@@ -236,12 +236,12 @@ curl
 ```sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/json-schema"
+  "http://localhost:8080/api/chan/$id/json-schema"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/json-schema`, {
+await fetch(`http://localhost:8080/api/chan/${id}/json-schema`, {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -250,7 +250,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/json-schema`, {
 
 #### 设置JSON Schema
 
-`PUT /api/mpmc/<id>/json-schema`
+`PUT /api/chan/<id>/json-schema`
 
 ##### Example
 
@@ -261,12 +261,12 @@ curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
   --header "Content-Type: application/json" \
   --data "$JSON_SCHEMA" \
-  "http://localhost:8080/api/mpmc/$id/jsonschema"
+  "http://localhost:8080/api/chan/$id/jsonschema"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/json-schema`, {
+await fetch(`http://localhost:8080/api/chan/${id}/json-schema`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -278,7 +278,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/json-schema`, {
 
 #### 移除JSON Schema
 
-`DELETE /api/mpmc/<id>/json-schema`
+`DELETE /api/chan/<id>/json-schema`
 
 ##### Example
 
@@ -287,12 +287,12 @@ curl
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/json-schema"
+  "http://localhost:8080/api/chan/$id/json-schema"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/json-schema`, {
+await fetch(`http://localhost:8080/api/chan/${id}/json-schema`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -302,10 +302,10 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/json-schema`, {
 
 ## 访问控制
 
-MPMC提供两种访问控制策略, 可以一并使用.
+CHAN提供两种访问控制策略, 可以一并使用.
 
 所有访问控制API都使用基于口令的Bearer Token Authentication.
-口令需通过环境变量`MPMC_ADMIN_PASSWORD`进行设置.
+口令需通过环境变量`CHAN_ADMIN_PASSWORD`进行设置.
 
 访问控制规则是通过[WAL模式]的SQLite3持久化的, 开启访问控制后,
 服务器的吞吐量和响应速度会受到硬盘性能的影响.
@@ -316,7 +316,7 @@ MPMC提供两种访问控制策略, 可以一并使用.
 
 ### 基于名单的访问控制
 
-通过设置环境变量`MPMC_LIST_BASED_ACCESS_CONTROL`开启基于名单的访问控制:
+通过设置环境变量`CHAN_LIST_BASED_ACCESS_CONTROL`开启基于名单的访问控制:
 - `whitelist`
   启用基于消息队列白名单的访问控制, 只有在名单内的消息队列允许被访问.
 - `blacklist`
@@ -482,7 +482,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 
 对token的要求: `^[a-zA-Z0-9\.\-_]{1,256}$`
 
-通过设置环境变量`MPMC_TOKEN_BASED_ACCESS_CONTROL=true`开启基于token的访问控制.
+通过设置环境变量`CHAN_TOKEN_BASED_ACCESS_CONTROL=true`开启基于token的访问控制.
 
 基于token的访问控制将根据消息队列具有的token决定其访问规则, 具体行为见下方表格.
 一个消息队列可以有多个token, 每个token可以单独设置write和read权限.
@@ -496,7 +496,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 | NO | NO | 无token可以enqueue和dequeue |
 
 在开启基于token的访问控制时,
-可以通过将环境变量`MPMC_DISABLE_NO_TOKENS`设置为`true`将无token的消息队列禁用.
+可以通过将环境变量`CHAN_DISABLE_NO_TOKENS`设置为`true`将无token的消息队列禁用.
 
 基于token的访问控制作出了以下假设, 因此不使用加密和消息验证码(MAC):
 - token的传输过程是安全的
@@ -505,7 +505,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 
 #### 获取所有具有token的消息队列id
 
-`GET /api/mpmc-with-tokens`
+`GET /api/chan-with-tokens`
 
 获取所有具有token的消息队列id, 返回由JSON表示的字符串数组`string[]`
 
@@ -515,12 +515,12 @@ curl
 ```sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc-with-tokens"
+  "http://localhost:8080/api/chan-with-tokens"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc-with-tokens`, {
+await fetch(`http://localhost:8080/api/chan-with-tokens`, {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -529,7 +529,7 @@ await fetch(`http://localhost:8080/api/mpmc-with-tokens`, {
 
 #### 获取特定消息队列的所有token信息
 
-`GET /api/mpmc/<id>/tokens`
+`GET /api/chan/<id>/tokens`
 
 获取特定消息队列的所有token信息, 返回JSON表示的token信息数组
 `Array<{ token: string, write: boolean, read: boolean }>`.
@@ -540,12 +540,12 @@ curl
 ```sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/tokens"
+  "http://localhost:8080/api/chan/$id/tokens"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/tokens`, {
+await fetch(`http://localhost:8080/api/chan/${id}/tokens`, {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -554,7 +554,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens`, {
 
 #### 为特定消息队列的token设置write权限
 
-`PUT /api/mpmc/<id>/tokens/<token>/write`
+`PUT /api/chan/<id>/tokens/<token>/write`
 
 添加/更新token, 为token设置write权限.
 
@@ -565,12 +565,12 @@ curl
 curl \
   --request PUT \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/tokens/$token/write"
+  "http://localhost:8080/api/chan/$id/tokens/$token/write"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/write`, {
+await fetch(`http://localhost:8080/api/chan/${id}/tokens/$token/write`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -580,7 +580,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/write`, {
 
 #### 取消特定消息队列的token的write权限
 
-`DELETE /api/mpmc/<id>/tokens/<token>/write`
+`DELETE /api/chan/<id>/tokens/<token>/write`
 
 取消token的write权限.
 
@@ -591,12 +591,12 @@ curl
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/tokens/$token/write"
+  "http://localhost:8080/api/chan/$id/tokens/$token/write"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/write`, {
+await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/write`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -606,7 +606,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/write`, {
 
 #### 为特定消息队列的token设置read权限
 
-`PUT /api/mpmc/<id>/tokens/<token>/read`
+`PUT /api/chan/<id>/tokens/<token>/read`
 
 添加/更新token, 为token设置read权限.
 
@@ -617,12 +617,12 @@ curl
 curl \
   --request PUT \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/tokens/$token/read"
+  "http://localhost:8080/api/chan/$id/tokens/$token/read"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/read`, {
+await fetch(`http://localhost:8080/api/chan/${id}/tokens/$token/read`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -632,7 +632,7 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/$token/read`, {
 
 #### 取消特定消息队列的token的write权限
 
-`DELETE /api/mpmc/<id>/tokens/<token>/write`
+`DELETE /api/chan/<id>/tokens/<token>/write`
 
 取消token的read权限.
 
@@ -643,12 +643,12 @@ curl
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/mpmc/$id/tokens/$token/read"
+  "http://localhost:8080/api/chan/$id/tokens/$token/read"
 ```
 
 fetch
 ```js
-await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/read`, {
+await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/read`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -658,16 +658,16 @@ await fetch(`http://localhost:8080/api/mpmc/${id}/tokens/${token}/read`, {
 
 ## HTTP/2
 
-MPMC支持HTTP/2, 以多路复用反向代理时的连接, 可通过设置环境变量`MPMC_HTTP2=true`开启.
+CHAN支持HTTP/2, 以多路复用反向代理时的连接, 可通过设置环境变量`CHAN_HTTP2=true`开启.
 
 此HTTP/2支持不提供从HTTP/1.1自动升级的功能, 亦不提供HTTPS.
 因此, 在本地curl里进行测试时, 需要开启`--http2-prior-knowledge`选项.
 
 ## 限制Payload大小
 
-设置环境变量`MPMC_PAYLOAD_LIMIT`可限制服务接受的单个Payload字节数, 默认值为1048576(1MB).
+设置环境变量`CHAN_PAYLOAD_LIMIT`可限制服务接受的单个Payload字节数, 默认值为1048576(1MB).
 
-设置环境变量`MPMC_ENQUEUE_PAYLOAD_LIMIT`可限制enqueue接受的单个Payload字节数, 默认值继承自`MPMC_PAYLOAD_LIMIT`.
+设置环境变量`CHAN_ENQUEUE_PAYLOAD_LIMIT`可限制enqueue接受的单个Payload字节数, 默认值继承自`CHAN_PAYLOAD_LIMIT`.
 
 ## 统计信息
 
@@ -688,8 +688,8 @@ MPMC支持HTTP/2, 以多路复用反向代理时的连接, 可通过设置环境
 
 ```sh
 # 发送
-cat filename | curl "http://localhost:8080/mpmc/$id" --data-binary @-
+cat filename | curl "http://localhost:8080/chan/$id" --data-binary @-
 
 # 接收
-curl "http://localhost:8080/mpmc/$id" > filename
+curl "http://localhost:8080/chan/$id" > filename
 ```

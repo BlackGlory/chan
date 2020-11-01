@@ -8,7 +8,7 @@ on:
       - v*
 
 env:
-  IMAGE_NAME: mpmc
+  IMAGE_NAME: chan
 
 jobs:
   test:

@@ -1,18 +1,18 @@
-import { rebuildMPMCChannelManager } from '@dao/mpmc/mpmc-channel-manager'
-import { MPMCDAO } from '@dao/mpmc'
+import { rebuildCHANChannelManager } from '@dao/chan/chan-channel-manager'
+import { ChanDAO } from '@dao/chan'
 import '@blackglory/jest-matchers'
 
 beforeEach(() => {
-  rebuildMPMCChannelManager()
+  rebuildCHANChannelManager()
 })
 
-describe('MPMCDAO', () => {
+describe('CHANDAO', () => {
   describe('enqueue', () => {
     it('block', async done => {
       const key = 'key'
       const value = 'value'
 
-      const result = MPMCDAO.enqueue(key, value)
+      const result = ChanDAO.enqueue(key, value)
       result.then(() => done.fail())
       setImmediate(done)
 
@@ -24,7 +24,7 @@ describe('MPMCDAO', () => {
     it('block', async done => {
       const key = 'key'
 
-      const result = MPMCDAO.dequeue(key)
+      const result = ChanDAO.dequeue(key)
       result.then(() => done.fail())
       setImmediate(done)
 
@@ -37,8 +37,8 @@ describe('MPMCDAO', () => {
       const key = 'key'
       const value = 'value'
 
-      setImmediate(() => MPMCDAO.enqueue(key, value))
-      const result = MPMCDAO.dequeue(key)
+      setImmediate(() => ChanDAO.enqueue(key, value))
+      const result = ChanDAO.dequeue(key)
       const proResult = await result
 
       expect(result).toBePromise()
@@ -51,8 +51,8 @@ describe('MPMCDAO', () => {
       const key = 'key'
       const value = 'value'
 
-      setImmediate(() => MPMCDAO.dequeue(key))
-      const result = MPMCDAO.enqueue(key, value)
+      setImmediate(() => ChanDAO.dequeue(key))
+      const result = ChanDAO.enqueue(key, value)
       const proResult = await result
 
       expect(result).toBePromise()

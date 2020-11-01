@@ -104,9 +104,9 @@ function exist(db: Database, id: string) {
 }
 
 function insert(db: Database, id: string) {
-  db.prepare('INSERT INTO mpmc_blacklist (mpmc_id) VALUES ($id);').run({ id });
+  db.prepare('INSERT INTO chan_blacklist (chan_id) VALUES ($id);').run({ id });
 }
 
 function select(db: Database, id: string) {
-  return db.prepare('SELECT * FROM mpmc_blacklist WHERE mpmc_id = $id;').get({ id })
+  return db.prepare('SELECT * FROM chan_blacklist WHERE chan_id = $id;').get({ id })
 }

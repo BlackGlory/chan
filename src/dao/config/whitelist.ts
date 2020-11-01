@@ -2,17 +2,17 @@ import { getDatabase } from './database'
 
 export function getAllWhitelistItems(): string[] {
   const result = getDatabase().prepare(`
-    SELECT mpmc_id FROM mpmc_whitelist;
+    SELECT chan_id FROM chan_whitelist;
   `).all()
-  return result.map(x => x['mpmc_id'])
+  return result.map(x => x['chan_id'])
 }
 
 export function inWhitelist(id: string): boolean {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
-               FROM mpmc_whitelist
-              WHERE mpmc_id = $id
+               FROM chan_whitelist
+              WHERE chan_id = $id
            ) AS exist_in_whitelist;
   `).get({ id })
   return result['exist_in_whitelist'] === 1
@@ -21,7 +21,7 @@ export function inWhitelist(id: string): boolean {
 export function addWhitelistItem(id: string) {
   try {
     getDatabase().prepare(`
-      INSERT INTO mpmc_whitelist (mpmc_id)
+      INSERT INTO chan_whitelist (chan_id)
       VALUES ($id);
     `).run({ id })
   } catch {}
@@ -29,7 +29,7 @@ export function addWhitelistItem(id: string) {
 
 export function removeWhitelistItem(id: string) {
   getDatabase().prepare(`
-    DELETE FROM mpmc_whitelist
-     WHERE mpmc_id = $id;
+    DELETE FROM chan_whitelist
+     WHERE chan_id = $id;
   `).run({ id })
 }

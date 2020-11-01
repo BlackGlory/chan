@@ -4,7 +4,7 @@ import { idSchema, tokenSchema } from '@src/schema'
 export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   // get all ids
   server.get<{ Params: { id: string }}>(
-    '/mpmc-with-tokens'
+    '/chan-with-tokens'
   , {
       schema: {
         params: { id: idSchema }
@@ -26,7 +26,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
   server.get<{
     Params: { id: string }
   }>(
-    '/mpmc/:id/tokens'
+    '/chan/:id/tokens'
   , {
       schema: {
         params: { id: idSchema }
@@ -56,7 +56,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
   server.put<{
     Params: { token: string, id: string }
   }>(
-    '/mpmc/:id/tokens/:token/write'
+    '/chan/:id/tokens/:token/write'
   , {
       schema: {
         params: {
@@ -79,7 +79,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
   server.delete<{
     Params: { token: string, id: string }
   }>(
-    '/mpmc/:id/tokens/:token/write'
+    '/chan/:id/tokens/:token/write'
   , {
       schema: {
         params: {
@@ -103,7 +103,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
   server.put<{
     Params: { token: string, id : string }
   }>(
-    '/mpmc/:id/tokens/:token/read'
+    '/chan/:id/tokens/:token/read'
   , {
       schema: {
         params: {
@@ -126,7 +126,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
   server.delete<{
     Params: { token: string, id : string }
   }>(
-    '/mpmc/:id/tokens/:token/read'
+    '/chan/:id/tokens/:token/read'
   , {
       schema: {
         params: {

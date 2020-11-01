@@ -19,7 +19,7 @@ describe('no access control', () => {
     setImmediate(() => {
       server.inject({
         method: 'POST'
-      , url: `/mpmc/${id}`
+      , url: `/chan/${id}`
       , headers: {
           'Content-Type': 'text/plain'
         }
@@ -28,7 +28,7 @@ describe('no access control', () => {
     })
     const res = await server.inject({
       method: 'GET'
-    , url: `/mpmc/${id}`
+    , url: `/chan/${id}`
     })
 
     expect(res.statusCode).toBe(200)

@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "mpmc",
+  "name": "chan",
   "version": "0.1.0",
   "main": "lib/index.js",
-  "repository": "git@github.com:BlackGlory/mpmc.git",
+  "repository": "git@github.com:BlackGlory/chan.git",
   "author": "BlackGlory <woshenmedoubuzhidao@blackglory.me>",
   "license": "MIT",
   "scripts": {
@@ -12,12 +12,12 @@
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "coverage": "jest --coverage --config jest.config.js",
     "dev": "nodemon",
-    "dev:http2": "MPMC_HTTP2=true nodemon",
+    "dev:http2": "CHAN_HTTP2=true nodemon",
     "clean": "rm -rf lib",
     "build": "cross-env NODE_ENV=production tsc --project tsconfig.build.json && tscpaths --project tsconfig.build.json --src ./src --out ./lib",
     "start": "cross-env NODE_ENV=production node lib/index.js",
-    "start:http2": "cross-env NODE_ENV=production MPMC_HTTP2=true node lib/index.js",
-    "docker:build": "docker build --tag mpmc .",
+    "start:http2": "cross-env NODE_ENV=production CHAN_HTTP2=true node lib/index.js",
+    "docker:build": "docker build --tag chan .",
     "docker:test": "docker-compose --file docker-compose.test.yml run --rm sut",
     "release": "standard-version"
   },

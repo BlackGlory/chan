@@ -2,10 +2,10 @@ import { getDatabase } from './database'
 
 export function getAllIdsWithTokens(): string[] {
   const result = getDatabase().prepare(`
-    SELECT mpmc_id
-      FROM mpmc_tbac;
+    SELECT chan_id
+      FROM chan_tbac;
   `).all()
-  return result.map(x => x['mpmc_id'])
+  return result.map(x => x['chan_id'])
 }
 
 export function getAllTokens(id: string): Array<{ token: string, write: boolean, read: boolean }> {
@@ -17,8 +17,8 @@ export function getAllTokens(id: string): Array<{ token: string, write: boolean,
     SELECT token
          , write_permission
          , read_permission
-      FROM mpmc_tbac
-     WHERE mpmc_id = $id;
+      FROM chan_tbac
+     WHERE chan_id = $id;
   `).all({ id })
   return result.map(x => ({
     token: x['token']
@@ -31,8 +31,8 @@ export function hasWriteTokens(id: string): boolean {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
-               FROM mpmc_tbac
-              WHERE mpmc_id = $id
+               FROM chan_tbac
+              WHERE chan_id = $id
                 AND write_permission = 1
            ) AS write_tokens_exist
   `).get({ id })
@@ -46,8 +46,8 @@ export function matchWriteToken({ token, id }: {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
-               FROM mpmc_tbac
-              WHERE mpmc_id = $id
+               FROM chan_tbac
+              WHERE chan_id = $id
                 AND token = $token
                 AND write_permission = 1
            ) AS matched
@@ -57,9 +57,9 @@ export function matchWriteToken({ token, id }: {
 
 export function setWriteToken({ token, id }: { token: string; id: string }) {
   getDatabase().prepare(`
-    INSERT INTO mpmc_tbac (token, mpmc_id, write_permission)
+    INSERT INTO chan_tbac (token, chan_id, write_permission)
     VALUES ($token, $id, 1)
-        ON CONFLICT (token, mpmc_id)
+        ON CONFLICT (token, chan_id)
         DO UPDATE SET write_permission = 1;
   `).run({ token, id })
 }
@@ -68,10 +68,10 @@ export function unsetWriteToken({ token, id }: { token: string; id: string }) {
   const db = getDatabase()
   db.transaction(() => {
     db.prepare(`
-      UPDATE mpmc_tbac
+      UPDATE chan_tbac
          SET write_permission = 0
        WHERE token = $token
-         AND mpmc_id = $id;
+         AND chan_id = $id;
     `).run({ token, id })
     deleteNoPermissionToken({ token, id })
   })()
@@ -81,8 +81,8 @@ export function hasReadTokens(id: string): boolean {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
-               FROM mpmc_tbac
-              WHERE mpmc_id = $id
+               FROM chan_tbac
+              WHERE chan_id = $id
                 AND read_permission = 1
            ) AS read_tokens_exist
   `).get({ id })
@@ -96,8 +96,8 @@ export function matchReadToken({ token, id }: {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
-               FROM mpmc_tbac
-              WHERE mpmc_id = $id
+               FROM chan_tbac
+              WHERE chan_id = $id
                 AND token = $token
                 AND read_permission = 1
            ) AS matched
@@ -107,9 +107,9 @@ export function matchReadToken({ token, id }: {
 
 export function setReadToken({ token, id }: { token: string; id: string }) {
   getDatabase().prepare(`
-    INSERT INTO mpmc_tbac (token, mpmc_id, read_permission)
+    INSERT INTO chan_tbac (token, chan_id, read_permission)
     VALUES ($token, $id, 1)
-        ON CONFLICT (token, mpmc_id)
+        ON CONFLICT (token, chan_id)
         DO UPDATE SET read_permission = 1;
   `).run({ token, id })
 }
@@ -118,10 +118,10 @@ export function unsetReadToken({ token, id }: { token: string; id: string }) {
   const db = getDatabase()
   db.transaction(() => {
     db.prepare(`
-      UPDATE mpmc_tbac
+      UPDATE chan_tbac
          SET read_permission = 0
        WHERE token = $token
-         AND mpmc_id = $id;
+         AND chan_id = $id;
     `).run({ token, id })
     deleteNoPermissionToken({ token, id })
   })()
@@ -129,9 +129,9 @@ export function unsetReadToken({ token, id }: { token: string; id: string }) {
 
 function deleteNoPermissionToken({ token, id }: { token: string, id: string }) {
   getDatabase().prepare(`
-    DELETE FROM mpmc_tbac
+    DELETE FROM chan_tbac
      WHERE token = $token
-       AND mpmc_id = $id
+       AND chan_id = $id
        AND read_permission = 0
        AND write_permission = 0;
   `).run({ token, id })

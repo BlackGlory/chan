@@ -104,9 +104,9 @@ function exist(db: Database, id: string) {
 }
 
 function insert(db: Database, id: string) {
-  db.prepare('INSERT INTO mpmc_whitelist (mpmc_id) VALUES ($id);').run({ id });
+  db.prepare('INSERT INTO chan_whitelist (chan_id) VALUES ($id);').run({ id });
 }
 
 function select(db: Database, id: string) {
-  return db.prepare('SELECT * FROM mpmc_whitelist WHERE mpmc_id = $id;').get({ id })
+  return db.prepare('SELECT * FROM chan_whitelist WHERE chan_id = $id;').get({ id })
 }

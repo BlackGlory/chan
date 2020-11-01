@@ -16,20 +16,20 @@ describe('whitelist', () => {
     it('204', async () => {
       const id = 'id'
       const message = 'message'
-      process.env.MPMC_ADMIN_PASSWORD = 'password'
-      process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'whitelist'
+      process.env.CHAN_ADMIN_PASSWORD = 'password'
+      process.env.CHAN_LIST_BASED_ACCESS_CONTROL = 'whitelist'
       const server = await buildServer()
       await ConfigDAO.addWhitelistItem(id)
 
       setImmediate(() => {
         server.inject({
           method: 'GET'
-        , url: `/mpmc/${id}`
+        , url: `/chan/${id}`
         })
       })
       const res = await server.inject({
         method: 'POST'
-      , url: `/mpmc/${id}`
+      , url: `/chan/${id}`
       , headers: {
           'Content-Type': 'text/plain'
         }
@@ -42,15 +42,15 @@ describe('whitelist', () => {
 
   describe('id not in whitelist', () => {
     it('403', async () => {
-      process.env.MPMC_ADMIN_PASSWORD = 'password'
-      process.env.MPMC_LIST_BASED_ACCESS_CONTROL = 'whitelist'
+      process.env.CHAN_ADMIN_PASSWORD = 'password'
+      process.env.CHAN_LIST_BASED_ACCESS_CONTROL = 'whitelist'
       const id = 'id'
       const message = 'message'
       const server = await buildServer()
 
       const res = await server.inject({
         method: 'POST'
-      , url: `/mpmc/${id}`
+      , url: `/chan/${id}`
       , headers: {
           'Content-Type': 'text/plain'
         }
