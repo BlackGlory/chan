@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { idSchema } from '@src/schema'
 
-export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async function routes(server, { DAO }) {
+export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   server.get(
     '/blacklist'
   , {
@@ -15,9 +15,10 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-    const result = await DAO.getAllBlacklistItems()
-    reply.send(result)
-  })
+      const result = await Core.Blacklist.getAll()
+      reply.send(result)
+    }
+  )
 
   server.put<{ Params: { id: string }}>(
     '/blacklist/:id'
@@ -30,7 +31,8 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      await DAO.addBlacklistItem(req.params.id)
+      const id = req.params.id
+      await Core.Blacklist.add(id)
       reply.status(204).send()
     }
   )
@@ -46,7 +48,8 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      await DAO.removeBlacklistItem(req.params.id)
+      const id = req.params.id
+      await Core.Blacklist.remove(id)
       reply.status(204).send()
     }
   )

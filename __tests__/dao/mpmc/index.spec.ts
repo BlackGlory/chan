@@ -1,14 +1,18 @@
-import { createMPMC } from '@core'
+import { rebuildMPMCChannelManager } from '@dao/mpmc/mpmc-channel-manager'
+import { MPMCDAO } from '@dao/mpmc'
 import '@blackglory/jest-matchers'
 
-describe('MPMC', () => {
+beforeEach(() => {
+  rebuildMPMCChannelManager()
+})
+
+describe('MPMCDAO', () => {
   describe('enqueue', () => {
     it('block', async done => {
-      const mpmc = await createMPMC()
       const key = 'key'
       const value = 'value'
 
-      const result = mpmc.enqueue(key, value)
+      const result = MPMCDAO.enqueue(key, value)
       result.then(() => done.fail())
       setImmediate(done)
 
@@ -18,10 +22,9 @@ describe('MPMC', () => {
 
   describe('dequeue',  () => {
     it('block', async done => {
-      const mpmc = await createMPMC()
       const key = 'key'
 
-      const result = mpmc.dequeue(key)
+      const result = MPMCDAO.dequeue(key)
       result.then(() => done.fail())
       setImmediate(done)
 
@@ -31,12 +34,11 @@ describe('MPMC', () => {
 
   describe('dequeue, enqueue', () => {
     it('non-block', async () => {
-      const mpmc = await createMPMC()
       const key = 'key'
       const value = 'value'
 
-      setImmediate(() => mpmc.enqueue(key, value))
-      const result = mpmc.dequeue(key)
+      setImmediate(() => MPMCDAO.enqueue(key, value))
+      const result = MPMCDAO.dequeue(key)
       const proResult = await result
 
       expect(result).toBePromise()
@@ -46,12 +48,11 @@ describe('MPMC', () => {
 
   describe('enqueue, dequeue', () => {
     it('non-block', async () => {
-      const mpmc = await createMPMC()
       const key = 'key'
       const value = 'value'
 
-      setImmediate(() => mpmc.dequeue(key))
-      const result = mpmc.enqueue(key, value)
+      setImmediate(() => MPMCDAO.dequeue(key))
+      const result = MPMCDAO.enqueue(key, value)
       const proResult = await result
 
       expect(result).toBePromise()

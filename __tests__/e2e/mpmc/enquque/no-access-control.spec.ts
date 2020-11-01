@@ -1,7 +1,7 @@
 import { buildServer } from '@src/server'
 import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
-import { DAO } from '@dao'
+import { ConfigDAO } from '@dao'
 
 jest.mock('@dao/config/database')
 expect.extend(matchers)
@@ -107,7 +107,7 @@ describe('no access control', () => {
             const schema = { type: 'string' }
             const message = ' "message" '
             const server = await buildServer()
-            await DAO.setJsonSchema({
+            await ConfigDAO.setJsonSchema({
               id
             , schema: JSON.stringify(schema)
             })
@@ -141,7 +141,7 @@ describe('no access control', () => {
             const schema = { type: 'string' }
             const message = 'message'
             const server = await buildServer()
-            await DAO.setJsonSchema({
+            await ConfigDAO.setJsonSchema({
               id
             , schema: JSON.stringify(schema)
             })
@@ -167,7 +167,7 @@ describe('no access control', () => {
           const schema = { type: 'string' }
           const message = ' "message" '
           const server = await buildServer()
-          await DAO.setJsonSchema({
+          await ConfigDAO.setJsonSchema({
             id
           , schema: JSON.stringify(schema)
           })
@@ -195,7 +195,7 @@ describe('no access control', () => {
             const schema = { type: 'string' }
             const message = ' "message" '
             const server = await buildServer()
-            await DAO.setJsonSchema({
+            await ConfigDAO.setJsonSchema({
               id
             , schema: JSON.stringify(schema)
             })

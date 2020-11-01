@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { idSchema } from '@src/schema'
 
-export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async function routes(server, { DAO }) {
+export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   server.get(
     '/whitelist'
   , {
@@ -15,9 +15,10 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-    const result = await DAO.getAllWhitelistItems()
-    reply.send(result)
-  })
+      const result = await Core.Whitelist.getAll()
+      reply.send(result)
+    }
+  )
 
   server.put<{ Params: { id: string }}>(
     '/whitelist/:id'
@@ -30,7 +31,8 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      await DAO.addWhitelistItem(req.params.id)
+      const id = req.params.id
+      await Core.Whitelist.add(id)
       reply.status(204).send()
     }
   )
@@ -46,7 +48,9 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-    await DAO.removeWhitelistItem(req.params.id)
-    reply.status(204).send()
-  })
+      const id = req.params.id
+      await Core.Whitelist.remove(id)
+      reply.status(204).send()
+    }
+  )
 }

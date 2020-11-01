@@ -1,22 +1,9 @@
 import { FastifyPluginAsync } from 'fastify'
 import { idSchema, tokenSchema } from '@src/schema'
-import {
-  LIST_BASED_ACCESS_CONTROL
-, ListBasedAccessControl
-, TOKEN_BASED_ACCESS_CONTROL
-, DISABLE_NO_TOKENS
-, JSON_VALIDATION
-, DEFAULT_JSON_SCHEMA
-, JSON_PAYLOAD_ONLY
-, ENQUEUE_PAYLOAD_LIMIT
-} from '@env'
-import Ajv from 'ajv'
-import { getErrorResult } from 'return-style'
+import { JSON_PAYLOAD_ONLY, ENQUEUE_PAYLOAD_LIMIT } from '@env'
+import { Package } from './types'
 
-export const routes: FastifyPluginAsync<{
-  MPMC: IMPMC<{ type?: string; payload: string }>
-  DAO: IDataAccessObject
-}> = async function routes(server, { MPMC, DAO }) {
+export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   // overwrite application/json parser
   server.addContentTypeParser(
     'application/json'
@@ -51,52 +38,43 @@ export const routes: FastifyPluginAsync<{
     }
   , async (req, reply) => {
       const id = req.params.id
+      const payload = req.body
       const token = req.query.token
 
-      if (LIST_BASED_ACCESS_CONTROL() === ListBasedAccessControl.Blacklist) {
-        if (await DAO.inBlacklist(req.params.id)) return reply.status(403).send()
-      } else if (LIST_BASED_ACCESS_CONTROL() === ListBasedAccessControl.Whitelist) {
-        if (!await DAO.inWhitelist(req.params.id)) return reply.status(403).send()
-      }
-
-      if (TOKEN_BASED_ACCESS_CONTROL()) {
-        if (await DAO.hasWriteTokens(id)) {
-          if (token) {
-            if (!await DAO.matchWriteToken({ token, id })) return reply.status(401).send()
+      try {
+        await Core.Blacklist.check(id)
+        await Core.Whitelist.check(id)
+        await Core.TBAC.checkWritePermission(id, token)
+        if (Core.JsonSchema.isEnabled()) {
+          if (isJSONPayload()) {
+            await Core.JsonSchema.validate(id, payload)
           } else {
-            return reply.status(401).send()
-          }
-        } else {
-          if (DISABLE_NO_TOKENS()) {
-            if (!await DAO.hasReadTokens(id)) return reply.status(403).send()
-          }
-        }
-      }
-
-      if (JSON_VALIDATION()) {
-        const specificJsonSchema= await DAO.getJsonSchema(req.params.id)
-        if (req.headers['content-type']?.toLowerCase().startsWith('application/json')) {
-          const [err, json] = getErrorResult(() => JSON.parse(req.body))
-          if (err) return reply.status(400).send(err.message)
-
-          const schema = specificJsonSchema ?? DEFAULT_JSON_SCHEMA()
-          if (schema) {
-            const ajv = new Ajv()
-            const valid = ajv.validate(JSON.parse(schema), json)
-            if (!valid) {
-              return reply.status(400).send(ajv.errorsText())
+            if (await Core.JsonSchema.get(id)) {
+              throw new Error('This id only accepts application/json')
             }
           }
-        } else if (specificJsonSchema) {
-          return reply.status(400).send('content-type must be application/json')
         }
+      } catch (e) {
+        if (e instanceof Core.Error.Unauthorized) return reply.status(401).send()
+        if (e instanceof Core.Error.Forbidden) return reply.status(403).send()
+        if (e instanceof Error) return reply.status(400).send(e.message)
+        throw e
       }
 
-      await MPMC.enqueue(req.params.id, {
-        type: req.headers['content-type']
-      , payload: req.body
-      })
+      const pkg: Package = {
+        type: req.headers['content-type'] ?? 'application/octet-stream'
+      , payload
+      }
+      await Core.MPMC.enqueue(id, pkg)
       reply.status(204).send()
+
+      function isJSONPayload(): boolean {
+        const contentType = req.headers['content-type']
+        if (!contentType) return false
+        return contentType
+          .toLowerCase()
+          .startsWith('application/json')
+      }
     }
   )
 }

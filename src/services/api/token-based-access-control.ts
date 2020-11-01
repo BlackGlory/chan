@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { idSchema, tokenSchema } from '@src/schema'
 
-export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async function routes(server, { DAO }) {
+export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   // get all ids
   server.get<{ Params: { id: string }}>(
     '/mpmc-with-tokens'
@@ -17,7 +17,7 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      const result = await DAO.getAllIdsWithTokens()
+      const result = await Core.TBAC.getAllIds()
       reply.send(result)
     }
   )
@@ -37,8 +37,8 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
               type: 'object'
             , properties: {
                 token: tokenSchema
-              , enqueue: { type: 'boolean' }
-              , dequeue: { type: 'boolean' }
+              , write: { type: 'boolean' }
+              , read: { type: 'boolean' }
               }
             }
           }
@@ -46,12 +46,13 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      const result = await DAO.getAllTokens(req.params.id)
+      const id = req.params.id
+      const result = await Core.TBAC.getTokens(id)
       reply.send(result)
     }
   )
 
-  // enqueue token
+  // publish token
   server.put<{
     Params: { token: string, id: string }
   }>(
@@ -68,7 +69,9 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      await DAO.setWriteToken({ token: req.params.token, id: req.params.id })
+      const id = req.params.id
+      const token = req.params.token
+      await Core.TBAC.setWriteToken(id, token)
       reply.status(204).send()
     }
   )
@@ -89,12 +92,14 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      await DAO.unsetWriteToken({ token: req.params.token, id: req.params.id })
+      const id = req.params.id
+      const token = req.params.token
+      await Core.TBAC.unsetWriteToken(id, token)
       reply.status(204).send()
     }
   )
 
-  // dequeue token
+  // subscribe token
   server.put<{
     Params: { token: string, id : string }
   }>(
@@ -111,7 +116,9 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      await DAO.setReadToken({ token: req.params.token, id: req.params.id })
+      const id = req.params.id
+      const token = req.params.token
+      await Core.TBAC.setReadToken(id, token)
       reply.status(204).send()
     }
   )
@@ -132,7 +139,9 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-      await DAO.unsetReadToken({ token: req.params.token, id: req.params.id })
+      const id = req.params.id
+      const token = req.params.token
+      await Core.TBAC.unsetReadToken(id, token)
       reply.status(204).send()
     }
   )

@@ -1,1 +1,2 @@
-export { DAO } from './config'
+export { ConfigDAO } from './config'
+export { MPMCDAO } from './mpmc'

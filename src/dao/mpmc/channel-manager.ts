@@ -1,6 +1,6 @@
 import { Channel } from './channel'
 
-export class ChannelManager<T> implements IMPMC<T> {
+export class ChannelManager<T> {
   #map = new Map<string, Channel<T>>()
 
   async enqueue(key: string, value: T) {

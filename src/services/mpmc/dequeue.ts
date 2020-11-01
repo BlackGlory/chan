@@ -1,16 +1,8 @@
 import { FastifyPluginAsync } from 'fastify'
 import { idSchema, tokenSchema } from '@src/schema'
-import {
-  LIST_BASED_ACCESS_CONTROL
-, ListBasedAccessControl
-, TOKEN_BASED_ACCESS_CONTROL
-, DISABLE_NO_TOKENS
-} from '@env'
+import { Package } from './types'
 
-export const routes: FastifyPluginAsync<{
-  MPMC: IMPMC<{ type?: string; payload: string }>
-  DAO: IDataAccessObject
-}> = async function routes(server, { MPMC, DAO }) {
+export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   server.get<{
     Params: { id: string }
     Querystring: { token?: string }
@@ -29,27 +21,18 @@ export const routes: FastifyPluginAsync<{
       const id = req.params.id
       const token = req.query.token
 
-      if (LIST_BASED_ACCESS_CONTROL() === ListBasedAccessControl.Blacklist) {
-        if (await DAO.inBlacklist(id)) return reply.status(403).send()
-      } else if (LIST_BASED_ACCESS_CONTROL() === ListBasedAccessControl.Whitelist) {
-        if (!await DAO.inWhitelist(id)) return reply.status(403).send()
+      try {
+        await Core.Blacklist.check(id)
+        await Core.Whitelist.check(id)
+        await Core.TBAC.checkReadPermission(id, token)
+      } catch (e) {
+        if (e instanceof Core.Error.Unauthorized) return reply.status(401).send()
+        if (e instanceof Core.Error.Forbidden) return reply.status(403).send()
+        if (e instanceof Error) return reply.status(400).send(e.message)
+        throw e
       }
 
-      if (TOKEN_BASED_ACCESS_CONTROL()) {
-        if (await DAO.hasReadTokens(id)) {
-          if (token) {
-            if (!await DAO.matchReadToken({ token, id })) return reply.status(401).send()
-          } else {
-            return reply.status(401).send()
-          }
-        } else {
-          if (DISABLE_NO_TOKENS()) {
-            if (!await DAO.hasWriteTokens(id)) return reply.status(403).send()
-          }
-        }
-      }
-
-      const value = await MPMC.dequeue(id)
+      const value = await Core.MPMC.dequeue(id) as Package
       if (value.type) reply.header('content-type', value.type)
       reply.send(value.payload)
     }

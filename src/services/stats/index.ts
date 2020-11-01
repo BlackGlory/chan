@@ -1,11 +1,8 @@
 import { FastifyPluginAsync } from 'fastify'
 
-export const routes: FastifyPluginAsync = async function routes(server, options) {
+export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   server.get('/stats', (req, reply) => {
-    reply.send({
-      memoryUsage: process.memoryUsage()
-    , cpuUsage: process.cpuUsage()
-    , resourceUsage: process.resourceUsage()
-    })
+    const result = Core.stats()
+    reply.send(result)
   })
 }

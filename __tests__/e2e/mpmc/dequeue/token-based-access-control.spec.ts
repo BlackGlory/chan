@@ -1,7 +1,7 @@
 import { buildServer } from '@src/server'
 import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
-import { DAO } from '@dao'
+import { ConfigDAO } from '@dao'
 
 jest.mock('@dao/config/database')
 expect.extend(matchers)
@@ -12,35 +12,35 @@ beforeEach(async () => {
 })
 
 describe('token-based access control', () => {
-  describe('id has enqueue tokens', () => {
+  describe('id has dequeue tokens', () => {
     describe('token matched', () => {
-      it('204', async () => {
+      it('200', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
         process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
         const id = 'id'
         const token = 'token'
         const message = 'message'
         const server = await buildServer()
-        await DAO.setWriteToken({ id, token })
+        await ConfigDAO.setReadToken({ id, token })
 
         setImmediate(() => {
           server.inject({
-            method: 'GET'
+            method: 'POST'
           , url: `/mpmc/${id}`
-          , query: { token }
+          , payload: message
+          , headers: {
+              'Content-Type': 'text/plain'
+            }
           })
         })
         const res = await server.inject({
-          method: 'POST'
+          method: 'GET'
         , url: `/mpmc/${id}`
         , query: { token }
-        , headers: {
-            'Content-Type': 'text/plain'
-          }
-        , payload: message
         })
 
-        expect(res.statusCode).toBe(204)
+        expect(res.statusCode).toBe(200)
+        expect(res.body).toBe(message)
       })
     })
 
@@ -50,18 +50,13 @@ describe('token-based access control', () => {
         process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
         const id = 'id'
         const token = 'token'
-        const message = 'message'
         const server = await buildServer()
-        await DAO.setWriteToken({ id, token })
+        await ConfigDAO.setReadToken({ id, token })
 
         const res = await server.inject({
-          method: 'POST'
+          method: 'GET'
         , url: `/mpmc/${id}`
         , query: { token: 'bad' }
-        , headers: {
-            'Content-Type': 'text/plain'
-          }
-        , payload: message
         })
 
         expect(res.statusCode).toBe(401)
@@ -74,17 +69,12 @@ describe('token-based access control', () => {
         process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
         const id = 'id'
         const token = 'token'
-        const message = 'message'
         const server = await buildServer()
-        await DAO.setWriteToken({ id, token })
+        await ConfigDAO.setReadToken({ id, token })
 
         const res = await server.inject({
-          method: 'POST'
+          method: 'GET'
         , url: `/mpmc/${id}`
-        , headers: {
-            'Content-Type': 'text/plain'
-          }
-        , payload: message
         })
 
         expect(res.statusCode).toBe(401)
@@ -92,34 +82,35 @@ describe('token-based access control', () => {
     })
   })
 
-  describe('id does not have enqueue tokens', () => {
-    describe('id has dequeue tokens', () => {
-      it('204', async () => {
+  describe('id does not have dequeue tokens', () => {
+    describe('id has enqueue tokens', () => {
+      it('200', async () => {
         process.env.MPMC_ADMIN_PASSWORD = 'password'
         process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
         const id = 'id'
         const token = 'token'
         const message = 'message'
         const server = await buildServer()
-        await DAO.setReadToken({ id, token })
+        await ConfigDAO.setWriteToken({ id, token })
 
         setImmediate(() => {
           server.inject({
-            method: 'GET'
+            method: 'POST'
           , url: `/mpmc/${id}`
+          , payload: message
           , query: { token }
+          , headers: {
+              'Content-Type': 'text/plain'
+            }
           })
         })
         const res = await server.inject({
-          method: 'POST'
+          method: 'GET'
         , url: `/mpmc/${id}`
-        , headers: {
-            'Content-Type': 'text/plain'
-          }
-        , payload: message
         })
 
-        expect(res.statusCode).toBe(204)
+        expect(res.statusCode).toBe(200)
+        expect(res.body).toBe(message)
       })
     })
 
@@ -130,16 +121,11 @@ describe('token-based access control', () => {
           process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
           process.env.MPMC_DISABLE_NO_TOKENS = 'true'
           const id = 'id'
-          const message = 'message'
           const server = await buildServer()
 
           const res = await server.inject({
-            method: 'POST'
+            method: 'GET'
           , url: `/mpmc/${id}`
-          , headers: {
-              'Content-Type': 'text/plain'
-            }
-          , payload: message
           })
 
           expect(res.statusCode).toBe(403)
@@ -147,7 +133,7 @@ describe('token-based access control', () => {
       })
 
       describe('not DISABLE_NO_TOKENS', () => {
-        it('204', async () => {
+        it('200', async () => {
           process.env.MPMC_ADMIN_PASSWORD = 'password'
           process.env.MPMC_TOKEN_BASED_ACCESS_CONTROL = 'true'
           const id = 'id'
@@ -156,20 +142,21 @@ describe('token-based access control', () => {
 
           setImmediate(() => {
             server.inject({
-              method: 'GET'
+              method: 'POST'
             , url: `/mpmc/${id}`
+            , payload: message
+            , headers: {
+                'Content-Type': 'text/plain'
+              }
             })
           })
           const res = await server.inject({
-            method: 'POST'
+            method: 'GET'
           , url: `/mpmc/${id}`
-          , headers: {
-              'Content-Type': 'text/plain'
-            }
-          , payload: message
           })
 
-          expect(res.statusCode).toBe(204)
+          expect(res.statusCode).toBe(200)
+          expect(res.body).toBe(message)
         })
       })
     })

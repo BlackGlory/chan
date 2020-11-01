@@ -39,7 +39,7 @@ const TokenBasedAccessControlDAO: ITokenBasedAccessControlDAO = {
 , unsetReadToken: asyncify(TokenBasedAccessControl.unsetReadToken)
 }
 
-export const DAO: IDataAccessObject = {
+export const ConfigDAO: IDataAccessObject = {
   ...BlacklistDAO
 , ...WhitelistDAO
 , ...JsonSchemaDAO

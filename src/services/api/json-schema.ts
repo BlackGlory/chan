@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { idSchema } from '@src/schema'
 
-export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async function routes(server, { DAO }) {
+export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   server.get(
     '/mpmc-with-json-schema'
   , {
@@ -15,9 +15,10 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-    const result = await DAO.getAllIdsWithJsonSchema()
-    reply.send(result)
-  })
+      const result = await Core.JsonSchema.getAllIds()
+      reply.send(result)
+    }
+  )
 
   server.get<{ Params: { id: string }}>(
     '/mpmc/:id/json-schema'
@@ -31,13 +32,15 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-    const result = await DAO.getJsonSchema(req.params.id)
-    if (result) {
-      reply.header('content-type', 'application/json').send(result)
-    } else {
-      reply.status(404).send()
+      const id = req.params.id
+      const result = await Core.JsonSchema.get(id)
+      if (result) {
+        reply.header('content-type', 'application/json').send(result)
+      } else {
+        reply.status(404).send()
+      }
     }
-  })
+  )
 
   server.put<{ Params: { id: string }; Body: any }>(
     '/mpmc/:id/json-schema'
@@ -50,12 +53,12 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-    await DAO.setJsonSchema({
-      id: req.params.id
-    , schema: JSON.stringify(req.body, null, 2)
-    })
-    reply.status(204).send()
-  })
+      const id = req.params.id
+      const schema = req.body
+      await Core.JsonSchema.set(id, schema)
+      reply.status(204).send()
+    }
+  )
 
   server.delete<{ Params: { id: string }}>(
     '/mpmc/:id/json-schema'
@@ -68,7 +71,9 @@ export const routes: FastifyPluginAsync<{ DAO: IDataAccessObject }> = async func
       }
     }
   , async (req, reply) => {
-    await DAO.removeJsonSchema(req.params.id)
-    reply.status(204).send()
-  })
+      const id = req.params.id
+      await Core.JsonSchema.remove(id)
+      reply.status(204).send()
+    }
+  )
 }

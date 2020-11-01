@@ -2,7 +2,7 @@
 import { buildServer } from '@src/server'
 import { prepareDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
-import { DAO } from '@dao'
+import { ConfigDAO } from '@dao'
 
 jest.mock('@dao/config/database')
 expect.extend(matchers)
@@ -70,7 +70,7 @@ describe('json schema', () => {
           const server = await buildServer()
           const id = 'id'
           const schema = { type: 'number' }
-          await DAO.setJsonSchema({
+          await ConfigDAO.setJsonSchema({
             id
           , schema: JSON.stringify(schema)
           })
