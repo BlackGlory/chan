@@ -95,8 +95,6 @@ services:
   chan:
     image: 'blackglory/chan'
     restart: always
-    environment:
-      - CHAN_HOST=0.0.0.0
     volumes:
       - 'chan-data:/data'
     ports:
@@ -117,7 +115,6 @@ services:
     image: 'blackglory/chan'
     restart: always
     environment:
-      - CHAN_HOST=0.0.0.0
       - CHAN_ADMIN_PASSWORD=password
       - CHAN_TOKEN_BASED_ACCESS_CONTROL=true
       - CHAN_DISABLE_NO_TOKENS=true

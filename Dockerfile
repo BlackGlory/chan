@@ -17,6 +17,7 @@ RUN yarn build \
  && mkdir /data \
  && ln -s /data data
 
+ENV UID_HOST=0.0.0.0
 EXPOSE 8080
 ENTRYPOINT ["yarn"]
 CMD ["--silent", "start"]
