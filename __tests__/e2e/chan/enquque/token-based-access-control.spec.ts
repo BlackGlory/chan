@@ -13,7 +13,7 @@ beforeEach(async () => {
 
 describe('token-based access control', () => {
   describe('enabled', () => {
-    describe('id has enqueue tokens', () => {
+    describe('id need write tokens', () => {
       describe('token matched', () => {
         it('204', async () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
@@ -21,6 +21,7 @@ describe('token-based access control', () => {
           const token = 'token'
           const message = 'message'
           const server = await buildServer()
+          await AccessControlDAO.setWriteTokenRequired(id, true)
           await AccessControlDAO.setWriteToken({ id, token })
 
           setImmediate(() => {
@@ -50,6 +51,7 @@ describe('token-based access control', () => {
           const token = 'token'
           const message = 'message'
           const server = await buildServer()
+          await AccessControlDAO.setWriteTokenRequired(id, true)
           await AccessControlDAO.setWriteToken({ id, token })
 
           const res = await server.inject({
@@ -67,12 +69,13 @@ describe('token-based access control', () => {
       })
 
       describe('no token', () => {
-        it('401', async () => {
+        it('403', async () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
           const id = 'id'
           const token = 'token'
           const message = 'message'
           const server = await buildServer()
+          await AccessControlDAO.setWriteTokenRequired(id, true)
           await AccessControlDAO.setWriteToken({ id, token })
 
           const res = await server.inject({
@@ -84,26 +87,45 @@ describe('token-based access control', () => {
           , payload: message
           })
 
-          expect(res.statusCode).toBe(401)
+          expect(res.statusCode).toBe(403)
         })
       })
     })
 
-    describe('id does not have enqueue tokens', () => {
-      describe('id has dequeue tokens', () => {
-        it('204', async () => {
+    describe('id does not need write tokens', () => {
+      describe('WRITE_TOKEN_REQUIRED=true', () => {
+        it('403', async () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
+          process.env.CHAN_WRITE_TOKEN_REQUIRED = 'true'
           const id = 'id'
-          const token = 'token'
           const message = 'message'
           const server = await buildServer()
-          await AccessControlDAO.setReadToken({ id, token })
+
+          const res = await server.inject({
+            method: 'POST'
+          , url: `/chan/${id}`
+          , headers: {
+              'Content-Type': 'text/plain'
+            }
+          , payload: message
+          })
+
+          expect(res.statusCode).toBe(403)
+        })
+      })
+
+      describe('WRITE_TOKEN_REQUIRED=false', () => {
+        it('204', async () => {
+          process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
+          process.env.CHAN_READ_TOKEN_REQUIRED = 'false'
+          const id = 'id'
+          const message = 'message'
+          const server = await buildServer()
 
           setImmediate(() => {
             server.inject({
               method: 'GET'
             , url: `/chan/${id}`
-            , query: { token }
             })
           })
           const res = await server.inject({
@@ -118,66 +140,49 @@ describe('token-based access control', () => {
           expect(res.statusCode).toBe(204)
         })
       })
-
-      describe('id has no tokens', () => {
-        describe('WRITE_TOKEN_REQUIRED', () => {
-          it('403', async () => {
-            process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
-            process.env.CHAN_WRITE_TOKEN_REQUIRED = 'true'
-            const id = 'id'
-            const message = 'message'
-            const server = await buildServer()
-
-            const res = await server.inject({
-              method: 'POST'
-            , url: `/chan/${id}`
-            , headers: {
-                'Content-Type': 'text/plain'
-              }
-            , payload: message
-            })
-
-            expect(res.statusCode).toBe(403)
-          })
-        })
-
-        describe('not WRITE_TOKEN_REQUIRED', () => {
-          it('204', async () => {
-            process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
-            const id = 'id'
-            const message = 'message'
-            const server = await buildServer()
-
-            setImmediate(() => {
-              server.inject({
-                method: 'GET'
-              , url: `/chan/${id}`
-              })
-            })
-            const res = await server.inject({
-              method: 'POST'
-            , url: `/chan/${id}`
-            , headers: {
-                'Content-Type': 'text/plain'
-              }
-            , payload: message
-            })
-
-            expect(res.statusCode).toBe(204)
-          })
-        })
-      })
     })
   })
 
   describe('disabled', () => {
-    describe('id has enqueue tokens', () => {
+    describe('id need write tokens', () => {
       describe('no token', () => {
         it('200', async () => {
           const id = 'id'
           const token = 'token'
           const message = 'message'
           const server = await buildServer()
+          await AccessControlDAO.setWriteTokenRequired(id, true)
+          await AccessControlDAO.setWriteToken({ id, token })
+
+          setImmediate(() => {
+            server.inject({
+              method: 'GET'
+            , url: `/chan/${id}`
+            })
+          })
+          const res = await server.inject({
+            method: 'POST'
+          , url: `/chan/${id}`
+          , headers: {
+              'Content-Type': 'text/plain'
+            }
+          , payload: message
+          })
+
+          expect(res.statusCode).toBe(204)
+        })
+      })
+    })
+
+    describe('id does not need write tokens', () => {
+      describe('WRITE_TOKEN_REQUIRED=true', () => {
+        it('200', async () => {
+          process.env.CHAN_WRITE_TOKEN_REQUIRED = 'true'
+          const id = 'id'
+          const token = 'token'
+          const message = 'message'
+          const server = await buildServer()
+          await AccessControlDAO.setWriteTokenRequired(id, true)
           await AccessControlDAO.setWriteToken({ id, token })
 
           setImmediate(() => {

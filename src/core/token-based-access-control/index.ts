@@ -22,20 +22,27 @@ export function isEnabled() {
 
 export async function checkWritePermission(id: string, token?: string) {
   if (!isEnabled()) return
-  if (WRITE_TOKEN_REQUIRED() && !token) throw new Forbidden()
 
-  if (await AccessControlDAO.hasWriteTokens(id)) {
-    if (!token) throw new Unauthorized()
+  const writeTokenRequired =
+    (await TokenPolicy.get(id)).writeTokenRequired
+  ?? WRITE_TOKEN_REQUIRED()
+
+  if (writeTokenRequired) {
+    if (!token) throw new Forbidden()
     if (!await AccessControlDAO.matchWriteToken({ token, id })) throw new Unauthorized()
   }
+
 }
 
 export async function checkReadPermission(id: string, token?: string) {
   if (!isEnabled()) return
-  if (READ_TOKEN_REQUIRED() && !token) throw new Forbidden()
 
-  if (await AccessControlDAO.hasReadTokens(id)) {
-    if (!token) throw new Unauthorized()
+  const readTokenRequired =
+    (await TokenPolicy.get(id)).readTokenRequired
+  ?? READ_TOKEN_REQUIRED()
+
+  if (readTokenRequired) {
+    if (!token) throw new Forbidden()
     if (!await AccessControlDAO.matchReadToken({ token, id })) throw new Unauthorized()
   }
 }
