@@ -49,21 +49,37 @@ interface ICore {
 
   TBAC: {
     isEnabled(): boolean
-
-    getAllIds(): Promise<string[]>
-    getTokens(id: string): Promise<Array<{
-      token: string
-      write: boolean
-      read: boolean
-    }>>
-
     checkWritePermission(id: string, token?: string): Promise<void>
-    setWriteToken(id: string, token: string): Promise<void>
-    unsetWriteToken(id: string, token: string): Promise<void>
-
     checkReadPermission(id: string, token?: string): Promise<void>
-    setReadToken(id: string, token: string): Promise<void>
-    unsetReadToken(id: string, token: string): Promise<void>
+
+    Token: {
+      getAllIds(): Promise<string[]>
+      getAll(id: string): Promise<Array<{
+        token: string
+        write: boolean
+        read: boolean
+      }>>
+
+      setWriteToken(id: string, token: string): Promise<void>
+      unsetWriteToken(id: string, token: string): Promise<void>
+
+      setReadToken(id: string, token: string): Promise<void>
+      unsetReadToken(id: string, token: string): Promise<void>
+    }
+
+    TokenPolicy: {
+      getAllIds(): Promise<string[]>
+      get(id: string): Promise<{
+        writeTokenRequired: boolean | null
+        readTokenRequired: boolean | null
+      }>
+
+      setWriteTokenRequired(id: string, val: boolean): Promise<void>
+      unsetWriteTokenRequired(id: string): Promise<void>
+
+      setReadTokenRequired(id: string, val: boolean): Promise<void>
+      unsetReadTokenRequired(id: string): Promise<void>
+    }
   }
 
   Error: {

@@ -1,14 +1,12 @@
 import { FastifyPluginAsync } from 'fastify'
-import { idSchema, tokenSchema } from '@src/schema'
+import { idSchema } from '@src/schema'
 
 export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
-  // get all ids
-  server.get<{ Params: { id: string }}>(
-    '/chan-with-tokens'
+  server.get(
+    '/chan-with-token-policies'
   , {
       schema: {
-        params: { id: idSchema }
-      , response: {
+        response: {
           200: {
             type: 'array'
           , items: { type: 'string' }
@@ -17,16 +15,15 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
       }
     }
   , async (req, reply) => {
-      const result = await Core.TBAC.getAllIds()
+      const result = await Core.TBAC.TokenPolicy.getAllIds()
       reply.send(result)
     }
   )
 
-  // get all tokens
   server.get<{
     Params: { id: string }
   }>(
-    '/chan/:id/tokens'
+    '/chan/:id/token-policies'
   , {
       schema: {
         params: { id: idSchema }
@@ -36,9 +33,18 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
           , items: {
               type: 'object'
             , properties: {
-                token: tokenSchema
-              , write: { type: 'boolean' }
-              , read: { type: 'boolean' }
+                writeTokenRequired: {
+                  oneOf: [
+                    { type: 'boolean' }
+                  , { type: 'null' }
+                  ]
+                }
+              , readTokenRequired: {
+                  oneOf: [
+                    { type: 'boolean' }
+                  , { type: 'null' }
+                  ]
+                }
               }
             }
           }
@@ -47,22 +53,20 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
     }
   , async (req, reply) => {
       const id = req.params.id
-      const result = await Core.TBAC.getTokens(id)
+      const result = await Core.TBAC.TokenPolicy.get(id)
       reply.send(result)
     }
   )
 
-  // publish token
   server.put<{
-    Params: { token: string, id: string }
+    Params: { id: string }
+  , Body: boolean
   }>(
-    '/chan/:id/tokens/:token/write'
+    '/chan/:id/token-policies/write-token-required'
   , {
       schema: {
-        params: {
-          token: tokenSchema
-        , id: idSchema
-        }
+        params: { id: idSchema }
+      , body: { type: 'boolean' }
       , response: {
           204: { type: 'null' }
         }
@@ -70,22 +74,19 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
     }
   , async (req, reply) => {
       const id = req.params.id
-      const token = req.params.token
-      await Core.TBAC.setWriteToken(id, token)
+      const val = req.body
+      await Core.TBAC.TokenPolicy.setWriteTokenRequired(id, val)
       reply.status(204).send()
     }
   )
 
   server.delete<{
-    Params: { token: string, id: string }
+    Params: { id: string}
   }>(
-    '/chan/:id/tokens/:token/write'
+    '/chan/:id/token-policies/write-token-required'
   , {
       schema: {
-        params: {
-          token: tokenSchema
-        , id: idSchema
-        }
+        params: { id: idSchema }
       , response: {
           204: { type: 'null' }
         }
@@ -93,23 +94,20 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
     }
   , async (req, reply) => {
       const id = req.params.id
-      const token = req.params.token
-      await Core.TBAC.unsetWriteToken(id, token)
+      await Core.TBAC.TokenPolicy.unsetWriteTokenRequired(id)
       reply.status(204).send()
     }
   )
 
-  // subscribe token
   server.put<{
-    Params: { token: string, id : string }
+    Params: { id: string }
+  , Body: boolean
   }>(
-    '/chan/:id/tokens/:token/read'
+    '/chan/:id/token-policies/read-token-required'
   , {
       schema: {
-        params: {
-          token: tokenSchema
-        , id: idSchema
-        }
+        params: { id: idSchema }
+      , body: { type: 'boolean' }
       , response: {
           204: { type: 'null' }
         }
@@ -117,22 +115,19 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
     }
   , async (req, reply) => {
       const id = req.params.id
-      const token = req.params.token
-      await Core.TBAC.setReadToken(id, token)
+      const val = req.body
+      await Core.TBAC.TokenPolicy.setReadTokenRequired(id, val)
       reply.status(204).send()
     }
   )
 
   server.delete<{
-    Params: { token: string, id : string }
+    Params: { id: string}
   }>(
-    '/chan/:id/tokens/:token/read'
+    '/chan/:id/token-policies/read-token-required'
   , {
       schema: {
-        params: {
-          token: tokenSchema
-        , id: idSchema
-        }
+        params: { id: idSchema }
       , response: {
           204: { type: 'null' }
         }
@@ -140,8 +135,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
     }
   , async (req, reply) => {
       const id = req.params.id
-      const token = req.params.token
-      await Core.TBAC.unsetReadToken(id, token)
+      await Core.TBAC.TokenPolicy.unsetReadTokenRequired(id)
       reply.status(204).send()
     }
   )
