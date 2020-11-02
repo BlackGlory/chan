@@ -117,7 +117,6 @@ describe('token-based access control', () => {
       describe('WRITE_TOKEN_REQUIRED=false', () => {
         it('204', async () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
-          process.env.CHAN_READ_TOKEN_REQUIRED = 'false'
           const id = 'id'
           const message = 'message'
           const server = await buildServer()
@@ -146,7 +145,7 @@ describe('token-based access control', () => {
   describe('disabled', () => {
     describe('id need write tokens', () => {
       describe('no token', () => {
-        it('200', async () => {
+        it('204', async () => {
           const id = 'id'
           const token = 'token'
           const message = 'message'
@@ -176,7 +175,7 @@ describe('token-based access control', () => {
 
     describe('id does not need write tokens', () => {
       describe('WRITE_TOKEN_REQUIRED=true', () => {
-        it('200', async () => {
+        it('204', async () => {
           process.env.CHAN_WRITE_TOKEN_REQUIRED = 'true'
           const id = 'id'
           const token = 'token'
