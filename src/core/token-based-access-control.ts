@@ -1,6 +1,6 @@
 import { Forbidden, Unauthorized } from './error'
 import { AccessControlDAO } from '@dao'
-import { TOKEN_BASED_ACCESS_CONTROL, DISABLE_NO_TOKENS } from '@env'
+import { TOKEN_BASED_ACCESS_CONTROL, TOKEN_REQUIRED } from '@env'
 
 export function isEnabled() {
   return TOKEN_BASED_ACCESS_CONTROL()
@@ -27,7 +27,7 @@ export function unsetWriteToken(id: string, token: string): Promise<void> {
 }
 
 export async function checkWritePermission(id: string, token?: string) {
-  if (DISABLE_NO_TOKENS()) {
+  if (TOKEN_REQUIRED()) {
     if (!await AccessControlDAO.hasWriteTokens(id) && !await AccessControlDAO.hasReadTokens(id)) {
       throw new Forbidden()
     }
@@ -48,7 +48,7 @@ export function unsetReadToken(id: string, token: string): Promise<void> {
 }
 
 export async function checkReadPermission(id: string, token?: string) {
-  if (DISABLE_NO_TOKENS()) {
+  if (TOKEN_REQUIRED()) {
     if (!await AccessControlDAO.hasWriteTokens(id) && !await AccessControlDAO.hasReadTokens(id)) {
       throw new Forbidden()
     }

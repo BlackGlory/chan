@@ -124,11 +124,11 @@ describe('token-based access control', () => {
     })
 
     describe('id has no tokens', () => {
-      describe('DISABLE_NO_TOKENS', () => {
+      describe('TOKEN_REQUIRED', () => {
         it('403', async () => {
           process.env.CHAN_ADMIN_PASSWORD = 'password'
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
-          process.env.CHAN_DISABLE_NO_TOKENS = 'true'
+          process.env.CHAN_TOKEN_REQUIRED = 'true'
           const id = 'id'
           const message = 'message'
           const server = await buildServer()
@@ -146,7 +146,7 @@ describe('token-based access control', () => {
         })
       })
 
-      describe('not DISABLE_NO_TOKENS', () => {
+      describe('not TOKEN_REQUIRED', () => {
         it('204', async () => {
           process.env.CHAN_ADMIN_PASSWORD = 'password'
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'

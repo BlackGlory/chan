@@ -493,7 +493,8 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 | NO | NO | 无token可以enqueue和dequeue |
 
 在开启基于token的访问控制时,
-可以通过将环境变量`CHAN_DISABLE_NO_TOKENS`设置为`true`将无token的消息队列禁用.
+可以通过将环境变量`CHAN_TOKEN_REQUIRED`设置为`true`要求所有访问都带有token,
+相当于禁止所有不带token的行为.
 
 基于token的访问控制作出了以下假设, 因此不使用加密和消息验证码(MAC):
 - token的传输过程是安全的
