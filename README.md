@@ -557,6 +557,7 @@ curl
 curl \
   --request PUT \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
+  --header "Content-Type: application/json" \
   --data "$WRITE_TOKEN_REQUIRED" \
   "http://localhost:8080/api/chan/$id/token-policies/write-token-required"
 ```
@@ -567,6 +568,7 @@ await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-req
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
+  , 'Content-Type': 'application/json'
   }
 , body: JSON.stringify(writeTokenRequired)
 })

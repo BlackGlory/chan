@@ -11,7 +11,7 @@ beforeEach(async () => {
   await prepareAccessControlDatabase()
 })
 
-describe('TBAC', () => {
+describe('Token', () => {
   describe('GET /api/chan-with-tokens', () => {
     describe('auth', () => {
       it('200', async () => {
