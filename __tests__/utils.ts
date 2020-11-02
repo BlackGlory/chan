@@ -33,7 +33,8 @@ export async function resetEnvironment() {
   delete process.env.CHAN_ADMIN_PASSWORD
   delete process.env.CHAN_LIST_BASED_ACCESS_CONTROL
   delete process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL
-  delete process.env.CHAN_TOKEN_REQUIRED
+  delete process.env.CHAN_READ_TOKEN_REQUIRED
+  delete process.env.CHAN_WRITE_TOKEN_REQUIRED
   delete process.env.CHAN_JSON_VALIDATION
   delete process.env.CHAN_DEFAULT_JSON_SCHEMA
   delete process.env.CHAN_JSON_PAYLOAD_ONLY

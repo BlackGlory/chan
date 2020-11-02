@@ -117,7 +117,8 @@ services:
     environment:
       - CHAN_ADMIN_PASSWORD=password
       - CHAN_TOKEN_BASED_ACCESS_CONTROL=true
-      - CHAN_DISABLE_NO_TOKENS=true
+      - CHAN_WRITE_TOKEN_REQUIRED=true
+      - CHAN_READ_TOKEN_REQUIRED=true
     volumes:
       - 'chan-data:/data'
     ports:
@@ -492,9 +493,9 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 | NO | YES | 无token可以dequeue, 有write权限才能enqueue |
 | NO | NO | 无token可以enqueue和dequeue |
 
-在开启基于token的访问控制时,
-可以通过将环境变量`CHAN_TOKEN_REQUIRED`设置为`true`要求所有访问都带有token,
-相当于禁止所有不带token的行为.
+在开启基于token的访问控制时, 可以用环境变量禁用特定权限的无token行为:
+将环境变量`CHAN_WRITE_TOKEN_REQUIRED`设置为`true`, 则所有write权限相关的行为都必须带有token.
+将环境变量`CHAN_READ_TOKEN_REQUIRED`设置为`true`, 则所有read权限相关的行为都必须带有token.
 
 基于token的访问控制作出以下假设
 - token的传输过程是安全的

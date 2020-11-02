@@ -16,7 +16,6 @@ describe('token-based access control', () => {
     describe('id has enqueue tokens', () => {
       describe('token matched', () => {
         it('204', async () => {
-          process.env.CHAN_ADMIN_PASSWORD = 'password'
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
           const id = 'id'
           const token = 'token'
@@ -46,7 +45,6 @@ describe('token-based access control', () => {
 
       describe('token does not matched', () => {
         it('401', async () => {
-          process.env.CHAN_ADMIN_PASSWORD = 'password'
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
           const id = 'id'
           const token = 'token'
@@ -70,7 +68,6 @@ describe('token-based access control', () => {
 
       describe('no token', () => {
         it('401', async () => {
-          process.env.CHAN_ADMIN_PASSWORD = 'password'
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
           const id = 'id'
           const token = 'token'
@@ -95,7 +92,6 @@ describe('token-based access control', () => {
     describe('id does not have enqueue tokens', () => {
       describe('id has dequeue tokens', () => {
         it('204', async () => {
-          process.env.CHAN_ADMIN_PASSWORD = 'password'
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
           const id = 'id'
           const token = 'token'
@@ -124,11 +120,10 @@ describe('token-based access control', () => {
       })
 
       describe('id has no tokens', () => {
-        describe('TOKEN_REQUIRED', () => {
+        describe('WRITE_TOKEN_REQUIRED', () => {
           it('403', async () => {
-            process.env.CHAN_ADMIN_PASSWORD = 'password'
             process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
-            process.env.CHAN_TOKEN_REQUIRED = 'true'
+            process.env.CHAN_WRITE_TOKEN_REQUIRED = 'true'
             const id = 'id'
             const message = 'message'
             const server = await buildServer()
@@ -146,9 +141,8 @@ describe('token-based access control', () => {
           })
         })
 
-        describe('not TOKEN_REQUIRED', () => {
+        describe('not WRITE_TOKEN_REQUIRED', () => {
           it('204', async () => {
-            process.env.CHAN_ADMIN_PASSWORD = 'password'
             process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
             const id = 'id'
             const message = 'message'

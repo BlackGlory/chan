@@ -46,8 +46,12 @@ export function TOKEN_BASED_ACCESS_CONTROL(): boolean {
   return process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL === 'true'
 }
 
-export function TOKEN_REQUIRED(): boolean {
-  return process.env.CHAN_TOKEN_REQUIRED === 'true'
+export function READ_TOKEN_REQUIRED(): boolean {
+  return process.env.CHAN_READ_TOKEN_REQUIRED === 'true'
+}
+
+export function WRITE_TOKEN_REQUIRED(): boolean {
+  return process.env.CHAN_WRITE_TOKEN_REQUIRED === 'true'
 }
 
 export function HTTP2(): boolean {
