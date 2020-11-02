@@ -1,11 +1,11 @@
-import * as DAO from '@dao/access-control/token-based-access-control'
+import * as DAO from '@dao/access-control/token'
 import { prepareAccessControlDatabase } from '@test/utils'
 import { Database } from 'better-sqlite3'
 import 'jest-extended'
 
 jest.mock('@dao/access-control/database')
 
-describe('TBAC(token-based access control)', () => {
+describe('token-based access control', () => {
   describe('getAllIdsWithTokens(): string[]', () => {
     it('return string[]', async () => {
       const db = await prepareAccessControlDatabase()
@@ -288,7 +288,7 @@ function exist(db: Database, { token, id }: { token: string; id: string }) {
 function select(db: Database, { token, id }: { token: string; id: string }) {
   return db.prepare(`
     SELECT *
-      FROM chan_tbac
+      FROM chan_token
      WHERE token = $token AND chan_id = $id;
   `).get({ token, id })
 }
@@ -303,7 +303,7 @@ function insert(
   }
 ) {
   db.prepare(`
-    INSERT INTO chan_tbac (token, chan_id, read_permission, write_permission)
+    INSERT INTO chan_token (token, chan_id, read_permission, write_permission)
     VALUES ($token, $id, $read, $write);
   `).run({
     token

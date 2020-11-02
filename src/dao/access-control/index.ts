@@ -1,6 +1,7 @@
 import * as Blacklist from './blacklist'
 import * as Whitelist from './whitelist'
-import * as TokenBasedAccessControl from './token-based-access-control'
+import * as Token from './token'
+import * as TokenPolicy from './token-policy'
 
 const BlacklistDAO: IBlacklistDAO = {
   addBlacklistItem: asyncify(Blacklist.addBlacklistItem)
@@ -16,25 +17,37 @@ const WhitelistDAO: IWhitelistDAO = {
 , removeWhitelistItem: asyncify(Whitelist.removeWhitelistItem)
 }
 
-const TokenBasedAccessControlDAO: ITokenBasedAccessControlDAO = {
-  getAllIdsWithTokens: asyncify(TokenBasedAccessControl.getAllIdsWithTokens)
-, getAllTokens: asyncify(TokenBasedAccessControl.getAllTokens)
+const TokenDAO: ITokenDAO = {
+  getAllIdsWithTokens: asyncify(Token.getAllIdsWithTokens)
+, getAllTokens: asyncify(Token.getAllTokens)
 
-, hasWriteTokens: asyncify(TokenBasedAccessControl.hasWriteTokens)
-, matchWriteToken: asyncify(TokenBasedAccessControl.matchWriteToken)
-, setWriteToken: asyncify(TokenBasedAccessControl.setWriteToken)
-, unsetWriteToken: asyncify(TokenBasedAccessControl.unsetWriteToken)
+, hasWriteTokens: asyncify(Token.hasWriteTokens)
+, matchWriteToken: asyncify(Token.matchWriteToken)
+, setWriteToken: asyncify(Token.setWriteToken)
+, unsetWriteToken: asyncify(Token.unsetWriteToken)
 
-, hasReadTokens: asyncify(TokenBasedAccessControl.hasReadTokens)
-, matchReadToken: asyncify(TokenBasedAccessControl.matchReadToken)
-, setReadToken: asyncify(TokenBasedAccessControl.setReadToken)
-, unsetReadToken: asyncify(TokenBasedAccessControl.unsetReadToken)
+, hasReadTokens: asyncify(Token.hasReadTokens)
+, matchReadToken: asyncify(Token.matchReadToken)
+, setReadToken: asyncify(Token.setReadToken)
+, unsetReadToken: asyncify(Token.unsetReadToken)
+}
+
+const TokenPolicyDAO: ITokenPolicyDAO = {
+  getAllIdsWithTokenPolicies: asyncify(TokenPolicy.getAllIdsWithTokenPolicies)
+, getTokenPolicies: asyncify(TokenPolicy.getTokenPolicies)
+
+, setWriteTokenRequired: asyncify(TokenPolicy.setWriteTokenRequired)
+, unsetWriteTokenRequired: asyncify(TokenPolicy.unsetWriteTokenRequired)
+
+, setReadTokenRequired: asyncify(TokenPolicy.setReadTokenRequired)
+, unsetReadTokenRequired: asyncify(TokenPolicy.unsetReadTokenRequired)
 }
 
 export const AccessControlDAO: IAccessControlDAO = {
   ...BlacklistDAO
 , ...WhitelistDAO
-, ...TokenBasedAccessControlDAO
+, ...TokenDAO
+, ...TokenPolicyDAO
 }
 
 function asyncify<T extends any[], U>(fn: (...args: T) => U): (...args: T) => Promise<U> {

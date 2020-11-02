@@ -482,27 +482,120 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 
 通过设置环境变量`CHAN_TOKEN_BASED_ACCESS_CONTROL=true`开启基于token的访问控制.
 
-基于token的访问控制将根据消息队列具有的token决定其访问规则, 具体行为见下方表格.
-一个消息队列可以有多个token, 每个token可以单独设置write和read权限.
-不同消息队列的token不共用.
+基于token的访问控制将根据消息队列的token access policy决定其访问规则.
+可通过环境变量`CHAN_WRITE_TOKEN_REQUIRED`, `CHAN_READ_TOKEN_REQUIRED`设置相关默认值, 未设置情况下为`false`.
 
-| 此消息队列存在具有read权限的token | 此消息队列存在具有write权限的token | 行为 |
-| --- | --- | --- |
-| YES | YES | 有write权限才能enqueue, 有read权限才能dequeue |
-| YES | NO | 无token可以enqueue, 有read权限才能dequeue |
-| NO | YES | 无token可以dequeue, 有write权限才能enqueue |
-| NO | NO | 无token可以enqueue和dequeue |
-
-在开启基于token的访问控制时, 可以用环境变量禁用特定权限的无token行为:
-将环境变量`CHAN_WRITE_TOKEN_REQUIRED`设置为`true`, 则所有write权限相关的行为都必须带有token.
-将环境变量`CHAN_READ_TOKEN_REQUIRED`设置为`true`, 则所有read权限相关的行为都必须带有token.
-这种细粒度的控制是为未来的潜在需求设计的,
-在当前版本里, 单独设置一个环境变量没有意义, 因为具有write和read权限的行为(即enqueue和dequeue)需要配对使用.
+一个消息队列可以有多个token, 每个token可以单独设置write和read权限, 不同消息队列的token不共用.
 
 基于token的访问控制作出以下假设
 - token的传输过程是安全的
 - token难以被猜测
 - token的意外泄露可以被迅速处理
+
+#### 获取所有具有token策略的消息队列id
+
+`GET /api/chan-with-token-policies`
+
+获取所有具有token策略的消息队列id, 返回由JSON表示的字符串数组`string[]`.
+
+##### Example
+
+curl
+```sh
+curl \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
+  "http://localhost:8080/api/chan-with-token-policies"
+```
+
+fetch
+```js
+await fetch('http://localhost:8080/api/chan-with-token-policies')
+```
+
+#### 获取特定消息队列的token策略
+
+`GET /api/chan/<id>/token-policies`
+
+返回JSON:
+```ts
+{
+  writeTokenRequired: boolean | null
+  readTokenRequired: boolean | null
+}
+```
+`null`代表沿用相关默认值.
+
+##### Example
+
+curl
+```sh
+curl \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
+  "http://localhost:8080/api/chan/$id/token-policies"
+```
+
+fetch
+```js
+await fethc(`http://localhost:8080/api/chan/${id}/token-policies`, {
+  headers: {
+    'Authorization': `Bearer ${adminPassword}`
+  }
+}).then(res => res.json())
+```
+
+#### 设置token策略
+
+`PUT /api/chan/<id>/token-policies/write-token-required`
+`PUT /api/chan/<id>/token-policies/read-token-required`
+
+Payload必须是一个布尔值.
+
+##### Example
+
+curl
+```sh
+curl \
+  --request PUT \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
+  --data "$WRITE_TOKEN_REQUIRED" \
+  "http://localhost:8080/api/chan/$id/token-policies/write-token-required"
+```
+
+fetch
+```js
+await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-required`, {
+  method: 'PUT'
+, headers: {
+    'Authorization': `Bearer ${adminPassword}`
+  }
+, body: JSON.stringify(writeTokenRequired)
+})
+```
+
+#### 移除token策略
+
+`DELETE /api/chan/<id>/token-policies/write-token-required`
+`DELETE /api/chan/<id>/token-policies/read-token-required`
+
+##### Example
+
+curl
+```sh
+curl \
+  --request DELETE \
+  --header "Authorization: Bearer $ADMIN_PASSWORD" \
+  "http://localhost:8080/api/chan/$id/token-policies/write-token-required"
+```
+
+fetch
+```js
+await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-required`, {
+  method: 'DELETE'
+, headers: {
+    'Authorization': `Bearer ${adminPassword}`
+  }
+})
+```
 
 #### 获取所有具有token的消息队列id
 
@@ -528,11 +621,11 @@ await fetch(`http://localhost:8080/api/chan-with-tokens`, {
 }).then(res => res.json())
 ```
 
-#### 获取特定消息队列的所有token信息
+#### 获取特定消息队列的所有token
 
 `GET /api/chan/<id>/tokens`
 
-获取特定消息队列的所有token信息, 返回JSON表示的token信息数组
+获取特定消息队列的所有token, 返回JSON数组表示的token及其权限
 `Array<{ token: string, write: boolean, read: boolean }>`.
 
 ##### Example

@@ -16,10 +16,16 @@ CREATE TABLE chan_whitelist (
   chan_id VARCHAR(255) NOT NULL UNIQUE
 );
 
-CREATE TABLE chan_tbac (
-  token              VARCHAR(255) NOT NULL
-, chan_id            VARCHAR(255) NOT NULL
-, read_permission BOOLEAN      NOT NULL DEFAULT 0 CHECK(read_permission IN (0,1))
+CREATE TABLE chan_token_policy (
+  chan_id              VARCHAR(255) NOT NULL UNIQUE
+, write_token_required BOOLEAN
+, read_token_required  BOOLEAN
+);
+
+CREATE TABLE chan_token (
+  chan_id          VARCHAR(255) NOT NULL
+, token            VARCHAR(255) NOT NULL
+, read_permission  BOOLEAN      NOT NULL DEFAULT 0 CHECK(read_permission IN (0,1))
 , write_permission BOOLEAN      NOT NULL DEFAULT 0 CHECK(write_permission IN (0,1))
 , UNIQUE (token, chan_id)
 );
@@ -32,4 +38,5 @@ PRAGMA journal_mode = DELETE;
 
 DROP TABLE chan_blacklist;
 DROP TABLE chan_whitelist;
-DROP TABLE chan_tbac;
+DROP TABLE chan_token_policy;
+DROP TABLE chan_token;

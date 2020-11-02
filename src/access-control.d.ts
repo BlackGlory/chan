@@ -12,7 +12,7 @@ interface IWhitelistDAO {
   removeWhitelistItem(id: string): Promise<void>
 }
 
-interface ITokenBasedAccessControlDAO {
+interface ITokenDAO {
   getAllIdsWithTokens(): Promise<string[]>
   getAllTokens(id: string): Promise<Array<{
     token: string
@@ -31,7 +31,22 @@ interface ITokenBasedAccessControlDAO {
   unsetReadToken(props: { token: string; id: string }): Promise<void>
 }
 
+interface ITokenPolicyDAO {
+  getAllIdsWithTokenPolicies(): Promise<string[]>
+  getTokenPolicies(id: string): Promise<{
+    writeTokenRequired: boolean | null
+    readTokenRequired: boolean | null
+  }>
+
+  setWriteTokenRequired(id: string, val: boolean): Promise<void>
+  unsetWriteTokenRequired(id: string): Promise<void>
+
+  setReadTokenRequired(id: string, val: boolean): Promise<void>
+  unsetReadTokenRequired(id: string): Promise<void>
+}
+
 interface IAccessControlDAO extends
   IBlacklistDAO
 , IWhitelistDAO
-, ITokenBasedAccessControlDAO {}
+, ITokenDAO
+, ITokenPolicyDAO {}
