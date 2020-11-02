@@ -16,11 +16,11 @@ export const TBAC: ICore['TBAC'] = {
 , Token
 }
 
-export function isEnabled() {
+function isEnabled() {
   return TOKEN_BASED_ACCESS_CONTROL()
 }
 
-export async function checkWritePermission(id: string, token?: string) {
+async function checkWritePermission(id: string, token?: string) {
   if (!isEnabled()) return
 
   const writeTokenRequired =
@@ -34,7 +34,7 @@ export async function checkWritePermission(id: string, token?: string) {
 
 }
 
-export async function checkReadPermission(id: string, token?: string) {
+async function checkReadPermission(id: string, token?: string) {
   if (!isEnabled()) return
 
   const readTokenRequired =
