@@ -496,6 +496,8 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 在开启基于token的访问控制时, 可以用环境变量禁用特定权限的无token行为:
 将环境变量`CHAN_WRITE_TOKEN_REQUIRED`设置为`true`, 则所有write权限相关的行为都必须带有token.
 将环境变量`CHAN_READ_TOKEN_REQUIRED`设置为`true`, 则所有read权限相关的行为都必须带有token.
+这种细粒度的控制是为未来的潜在需求设计的,
+在当前版本里, 单独设置一个环境变量没有意义, 因为具有write和read权限的行为(即enqueue和dequeue)需要配对使用.
 
 基于token的访问控制作出以下假设
 - token的传输过程是安全的
