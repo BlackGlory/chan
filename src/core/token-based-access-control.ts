@@ -27,6 +27,8 @@ export function unsetWriteToken(id: string, token: string): Promise<void> {
 }
 
 export async function checkWritePermission(id: string, token?: string) {
+  if (!isEnabled()) return
+
   if (TOKEN_REQUIRED()) {
     if (!await AccessControlDAO.hasWriteTokens(id) && !await AccessControlDAO.hasReadTokens(id)) {
       throw new Forbidden()
@@ -48,6 +50,8 @@ export function unsetReadToken(id: string, token: string): Promise<void> {
 }
 
 export async function checkReadPermission(id: string, token?: string) {
+  if (!isEnabled()) return
+
   if (TOKEN_REQUIRED()) {
     if (!await AccessControlDAO.hasWriteTokens(id) && !await AccessControlDAO.hasReadTokens(id)) {
       throw new Forbidden()
