@@ -20,6 +20,15 @@ interface ICore {
     dequeue(id: string): Promise<unknown>
   }
 
+  JsonSchema: {
+    isEnabled(): boolean
+    validate(id: string, payload: string): Promise<void>
+    getAllIds(): Promise<string[]>
+    get(id: string): Promise<string | null>
+    set(id: string, schema: string): Promise<void>
+    remove(id: string): Promise<void>
+  }
+
   Blacklist: {
     isEnabled(): boolean
     isBlocked(id: string): Promise<boolean>
@@ -35,15 +44,6 @@ interface ICore {
     check(id: string): Promise<void>
     getAll(): Promise<string[]>
     add(id: string): Promise<void>
-    remove(id: string): Promise<void>
-  }
-
-  JsonSchema: {
-    isEnabled(): boolean
-    validate(id: string, payload: string): Promise<void>
-    getAllIds(): Promise<string[]>
-    get(id: string): Promise<string | null>
-    set(id: string, schema: string): Promise<void>
     remove(id: string): Promise<void>
   }
 
