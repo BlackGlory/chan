@@ -28,7 +28,7 @@ async function checkWritePermission(id: string, token?: string) {
   ?? WRITE_TOKEN_REQUIRED()
 
   if (writeTokenRequired) {
-    if (!token) throw new Forbidden()
+    if (!token) throw new Unauthorized()
     if (!await AccessControlDAO.matchWriteToken({ token, id })) throw new Unauthorized()
   }
 
@@ -42,7 +42,7 @@ async function checkReadPermission(id: string, token?: string) {
   ?? READ_TOKEN_REQUIRED()
 
   if (readTokenRequired) {
-    if (!token) throw new Forbidden()
+    if (!token) throw new Unauthorized()
     if (!await AccessControlDAO.matchReadToken({ token, id })) throw new Unauthorized()
   }
 }

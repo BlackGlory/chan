@@ -75,22 +75,19 @@ describe('TokenPolicy', () => {
 
         expect(res.statusCode).toBe(200)
         expect(res.json()).toMatchSchema({
-          type: 'array'
-        , items: {
-            type: 'object'
-          , properties: {
-              writeTokenRequired: {
-                oneOf: [
-                  { type: 'boolean' }
-                , { type: 'null' }
-                ]
-              }
-            , readTokenRequired: {
-                oneOf: [
-                  { type: 'boolean' }
-                , { type: 'null' }
-                ]
-              }
+          type: 'object'
+        , properties: {
+            writeTokenRequired: {
+              oneOf: [
+                { type: 'boolean' }
+              , { type: 'null' }
+              ]
+            }
+          , readTokenRequired: {
+              oneOf: [
+                { type: 'boolean' }
+              , { type: 'null' }
+              ]
             }
           }
         })

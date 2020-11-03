@@ -65,7 +65,7 @@ describe('token-based access control', () => {
       })
 
       describe('no token', () => {
-        it('403', async () => {
+        it('401', async () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
           const id = 'id'
           const token = 'token'
@@ -78,14 +78,14 @@ describe('token-based access control', () => {
           , url: `/chan/${id}`
           })
 
-          expect(res.statusCode).toBe(403)
+          expect(res.statusCode).toBe(401)
         })
       })
     })
 
     describe('id does not need read tokens', () => {
       describe('READ_TOKEN_REQUIRED=true', () => {
-        it('403', async () => {
+        it('401', async () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
           process.env.CHAN_READ_TOKEN_REQUIRED = 'true'
           const id = 'id'
@@ -96,7 +96,7 @@ describe('token-based access control', () => {
           , url: `/chan/${id}`
           })
 
-          expect(res.statusCode).toBe(403)
+          expect(res.statusCode).toBe(401)
         })
       })
 
