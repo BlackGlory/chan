@@ -11,7 +11,7 @@
 受原理所限, 此服务不能实现消息的可靠传递(reliable delivery), 也无法重发消息.
 因此当遭遇网络故障时, 消息可能会丢失.
 
-所有URL都采用了反射性的CORS, 没有提供针对=Origin=的访问控制策略.
+所有URL都采用了反射性的CORS, 不提供针对 =Origin= 的访问控制策略.
 
 ** Quickstart
 #+BEGIN_SRC sh
