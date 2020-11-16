@@ -1,5 +1,5 @@
 * Chan
-一个受[patchbay]启发的Web友好的自托管ad-hoc微服务,
+一个受[[https://patchbay.pub/][patchbay]]启发的Web友好的自托管ad-hoc微服务,
 提供基于 HTTP 的阻塞式 MPMC 消息队列功能,
 带有基于token和名单的访问控制策略,
 支持JSON Schema.
@@ -12,8 +12,6 @@
 因此当遭遇网络故障时, 消息可能会丢失.
 
 所有URL都采用了反射性的CORS, 没有提供针对=Origin=的访问控制策略.
-
-[patchbay]: https://patchbay.pub/
 
 ** Quickstart
 #+BEGIN_SRC sh
@@ -294,12 +292,10 @@ CHAN提供两种可以同时启用的访问控制策略.
 所有访问控制API都使用基于口令的Bearer Token Authentication.
 口令需通过环境变量 =CHAN_ADMIN_PASSWORD= 进行设置.
 
-访问控制规则是通过[WAL模式]的SQLite3持久化的, 开启访问控制后,
+访问控制规则是通过[[https://www.sqlite.org/wal.html][WAL模式]]的SQLite3持久化的, 开启访问控制后,
 服务器的吞吐量和响应速度会受到硬盘性能的影响.
 
 已经打开的连接不会受到新的访问控制规则的影响.
-
-[WAL模式]: https://www.sqlite.org/wal.html
 
 ***** 基于名单的访问控制
 通过设置环境变量 =CHAN_LIST_BASED_ACCESS_CONTROL= 开启基于名单的访问控制:
