@@ -452,7 +452,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 通过设置环境变量 =CHAN_TOKEN_BASED_ACCESS_CONTROL=true= 开启基于token的访问控制.
 
 基于token的访问控制将根据消息队列的token access policy决定其访问规则.
-可通过环境变量=CHAN_WRITE_TOKEN_REQUIRED=, =CHAN_READ_TOKEN_REQUIRED= 设置相关默认值,
+可通过环境变量 =CHAN_WRITE_TOKEN_REQUIRED=, =CHAN_READ_TOKEN_REQUIRED= 设置相关默认值,
 未设置情况下为 =false=.
 
 一个消息队列可以有多个token, 每个token可以单独设置write和read权限, 不同消息队列的token不共用.
