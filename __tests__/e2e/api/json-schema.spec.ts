@@ -1,15 +1,16 @@
 
 import { buildServer } from '@src/server'
-import { prepareJsonSchemaDatabase, resetEnvironment } from '@test/utils'
+import { prepareDatabases, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { JsonSchemaDAO } from '@dao'
 
 jest.mock('@dao/json-schema/database')
+jest.mock('@dao/access-control/database')
 expect.extend(matchers)
 
 beforeEach(async () => {
   resetEnvironment()
-  await prepareJsonSchemaDatabase()
+  await prepareDatabases()
 })
 
 describe('json schema', () => {

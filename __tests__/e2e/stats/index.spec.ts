@@ -1,4 +1,13 @@
 import { buildServer } from '@src/server'
+import { prepareDatabases, resetEnvironment } from '@test/utils'
+
+jest.mock('@dao/access-control/database')
+jest.mock('@dao/json-schema/database')
+
+beforeEach(async () => {
+  resetEnvironment()
+  await prepareDatabases()
+})
 
 describe('stats', () => {
   describe('GET /stats', () => {

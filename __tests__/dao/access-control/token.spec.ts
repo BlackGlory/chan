@@ -1,9 +1,15 @@
 import * as DAO from '@dao/access-control/token'
-import { prepareAccessControlDatabase } from '@test/utils'
+import { prepareAccessControlDatabase , prepareDatabases, resetEnvironment } from '@test/utils'
 import { Database } from 'better-sqlite3'
 import 'jest-extended'
 
 jest.mock('@dao/access-control/database')
+jest.mock('@dao/json-schema/database')
+
+beforeEach(async () => {
+  resetEnvironment()
+  await prepareDatabases()
+})
 
 describe('token-based access control', () => {
   describe('getAllIdsWithTokens(): string[]', () => {

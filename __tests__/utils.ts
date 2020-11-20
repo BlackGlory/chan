@@ -10,6 +10,11 @@ import {
 , migrateDatabase as migrateJsonSchemaDatabase
 } from '@dao/json-schema/database'
 
+export async function prepareDatabases() {
+  await prepareAccessControlDatabase()
+  await prepareJsonSchemaDatabase()
+}
+
 export async function prepareAccessControlDatabase() {
   reconnectAccessControlDatabase()
   const db = getAccessControlDatabase()
