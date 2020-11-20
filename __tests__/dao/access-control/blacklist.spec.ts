@@ -1,7 +1,8 @@
 import * as DAO from '@dao/access-control/blacklist'
-import { prepareDatabases, resetEnvironment } from '@test/utils'
+import { getDatabase } from '@dao/access-control/database'
+import { resetDatabases, resetEnvironment } from '@test/utils'
 import { Database } from 'better-sqlite3'
-import { prepareAccessControlDatabase } from '@test/utils'
+import { resetAccessControlDatabase } from '@test/utils'
 import 'jest-extended'
 
 jest.mock('@dao/access-control/database')
@@ -9,13 +10,13 @@ jest.mock('@dao/json-schema/database')
 
 beforeEach(async () => {
   resetEnvironment()
-  await prepareDatabases()
+  await resetDatabases()
 })
 
 describe('blacklist', () => {
   describe('getAllBlacklistItems(): string[]', () => {
     it('return string[]', async () => {
-      const db = await prepareAccessControlDatabase()
+      const db = await getDatabase()
       const id = 'id-1'
       insert(db, id)
 
@@ -29,7 +30,7 @@ describe('blacklist', () => {
   describe('inBlacklist(id: string): boolean', () => {
     describe('exist', () => {
       it('return true', async () => {
-        const db = await prepareAccessControlDatabase()
+        const db = await getDatabase()
         const id = 'id-1'
         insert(db, id)
 
@@ -41,7 +42,6 @@ describe('blacklist', () => {
 
     describe('not exist', () => {
       it('return false', async () => {
-        const db = await prepareAccessControlDatabase()
         const id = 'id-1'
 
         const result = DAO.inBlacklist(id)
@@ -54,7 +54,7 @@ describe('blacklist', () => {
   describe('addBlacklistItem', () => {
     describe('exist', () => {
       it('return undefined', async () => {
-        const db = await prepareAccessControlDatabase()
+        const db = await getDatabase()
         const id = 'id-1'
         insert(db, id)
 
@@ -67,7 +67,7 @@ describe('blacklist', () => {
 
     describe('not exist', () => {
       it('return undefined', async () => {
-        const db = await prepareAccessControlDatabase()
+        const db = await getDatabase()
         const id = 'id-1'
 
         const result = DAO.addBlacklistItem(id)
@@ -81,7 +81,7 @@ describe('blacklist', () => {
   describe('removeBlacklistItem', () => {
     describe('exist', () => {
       it('return undefined', async () => {
-        const db = await prepareAccessControlDatabase()
+        const db = await getDatabase()
         const id = 'id-1'
         insert(db, id)
 
@@ -94,7 +94,7 @@ describe('blacklist', () => {
 
     describe('not exist', () => {
       it('return undefined', async () => {
-        const db = await prepareAccessControlDatabase()
+        const db = await getDatabase()
         const id = 'id-1'
 
         const result = DAO.removeBlacklistItem(id)

@@ -1,5 +1,5 @@
 import { buildServer } from '@src/server'
-import { prepareJsonSchemaDatabase, prepareAccessControlDatabase, resetEnvironment } from '@test/utils'
+import { resetJsonSchemaDatabase, resetAccessControlDatabase, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { JsonSchemaDAO } from '@dao'
 
@@ -9,8 +9,8 @@ expect.extend(matchers)
 
 beforeEach(async () => {
   resetEnvironment()
-  await prepareAccessControlDatabase()
-  await prepareJsonSchemaDatabase()
+  await resetAccessControlDatabase()
+  await resetJsonSchemaDatabase()
 })
 
 describe('no access control', () => {

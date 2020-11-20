@@ -1,4 +1,5 @@
 import Database = require('better-sqlite3')
+import type { Database as IDatabase } from 'better-sqlite3'
 import { path as appRoot } from 'app-root-path'
 import * as path from 'path'
 import * as fs from 'fs-extra'
@@ -8,23 +9,30 @@ import { NODE_ENV, NodeEnv } from '@env'
 import { strict as assert } from 'assert'
 assert(NODE_ENV() !== NodeEnv.Test)
 
-const migrationsPath = path.join(appRoot, 'migrations/access-control')
-const dataPath = path.join(appRoot, 'data')
-const dataFilename = path.join(dataPath, 'access-control.db')
-fs.ensureDirSync(dataPath)
-let db = new Database(dataFilename)
+let db: IDatabase
 
 export function getDatabase() {
-  if (!db.open) reconnectDatabase()
   return db
 }
 
-export function reconnectDatabase() {
-  db.close()
-  db = new Database(dataFilename)
+export function closeDatabase() {
+  if (db) db.close()
 }
 
-export async function migrateDatabase() {
+export async function prepareDatabase() {
+  db = connectDatabase()
+  await migrateDatabase(db)
+}
+
+function connectDatabase(): IDatabase {
+  const dataPath = path.join(appRoot, 'data')
+  const dataFilename = path.join(dataPath, 'access-control.db')
+  fs.ensureDirSync(dataPath)
+  return new Database(dataFilename)
+}
+
+async function migrateDatabase(db: IDatabase) {
+  const migrationsPath = path.join(appRoot, 'migrations/access-control')
   const migrations = await readMigrations(migrationsPath)
   migrate(db, migrations)
 }

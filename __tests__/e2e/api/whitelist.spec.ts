@@ -1,5 +1,5 @@
 import { buildServer } from '@src/server'
-import { prepareDatabases, resetEnvironment } from '@test/utils'
+import { resetDatabases, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 
 jest.mock('@dao/access-control/database')
@@ -8,7 +8,7 @@ expect.extend(matchers)
 
 beforeEach(async () => {
   resetEnvironment()
-  await prepareDatabases()
+  await resetDatabases()
 })
 
 describe('whitelist', () => {

@@ -1,6 +1,7 @@
 import * as DAO from '@dao/access-control/whitelist'
+import { getDatabase } from '@dao/access-control/database'
 import { Database } from 'better-sqlite3'
-import { prepareAccessControlDatabase, prepareDatabases, resetEnvironment } from '@test/utils'
+import { resetDatabases, resetEnvironment } from '@test/utils'
 import 'jest-extended'
 
 jest.mock('@dao/access-control/database')
@@ -8,13 +9,13 @@ jest.mock('@dao/json-schema/database')
 
 beforeEach(async () => {
   resetEnvironment()
-  await prepareDatabases()
+  await resetDatabases()
 })
 
 describe('whitelist', () => {
   describe('getAllWhitelistItems(): string[]', () => {
     it('return string[]', async () => {
-      const db = await prepareAccessControlDatabase()
+      const db = getDatabase()
       const id = 'id-1'
       insert(db, id)
 
@@ -28,7 +29,7 @@ describe('whitelist', () => {
   describe('inWhitelist(id: string): boolean', () => {
     describe('exist', () => {
       it('return true', async () => {
-        const db = await prepareAccessControlDatabase()
+        const db = getDatabase()
         const id = 'id-1'
         insert(db, id)
 
@@ -40,7 +41,6 @@ describe('whitelist', () => {
 
     describe('not exist', () => {
       it('return false', async () => {
-        const db = await prepareAccessControlDatabase()
         const id = 'id-1'
 
         const result = DAO.inWhitelist(id)
@@ -53,7 +53,7 @@ describe('whitelist', () => {
   describe('addWhitelistItem', () => {
     describe('exist', () => {
       it('return undefined', async () => {
-        const db = await prepareAccessControlDatabase()
+        const db = getDatabase()
         const id = 'id-1'
         insert(db, id)
 
@@ -66,7 +66,7 @@ describe('whitelist', () => {
 
     describe('not exist', () => {
       it('return undefined', async () => {
-        const db = await prepareAccessControlDatabase()
+        const db = getDatabase()
         const id = 'id-1'
 
         const result = DAO.addWhitelistItem(id)
@@ -80,7 +80,7 @@ describe('whitelist', () => {
   describe('removeWhitelistItem', () => {
     describe('exist', () => {
       it('return undefined', async () => {
-        const db = await prepareAccessControlDatabase()
+        const db = getDatabase()
         const id = 'id-1'
         insert(db, id)
 
@@ -93,7 +93,7 @@ describe('whitelist', () => {
 
     describe('not exist', () => {
       it('return undefined', async () => {
-        const db = await prepareAccessControlDatabase()
+        const db = getDatabase()
         const id = 'id-1'
 
         const result = DAO.removeWhitelistItem(id)
