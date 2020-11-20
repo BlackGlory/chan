@@ -23,7 +23,7 @@ export async function buildServer() {
 
 function getLoggerOptions() {
   switch (NODE_ENV()) {
-    case NodeEnv.Test: return { level: 'error' }
+    case NodeEnv.Test: return false
     case NodeEnv.Production: return { level: 'error' }
     case NodeEnv.Development: return { level: 'trace' }
     default: return false
