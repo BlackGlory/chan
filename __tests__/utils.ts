@@ -1,12 +1,12 @@
-import * as Sqlite3Database from '@dao/sqlite3/database'
+import * as ConfigInSqlite3 from '@dao/config-in-sqlite3/database'
 
 export async function resetDatabases() {
-  await resetSqlite3Database()
+  await resetConfigInSqlite3Database()
 }
 
-export async function resetSqlite3Database() {
-  Sqlite3Database.closeDatabase()
-  await Sqlite3Database.prepareDatabase()
+export async function resetConfigInSqlite3Database() {
+  ConfigInSqlite3.closeDatabase()
+  await ConfigInSqlite3.prepareDatabase()
 }
 
 export function resetEnvironment() {

@@ -4,7 +4,7 @@ import { resetDatabases, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { JsonSchemaDAO } from '@dao'
 
-jest.mock('@dao/sqlite3/database')
+jest.mock('@dao/config-in-sqlite3/database')
 expect.extend(matchers)
 
 beforeEach(async () => {

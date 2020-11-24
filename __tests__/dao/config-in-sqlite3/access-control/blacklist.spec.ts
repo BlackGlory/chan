@@ -1,38 +1,38 @@
-import * as DAO from '@dao/sqlite3/access-control/whitelist'
-import { getDatabase } from '@dao/sqlite3/database'
-import { Database } from 'better-sqlite3'
+import * as DAO from '@dao/config-in-sqlite3/access-control/blacklist'
+import { getDatabase } from '@dao/config-in-sqlite3/database'
 import { resetDatabases, resetEnvironment } from '@test/utils'
+import { Database } from 'better-sqlite3'
 import 'jest-extended'
 
-jest.mock('@dao/sqlite3/database')
+jest.mock('@dao/config-in-sqlite3/database')
 
 beforeEach(async () => {
   resetEnvironment()
   await resetDatabases()
 })
 
-describe('whitelist', () => {
-  describe('getAllWhitelistItems(): string[]', () => {
+describe('blacklist', () => {
+  describe('getAllBlacklistItems(): string[]', () => {
     it('return string[]', async () => {
-      const db = getDatabase()
+      const db = await getDatabase()
       const id = 'id-1'
       insert(db, id)
 
-      const result = DAO.getAllWhitelistItems()
+      const result = DAO.getAllBlacklistItems()
 
       // expect.toStrictEqual is broken, I have no idea
       expect(result).toEqual([id])
     })
   })
 
-  describe('inWhitelist(id: string): boolean', () => {
+  describe('inBlacklist(id: string): boolean', () => {
     describe('exist', () => {
       it('return true', async () => {
-        const db = getDatabase()
+        const db = await getDatabase()
         const id = 'id-1'
         insert(db, id)
 
-        const result = DAO.inWhitelist(id)
+        const result = DAO.inBlacklist(id)
 
         expect(result).toBeTrue()
       })
@@ -42,21 +42,21 @@ describe('whitelist', () => {
       it('return false', async () => {
         const id = 'id-1'
 
-        const result = DAO.inWhitelist(id)
+        const result = DAO.inBlacklist(id)
 
         expect(result).toBeFalse()
       })
     })
   })
 
-  describe('addWhitelistItem', () => {
+  describe('addBlacklistItem', () => {
     describe('exist', () => {
       it('return undefined', async () => {
-        const db = getDatabase()
+        const db = await getDatabase()
         const id = 'id-1'
         insert(db, id)
 
-        const result = DAO.addWhitelistItem(id)
+        const result = DAO.addBlacklistItem(id)
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeTrue()
@@ -65,10 +65,10 @@ describe('whitelist', () => {
 
     describe('not exist', () => {
       it('return undefined', async () => {
-        const db = getDatabase()
+        const db = await getDatabase()
         const id = 'id-1'
 
-        const result = DAO.addWhitelistItem(id)
+        const result = DAO.addBlacklistItem(id)
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeTrue()
@@ -76,14 +76,14 @@ describe('whitelist', () => {
     })
   })
 
-  describe('removeWhitelistItem', () => {
+  describe('removeBlacklistItem', () => {
     describe('exist', () => {
       it('return undefined', async () => {
-        const db = getDatabase()
+        const db = await getDatabase()
         const id = 'id-1'
         insert(db, id)
 
-        const result = DAO.removeWhitelistItem(id)
+        const result = DAO.removeBlacklistItem(id)
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeFalse()
@@ -92,10 +92,10 @@ describe('whitelist', () => {
 
     describe('not exist', () => {
       it('return undefined', async () => {
-        const db = getDatabase()
+        const db = await getDatabase()
         const id = 'id-1'
 
-        const result = DAO.removeWhitelistItem(id)
+        const result = DAO.removeBlacklistItem(id)
 
         expect(result).toBeUndefined()
         expect(exist(db, id)).toBeFalse()
@@ -109,9 +109,9 @@ function exist(db: Database, id: string) {
 }
 
 function insert(db: Database, id: string) {
-  db.prepare('INSERT INTO chan_whitelist (chan_id) VALUES ($id);').run({ id });
+  db.prepare('INSERT INTO chan_blacklist (chan_id) VALUES ($id);').run({ id });
 }
 
 function select(db: Database, id: string) {
-  return db.prepare('SELECT * FROM chan_whitelist WHERE chan_id = $id;').get({ id })
+  return db.prepare('SELECT * FROM chan_blacklist WHERE chan_id = $id;').get({ id })
 }

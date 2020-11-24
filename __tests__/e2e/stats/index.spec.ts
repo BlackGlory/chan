@@ -1,7 +1,7 @@
 import { buildServer } from '@src/server'
 import { resetDatabases, resetEnvironment } from '@test/utils'
 
-jest.mock('@dao/sqlite3/database')
+jest.mock('@dao/config-in-sqlite3/database')
 
 beforeEach(async () => {
   resetEnvironment()

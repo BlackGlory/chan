@@ -26,13 +26,13 @@ export async function prepareDatabase() {
 
 function connectDatabase(): IDatabase {
   const dataPath = path.join(appRoot, 'data')
-  const dataFilename = path.join(dataPath, 'sqlite3.db')
+  const dataFilename = path.join(dataPath, 'config.db')
   fs.ensureDirSync(dataPath)
   return new Database(dataFilename)
 }
 
 async function migrateDatabase(db: IDatabase) {
-  const migrationsPath = path.join(appRoot, 'migrations/sqlite3')
+  const migrationsPath = path.join(appRoot, 'migrations/config-in-sqlite3')
   const migrations = await readMigrations(migrationsPath)
   migrate(db, migrations)
 }
