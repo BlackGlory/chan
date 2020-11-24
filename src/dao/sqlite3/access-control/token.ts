@@ -1,4 +1,4 @@
-import { getDatabase } from './database'
+import { getDatabase } from '../database'
 
 export function getAllIdsWithTokens(): string[] {
   const result = getDatabase().prepare(`

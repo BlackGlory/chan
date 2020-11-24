@@ -3,8 +3,7 @@ import { resetDatabases, resetEnvironment } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { tokenSchema } from '@src/schema'
 
-jest.mock('@dao/access-control/database')
-jest.mock('@dao/json-schema/database')
+jest.mock('@dao/sqlite3/database')
 expect.extend(matchers)
 
 beforeEach(async () => {

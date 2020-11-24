@@ -30,6 +30,11 @@ CREATE TABLE chan_token (
 , UNIQUE (token, chan_id)
 );
 
+CREATE TABLE chan_json_schema (
+  chan_id     VARCHAR(255) NOT NULL UNIQUE
+, json_schema TEXT         NOT NULL
+);
+
 --------------------------------------------------------------------------------
 -- Down
 --------------------------------------------------------------------------------
@@ -40,3 +45,4 @@ DROP TABLE chan_blacklist;
 DROP TABLE chan_whitelist;
 DROP TABLE chan_token_policy;
 DROP TABLE chan_token;
+DROP TABLE chan_json_schema;

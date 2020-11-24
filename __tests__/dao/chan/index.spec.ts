@@ -1,5 +1,5 @@
-import { rebuildCHANChannelManager } from '@dao/chan/chan-channel-manager'
-import { ChanDAO } from '@dao/chan'
+import { rebuildCHANChannelManager } from '@dao/memory/chan/chan-channel-manager'
+import { ChanDAO } from '@dao/memory/chan'
 import '@blackglory/jest-matchers'
 
 beforeEach(() => {

@@ -1,19 +1,12 @@
-import * as AccessControlDatabase from '@dao/access-control/database'
-import * as JsonSchemaDatabase from '@dao/json-schema/database'
+import * as Sqlite3Database from '@dao/sqlite3/database'
 
 export async function resetDatabases() {
-  await resetAccessControlDatabase()
-  await resetJsonSchemaDatabase()
+  await resetSqlite3Database()
 }
 
-export async function resetAccessControlDatabase() {
-  AccessControlDatabase.closeDatabase()
-  await AccessControlDatabase.prepareDatabase()
-}
-
-export async function resetJsonSchemaDatabase() {
-  JsonSchemaDatabase.closeDatabase()
-  await JsonSchemaDatabase.prepareDatabase()
+export async function resetSqlite3Database() {
+  Sqlite3Database.closeDatabase()
+  await Sqlite3Database.prepareDatabase()
 }
 
 export function resetEnvironment() {
