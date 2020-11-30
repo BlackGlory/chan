@@ -473,25 +473,26 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 - token难以被猜测
 - token的意外泄露可以被迅速处理
 
-****** 获取所有具有token策略的消息队列id
+****** token策略
+******* 获取所有具有token策略的消息队列id
 =GET /api/chan-with-token-policies=
 
 获取所有具有token策略的消息队列id, 返回由JSON表示的字符串数组 =string[]=.
 
-******* Example
-******** curl
+******** Example
+********* curl
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/chan-with-token-policies"
 #+END_SRC
 
-******** fetch
+********* fetch
 #+BEGIN_SRC js
 await fetch('http://localhost:8080/api/chan-with-token-policies')
 #+END_SRC
 
-****** 获取特定消息队列的token策略
+******* 获取特定消息队列的token策略
 =GET /api/chan/<id>/token-policies=
 
 返回JSON:
@@ -503,15 +504,15 @@ await fetch('http://localhost:8080/api/chan-with-token-policies')
 #+END_SRC
 =null= 代表沿用相关默认值.
 
-******* Example
-******** curl
+******** Example
+********* curl
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/chan/$id/token-policies"
 #+END_SRC
 
-******** fetch
+********* fetch
 #+BEGIN_SRC js
 await fethc(`http://localhost:8080/api/chan/${id}/token-policies`, {
   headers: {
@@ -520,14 +521,14 @@ await fethc(`http://localhost:8080/api/chan/${id}/token-policies`, {
 }).then(res => res.json())
 #+END_SRC
 
-****** 设置token策略
+******* 设置token策略
 =PUT /api/chan/<id>/token-policies/write-token-required=
 =PUT /api/chan/<id>/token-policies/read-token-required=
 
 Payload必须是一个布尔值.
 
-******* Example
-******** curl
+******** Example
+********* curl
 #+BEGIN_SRC sh
 curl \
   --request PUT \
@@ -537,7 +538,7 @@ curl \
   "http://localhost:8080/api/chan/$id/token-policies/write-token-required"
 #+END_SRC
 
-******** fetch
+********* fetch
 #+BEGIN_SRC js
 await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-required`, {
   method: 'PUT'
@@ -549,12 +550,12 @@ await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-req
 })
 #+END_SRC
 
-****** 移除token策略
+******* 移除token策略
 =DELETE /api/chan/<id>/token-policies/write-token-required=
 =DELETE /api/chan/<id>/token-policies/read-token-required=
 
-******* Example
-******** curl
+******** Example
+********* curl
 #+BEGIN_SRC sh
 curl \
   --request DELETE \
@@ -562,7 +563,7 @@ curl \
   "http://localhost:8080/api/chan/$id/token-policies/write-token-required"
 #+END_SRC
 
-******** fetch
+********* fetch
 #+BEGIN_SRC js
 await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-required`, {
   method: 'DELETE'
@@ -572,20 +573,22 @@ await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-req
 })
 #+END_SRC
 
-****** 获取所有具有token的消息队列id
+
+****** token
+******* 获取所有具有token的消息队列id
 =GET /api/chan-with-tokens=
 
 获取所有具有token的消息队列id, 返回由JSON表示的字符串数组 =string[]=.
 
-******* Example
-******** curl
+******** Example
+********* curl
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/chan-with-tokens"
 #+END_SRC
 
-******** fetch
+********* fetch
 #+BEGIN_SRC js
 await fetch(`http://localhost:8080/api/chan-with-tokens`, {
   headers: {
@@ -594,21 +597,21 @@ await fetch(`http://localhost:8080/api/chan-with-tokens`, {
 }).then(res => res.json())
 #+END_SRC
 
-****** 获取特定消息队列的所有token
+******* 获取特定消息队列的所有token
 =GET /api/chan/<id>/tokens=
 
 获取特定消息队列的所有token, 返回JSON数组表示的token及其权限
 =Array<{ token: string, write: boolean, read: boolean }>=.
 
-******* Example
-******** curl
+******** Example
+********* curl
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
   "http://localhost:8080/api/chan/$id/tokens"
 #+END_SRC
 
-******** fetch
+********* fetch
 #+BEGIN_SRC js
 await fetch(`http://localhost:8080/api/chan/${id}/tokens`, {
   headers: {
@@ -617,13 +620,13 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens`, {
 }).then(res => res.json())
 #+END_SRC
 
-****** 为特定消息队列的token设置write权限
+******* 为特定消息队列的token设置write权限
 =PUT /api/chan/<id>/tokens/<token>/write=
 
 添加/更新token, 为token设置write权限.
 
-******* Example
-******** curl
+******** Example
+********* curl
 #+BEGIN_SRC sh
 curl \
   --request PUT \
@@ -631,7 +634,7 @@ curl \
   "http://localhost:8080/api/chan/$id/tokens/$token/write"
 #+END_SRC
 
-******** fetch
+********* fetch
 #+BEGIN_SRC js
 await fetch(`http://localhost:8080/api/chan/${id}/tokens/$token/write`, {
   method: 'PUT'
@@ -641,13 +644,13 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens/$token/write`, {
 })
 #+END_SRC
 
-****** 取消特定消息队列的token的write权限
+******* 取消特定消息队列的token的write权限
 =DELETE /api/chan/<id>/tokens/<token>/write=
 
 取消token的write权限.
 
-******* Example
-******** curl
+******** Example
+********* curl
 #+BEGIN_SRC sh
 curl \
   --request DELETE \
@@ -655,7 +658,7 @@ curl \
   "http://localhost:8080/api/chan/$id/tokens/$token/write"
 #+END_SRC
 
-******** fetch
+********* fetch
 #+BEGIN_SRC js
 await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/write`, {
   method: 'DELETE'
@@ -665,13 +668,13 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/write`, {
 })
 #+END_SRC
 
-****** 为特定消息队列的token设置read权限
+******* 为特定消息队列的token设置read权限
 =PUT /api/chan/<id>/tokens/<token>/read=
 
 添加/更新token, 为token设置read权限.
 
-******* Example
-******** curl
+******** Example
+********* curl
 #+BEGIN_SRC sh
 curl \
   --request PUT \
@@ -679,7 +682,7 @@ curl \
   "http://localhost:8080/api/chan/$id/tokens/$token/read"
 #+END_SRC
 
-******** fetch
+********* fetch
 #+BEGIN_SRC js
 await fetch(`http://localhost:8080/api/chan/${id}/tokens/$token/read`, {
   method: 'PUT'
@@ -689,13 +692,13 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens/$token/read`, {
 })
 #+END_SRC
 
-****** 取消特定消息队列的token的write权限
-=DELETE /api/chan/<id>/tokens/<token>/write=
+******* 取消特定消息队列的token的read权限
+=DELETE /api/chan/<id>/tokens/<token>/read=
 
 取消token的read权限.
 
-******* Example
-******** curl
+******** Example
+********* curl
 #+BEGIN_SRC sh
 curl \
   --request DELETE \
@@ -703,7 +706,7 @@ curl \
   "http://localhost:8080/api/chan/$id/tokens/$token/read"
 #+END_SRC
 
-******** fetch
+********* fetch
 #+BEGIN_SRC js
 await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/read`, {
   method: 'DELETE'
