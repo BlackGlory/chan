@@ -126,7 +126,7 @@ volumes:
 
 往特定消息队列放入消息, 会阻塞直到此消息dequeue.
 id用于标识消息队列.
-enqueue请求的=Content-Type=会在dequeue时原样返回.
+enqueue请求的 =Content-Type= 会在dequeue时原样返回.
 
 如果开启基于token的访问控制, 则可能需要在Querystring提供具有write权限的token:
 =POST /chan/<id>?token=<token>=
