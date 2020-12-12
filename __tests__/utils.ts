@@ -26,6 +26,7 @@ export function resetEnvironment() {
   delete process.env.CHAN_DEFAULT_JSON_SCHEMA
   delete process.env.CHAN_JSON_PAYLOAD_ONLY
 
+  // reset lodash.memoize
   for (const val of Object.values(Env)) {
     if (isFunction(val)) val.cache.clear!()
   }
