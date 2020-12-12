@@ -1,6 +1,6 @@
-import { getCHANChannelManager } from './chan-channel-manager'
+import { getChanChannelManager } from './chan-channel-manager'
 
 export function enqueue(key: string, value: unknown): Promise<void> {
-  const manager = getCHANChannelManager()
+  const manager = getChanChannelManager()
   return manager.enqueue(key, value)
 }

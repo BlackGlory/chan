@@ -1,6 +1,6 @@
-import { getCHANChannelManager } from './chan-channel-manager'
+import { getChanChannelManager } from './chan-channel-manager'
 
 export function dequeue(key: string): Promise<unknown> {
-  const manager = getCHANChannelManager()
+  const manager = getChanChannelManager()
   return manager.dequeue(key)
 }
