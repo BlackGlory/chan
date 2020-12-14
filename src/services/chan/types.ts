@@ -1,4 +1,4 @@
-export interface Package {
+export interface IPackage {
   type: string
   payload: string | Buffer
 }

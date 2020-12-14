@@ -2,6 +2,7 @@ import Ajv from 'ajv'
 import { JsonSchemaDAO } from '@dao'
 import { DEFAULT_JSON_SCHEMA } from '@env'
 import { JSON_VALIDATION } from '@env'
+import { Json } from '@blackglory/types'
 
 export function isEnabled(): boolean {
   return JSON_VALIDATION()

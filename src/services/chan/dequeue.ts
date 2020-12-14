@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 import { idSchema, tokenSchema } from '@src/schema'
-import { Package } from './types'
+import { IPackage } from './types'
 
 export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   server.get<{
@@ -32,7 +32,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
         throw e
       }
 
-      const value = await Core.Chan.dequeue(id) as Package
+      const value = await Core.Chan.dequeue(id) as IPackage
       if (value.type) reply.header('content-type', value.type)
       reply.send(value.payload)
     }

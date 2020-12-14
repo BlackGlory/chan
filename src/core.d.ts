@@ -1,11 +1,3 @@
-type Json =
-| string
-| number
-| boolean
-| null
-| { [property: string]: Json }
-| Json[]
-
 interface ICore {
   isAdmin(password: string): boolean
 
@@ -25,7 +17,12 @@ interface ICore {
     validate(id: string, payload: string): Promise<void>
     getAllIds(): Promise<string[]>
     get(id: string): Promise<string | null>
-    set(id: string, schema: string): Promise<void>
+    set(
+      id: string
+    , schema: {
+        [key: string]: import('@blackglory/types').Json
+      }
+    ): Promise<void>
     remove(id: string): Promise<void>
   }
 

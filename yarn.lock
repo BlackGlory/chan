@@ -301,7 +301,7 @@
   resolved "https://registry.yarnpkg.com/@blackglory/types/-/types-0.1.6.tgz#087e7bea037248925176bff6e94032d31ce521dc"
   integrity sha512-TagNLUCa2QJwGcXwoPzVEGb0uybqz2k6fEfiJJDW8Yx1lu2gwtTmAOyFYQVdU7QqzzDYp80+4r1MYLmLGaRYtQ==
 
-"@blackglory/types@^0.1.7":
+"@blackglory/types@^0.1.7", "@blackglory/types@^0.1.8":
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/@blackglory/types/-/types-0.1.8.tgz#d7f0b5bbc4eb8899f48e2e5e575a2c542d8d0022"
   integrity sha512-1G6jEeRRdMH/L/UZoDG5oGKAgGF6ZWmGisZIIjZ2lHDZPlHP//efemO7V6lM4ghjbVg9RceglUXwl5wcMuZFOw==

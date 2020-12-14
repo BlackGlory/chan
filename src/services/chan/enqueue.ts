@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { idSchema, tokenSchema } from '@src/schema'
 import { JSON_PAYLOAD_ONLY, ENQUEUE_PAYLOAD_LIMIT } from '@env'
-import { Package } from './types'
+import { IPackage } from './types'
 
 export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   // overwrite application/json parser
@@ -61,7 +61,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
         throw e
       }
 
-      const pkg: Package = {
+      const pkg: IPackage = {
         type: req.headers['content-type'] ?? 'application/octet-stream'
       , payload
       }
