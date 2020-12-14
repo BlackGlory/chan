@@ -301,10 +301,15 @@
   resolved "https://registry.yarnpkg.com/@blackglory/types/-/types-0.1.6.tgz#087e7bea037248925176bff6e94032d31ce521dc"
   integrity sha512-TagNLUCa2QJwGcXwoPzVEGb0uybqz2k6fEfiJJDW8Yx1lu2gwtTmAOyFYQVdU7QqzzDYp80+4r1MYLmLGaRYtQ==
 
-"@blackglory/types@^0.1.7", "@blackglory/types@^0.1.8":
+"@blackglory/types@^0.1.7":
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/@blackglory/types/-/types-0.1.8.tgz#d7f0b5bbc4eb8899f48e2e5e575a2c542d8d0022"
   integrity sha512-1G6jEeRRdMH/L/UZoDG5oGKAgGF6ZWmGisZIIjZ2lHDZPlHP//efemO7V6lM4ghjbVg9RceglUXwl5wcMuZFOw==
+
+"@blackglory/types@^0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@blackglory/types/-/types-0.1.9.tgz#0ad13c9bed039d863dbe1843bd0008bd3e3a556f"
+  integrity sha512-Kdw/zfPm6S9uIkU9Ssg+NvVipMJOdGOUOMv5tnDQUpaZK8Mfy1qoHPdaMkxW5dJhl98ej22CDl7l3sdAgRVLhw==
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
@@ -1124,13 +1129,13 @@ ajv@^6.10.0, ajv@^6.10.2, ajv@^6.11.0, ajv@^6.12.2, ajv@^6.12.3, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^7.0.0-rc.1:
-  version "7.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-7.0.0-rc.1.tgz#e69bf2e131a6c4f5c24c7500ec83b62a2812bf29"
-  integrity sha512-LGri6nQmALezUc2p8J3eHqlRYXK1bVPyHBd4IGBOaCgCCTM0naZssHIy7SpFX2ZqDe7A0DJi5oCljCwT6WXLrg==
+ajv@^7.0.0-rc.2:
+  version "7.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-7.0.0-rc.2.tgz#9c237b95072c1ee8c38e2df76422f37bacc9ae5e"
+  integrity sha512-D2iqHvbT3lszv5KSsTvJL9PSPf/2/s45i68vLXJmT124cxK/JOoOFyo/QnrgMKa2FHlVaMIsp1ZN1P4EH3bCKw==
   dependencies:
     fast-deep-equal "^3.1.1"
-    json-schema-traverse "^0.5.0"
+    json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
@@ -4397,10 +4402,10 @@ json-schema-traverse@^0.4.1:
   resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz#69f6a87d9513ab8bb8fe63bdb0979c448e684660"
   integrity sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==
 
-json-schema-traverse@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.5.0.tgz#1069a6097f9e9a567bfc6cc215e85f606ebf6480"
-  integrity sha512-x+TRJIQFskrNnFKE2Viz9FCSjK1vIh+H/uaBiOYszh/IcZmAFneQ35H4osWDJp1NPXccuV2I0RMXmi2ZS6Kqcg==
+json-schema-traverse@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz#ae7bcb3656ab77a73ba5c49bf654f38e6b6860e2"
+  integrity sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==
 
 json-schema@0.2.3:
   version "0.2.3"

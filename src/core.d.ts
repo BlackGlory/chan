@@ -17,12 +17,7 @@ interface ICore {
     validate(id: string, payload: string): Promise<void>
     getAllIds(): Promise<string[]>
     get(id: string): Promise<string | null>
-    set(
-      id: string
-    , schema: {
-        [key: string]: import('@blackglory/types').Json
-      }
-    ): Promise<void>
+    set(id: string , schema: import('@blackglory/types').Json): Promise<void>
     remove(id: string): Promise<void>
   }
 
