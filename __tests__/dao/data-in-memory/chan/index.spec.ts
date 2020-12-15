@@ -6,7 +6,7 @@ beforeEach(() => {
   rebuildChanChannelManager()
 })
 
-describe('CHANDAO', () => {
+describe('ChanDAO', () => {
   describe('enqueue', () => {
     it('block', async done => {
       const key = 'key'
