@@ -31,7 +31,6 @@ async function checkWritePermission(id: string, token?: string) {
     if (!token) throw new Unauthorized()
     if (!await AccessControlDAO.matchWriteToken({ token, id })) throw new Unauthorized()
   }
-
 }
 
 async function checkReadPermission(id: string, token?: string) {
