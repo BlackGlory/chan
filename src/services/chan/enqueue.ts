@@ -2,6 +2,7 @@ import { FastifyPluginAsync } from 'fastify'
 import { idSchema, tokenSchema } from '@src/schema'
 import { JSON_PAYLOAD_ONLY, ENQUEUE_PAYLOAD_LIMIT } from '@env'
 import { IPackage } from './types'
+import { CustomError } from '@blackglory/errors'
 
 export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   // overwrite application/json parser
@@ -81,8 +82,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
   )
 }
 
-class BadContentType extends Error {
-  name = this.constructor.name
+class BadContentType extends CustomError {
   constructor(contentType: string) {
     super(`Content-Type must be ${contentType}`)
   }
