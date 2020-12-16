@@ -161,7 +161,7 @@ describe('no access control', () => {
       })
 
       describe('other Content-Type', () => {
-        it('400', async () => {
+        it('415', async () => {
           process.env.CHAN_JSON_VALIDATION = 'true'
           const id = 'id'
           const schema = { type: 'string' }
@@ -181,7 +181,7 @@ describe('no access control', () => {
             }
           })
 
-          expect(res.statusCode).toBe(400)
+          expect(res.statusCode).toBe(415)
         })
       })
     })

@@ -77,5 +77,6 @@ interface ICore {
   Error: {
     Forbidden: new () => Error
     Unauthorized: new () => Error
+    InvalidJSON: new () => Error
   }
 }

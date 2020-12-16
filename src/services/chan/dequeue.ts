@@ -28,7 +28,6 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
       } catch (e) {
         if (e instanceof Core.Error.Unauthorized) return reply.status(401).send()
         if (e instanceof Core.Error.Forbidden) return reply.status(403).send()
-        if (e instanceof Error) return reply.status(400).send(e.message)
         throw e
       }
 

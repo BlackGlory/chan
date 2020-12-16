@@ -7,3 +7,7 @@ export class Unauthorized extends Error {
   name = this.constructor.name
   message = 'Unauthorized'
 }
+
+export class InvalidJSON extends Error {
+  name = this.constructor.name
+}
