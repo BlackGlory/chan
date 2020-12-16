@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "@blackglory/better-sqlite3-migrations": "^0.1.1",
+    "@blackglory/errors": "^0.1.0",
     "@blackglory/types": "^0.1.9",
     "ajv": "^7.0.0-rc.2",
     "app-root-path": "^3.0.0",

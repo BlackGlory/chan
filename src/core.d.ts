@@ -14,20 +14,32 @@ interface ICore {
 
   JsonSchema: {
     isEnabled(): boolean
-    validate(id: string, payload: string): Promise<void>
     getAllIds(): Promise<string[]>
     get(id: string): Promise<string | null>
     set(id: string , schema: import('@blackglory/types').Json): Promise<void>
     remove(id: string): Promise<void>
+
+    /**
+     * @throws {InvalidPayload}
+     */
+    validate(id: string, payload: string): Promise<void>
+
+    InvalidPayload: new () => import('@blackglory/errors').CustomError
   }
 
   Blacklist: {
     isEnabled(): boolean
     isBlocked(id: string): Promise<boolean>
-    check(id: string): Promise<void>
     getAll(): Promise<string[]>
     add(id: string): Promise<void>
     remove(id: string): Promise<void>
+
+    /**
+     * @throws {Forbidden}
+     */
+    check(id: string): Promise<void>
+
+    Forbidden: new () => import('@blackglory/errors').CustomError
   }
 
   Whitelist: {
@@ -37,12 +49,27 @@ interface ICore {
     getAll(): Promise<string[]>
     add(id: string): Promise<void>
     remove(id: string): Promise<void>
+
+    /**
+     * @throws {Forbidden}
+     */
+    Forbidden: new () => import('@blackglory/errors').CustomError
   }
 
   TBAC: {
     isEnabled(): boolean
+
+    /**
+     * @throws {Unauthorized}
+     */
     checkWritePermission(id: string, token?: string): Promise<void>
+
+    /**
+     * @throws {Unauthorized}
+     */
     checkReadPermission(id: string, token?: string): Promise<void>
+
+    Unauthorized: new () => import('@blackglory/errors').CustomError
 
     Token: {
       getAllIds(): Promise<string[]>
@@ -72,11 +99,5 @@ interface ICore {
       setReadTokenRequired(id: string, val: boolean): Promise<void>
       unsetReadTokenRequired(id: string): Promise<void>
     }
-  }
-
-  Error: {
-    Forbidden: new () => Error
-    Unauthorized: new () => Error
-    InvalidJSON: new () => Error
   }
 }

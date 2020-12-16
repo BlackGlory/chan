@@ -1,6 +1,6 @@
 import { AccessControlDAO } from '@dao'
 import { LIST_BASED_ACCESS_CONTROL, ListBasedAccessControl } from '@env'
-import { Forbidden } from './error'
+import { CustomError } from '@blackglory/errors'
 
 export function getAll(): Promise<string[]> {
   return AccessControlDAO.getAllWhitelistItems()
@@ -22,6 +22,11 @@ export function isEnabled() {
   return LIST_BASED_ACCESS_CONTROL() === ListBasedAccessControl.Whitelist
 }
 
+/**
+ * @throws {Forbidden}
+ */
 export async function check(id: string): Promise<void> {
   if (isEnabled() && await isBlocked(id)) throw new Forbidden()
 }
+
+export class Forbidden extends CustomError {}

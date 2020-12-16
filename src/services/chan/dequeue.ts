@@ -26,8 +26,9 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
         await Core.Whitelist.check(id)
         await Core.TBAC.checkReadPermission(id, token)
       } catch (e) {
-        if (e instanceof Core.Error.Unauthorized) return reply.status(401).send()
-        if (e instanceof Core.Error.Forbidden) return reply.status(403).send()
+        if (e instanceof Core.Blacklist.Forbidden) return reply.status(403).send()
+        if (e instanceof Core.Whitelist.Forbidden) return reply.status(403).send()
+        if (e instanceof Core.TBAC.Unauthorized) return reply.status(401).send()
         throw e
       }
 
