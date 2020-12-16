@@ -9,12 +9,14 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
   server.addContentTypeParser(
     'application/json'
   , { parseAs: 'string' }
-  , (req, body, done) => done(null, body))
+  , (req, body, done) => done(null, body)
+  )
 
   server.addContentTypeParser(
     '*'
   , { parseAs: 'string' }
-  , (req, body, done) => done(null, body))
+  , (req, body, done) => done(null, body)
+  )
 
   server.post<{
     Params: { id: string }
