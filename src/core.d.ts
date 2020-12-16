@@ -1,3 +1,6 @@
+type Json = import('@blackglory/types').Json
+type CustomErrorConstructor = import('@blackglory/errors').CustomErrorConstructor
+
 interface ICore {
   isAdmin(password: string): boolean
 
@@ -16,7 +19,7 @@ interface ICore {
     isEnabled(): boolean
     getAllIds(): Promise<string[]>
     get(id: string): Promise<string | null>
-    set(id: string , schema: import('@blackglory/types').Json): Promise<void>
+    set(id: string , schema: Json): Promise<void>
     remove(id: string): Promise<void>
 
     /**
@@ -24,7 +27,7 @@ interface ICore {
      */
     validate(id: string, payload: string): Promise<void>
 
-    InvalidPayload: new () => import('@blackglory/errors').CustomError
+    InvalidPayload: CustomErrorConstructor
   }
 
   Blacklist: {
@@ -39,7 +42,7 @@ interface ICore {
      */
     check(id: string): Promise<void>
 
-    Forbidden: new () => import('@blackglory/errors').CustomError
+    Forbidden: CustomErrorConstructor
   }
 
   Whitelist: {
@@ -53,7 +56,7 @@ interface ICore {
     /**
      * @throws {Forbidden}
      */
-    Forbidden: new () => import('@blackglory/errors').CustomError
+    Forbidden: CustomErrorConstructor
   }
 
   TBAC: {
@@ -69,7 +72,7 @@ interface ICore {
      */
     checkReadPermission(id: string, token?: string): Promise<void>
 
-    Unauthorized: new () => import('@blackglory/errors').CustomError
+    Unauthorized: CustomErrorConstructor
 
     Token: {
       getAllIds(): Promise<string[]>
