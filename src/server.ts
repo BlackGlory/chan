@@ -7,13 +7,13 @@ import { HTTP2, PAYLOAD_LIMIT, NODE_ENV, NodeEnv } from '@env'
 import { Core } from '@core'
 
 export async function buildServer() {
-  const server = fastify(({
+  const server = fastify({
     logger: getLoggerOptions()
   , maxParamLength: 600
     /* @ts-ignore */
   , http2: HTTP2()
   , bodyLimit: PAYLOAD_LIMIT()
-  }))
+  })
   server.register(cors, { origin: true })
   server.register(chan, { Core })
   server.register(api, { Core })
