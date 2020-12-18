@@ -12,15 +12,24 @@ CREATE TABLE chan_blacklist (
   chan_id VARCHAR(255) NOT NULL UNIQUE
 );
 
+CREATE UNIQUE INDEX chan_blacklist_chan_id
+    ON chan_blacklist(chan_id);
+
 CREATE TABLE chan_whitelist (
   chan_id VARCHAR(255) NOT NULL UNIQUE
 );
+
+CREATE UNIQUE INDEX chan_whitelist_chan_id
+    ON chan_whitelist(chan_id);
 
 CREATE TABLE chan_token_policy (
   chan_id              VARCHAR(255) NOT NULL UNIQUE
 , write_token_required BOOLEAN
 , read_token_required  BOOLEAN
 );
+
+CREATE UNIQUE INDEX chan_token_policy_chan_id
+    ON chan_token_policy(chan_id);
 
 CREATE TABLE chan_token (
   chan_id          VARCHAR(255) NOT NULL
@@ -30,10 +39,16 @@ CREATE TABLE chan_token (
 , UNIQUE (token, chan_id)
 );
 
+CREATE UNIQUE INDEX chan_token_policy_chan_id_token
+    ON chan_token(chan_id,token);
+
 CREATE TABLE chan_json_schema (
   chan_id     VARCHAR(255) NOT NULL UNIQUE
 , json_schema TEXT         NOT NULL
 );
+
+CREATE UNIQUE INDEX chan_json_schema_chan_id
+    ON chan_json_schema(chan_id);
 
 --------------------------------------------------------------------------------
 -- Down
