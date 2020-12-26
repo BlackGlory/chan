@@ -25,6 +25,12 @@ export const NODE_ENV: Getter<NodeEnv | undefined> = memoize(() => {
   }
 })
 
+export const CI: Getter<boolean> = memoize(() =>
+  env.get('CI')
+     .default('false')
+     .asBoolStrict()
+)
+
 export const HOST: Getter<string> = memoize(() =>
   env.get('CHAN_HOST')
      .default('localhost')
@@ -35,12 +41,6 @@ export const PORT: Getter<number> = memoize(() =>
   env.get('CHAN_PORT')
      .default(8080)
      .asPortNumber()
-)
-
-export const CI: Getter<boolean> = memoize(() =>
-  env.get('CI')
-     .default('false')
-     .asBoolStrict()
 )
 
 export const HTTP2: Getter<boolean> = memoize(() =>
