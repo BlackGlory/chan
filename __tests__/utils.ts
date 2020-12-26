@@ -1,6 +1,7 @@
 import * as ConfigInSqlite3 from '@dao/config-in-sqlite3/database'
 import * as Env from '@env'
 import { isFunction } from '@blackglory/types'
+import { MemoizedFunction } from 'lodash'
 
 export async function resetDatabases() {
   await resetConfigInSqlite3Database()
@@ -15,8 +16,6 @@ export function resetEnvironment() {
   // assigning a property on `process.env` will implicitly convert the value to a string.
   // use `delete` to delete a property from `process.env`.
   // see also: https://nodejs.org/api/process.html#process_process_env
-  delete process.env.CHAN_HOST
-  delete process.env.CHAN_PORT
   delete process.env.CHAN_ADMIN_PASSWORD
   delete process.env.CHAN_LIST_BASED_ACCESS_CONTROL
   delete process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL
@@ -28,6 +27,8 @@ export function resetEnvironment() {
 
   // reset lodash.memoize
   for (const val of Object.values(Env)) {
-    if (isFunction(val)) val.cache.clear!()
+    if (isFunction(val)) {
+      (val as any as MemoizedFunction).cache.clear!()
+    }
   }
 }

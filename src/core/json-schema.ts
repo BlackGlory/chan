@@ -35,10 +35,10 @@ export async function validate(id: string, payload: string): Promise<void> {
   if (err) throw new InvalidPayload()
 
   const jsonSchema= await JsonSchemaDAO.getJsonSchema(id)
-  const schema = jsonSchema ?? DEFAULT_JSON_SCHEMA()
+  const schema = jsonSchema ? JSON.parse(jsonSchema) : DEFAULT_JSON_SCHEMA()
   if (schema) {
     const ajv = new Ajv()
-    const valid = ajv.validate(JSON.parse(schema), json)
+    const valid = ajv.validate(schema, json)
     if (!valid) throw new InvalidPayload(ajv.errorsText())
   }
 }

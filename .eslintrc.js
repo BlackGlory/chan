@@ -12,5 +12,6 @@ module.exports = {
     'no-constant-condition': 'off'
   , 'no-empty': 'off'
   , '@typescript-eslint/ban-ts-comment': 'off'
+  , '@typescript-eslint/ban-types': 'off'
   }
 }
