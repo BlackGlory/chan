@@ -1,7 +1,5 @@
 import * as ConfigInSqlite3 from '@dao/config-in-sqlite3/database'
-import * as Env from '@env'
-import { isFunction } from '@blackglory/types'
-import { MemoizedFunction } from 'lodash'
+import { resetCache } from '@env/cache'
 
 export async function resetDatabases() {
   await resetConfigInSqlite3Database()
@@ -25,10 +23,6 @@ export function resetEnvironment() {
   delete process.env.CHAN_DEFAULT_JSON_SCHEMA
   delete process.env.CHAN_JSON_PAYLOAD_ONLY
 
-  // reset lodash.memoize
-  for (const val of Object.values(Env)) {
-    if (isFunction(val)) {
-      (val as any as MemoizedFunction).cache.clear!()
-    }
-  }
+  // reset memoize
+  resetCache()
 }

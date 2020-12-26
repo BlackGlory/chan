@@ -10,7 +10,8 @@
     , "@dao/*": ["src/dao/*"]
     , "@core": ["src/core/index"]
     , "@core/*": ["src/core/*"]
-    , "@env": ["src/env"]
+    , "@env": ["src/env/index"]
+    , "@env/*": ["src/env/*"]
     , "@test/*": ["__tests__/*"]
     , "@services/*": ["src/services/*"]
     }
