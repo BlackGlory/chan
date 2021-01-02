@@ -22,6 +22,7 @@ export function closeDatabase() {
 export async function prepareDatabase() {
   db = connectDatabase()
   await migrateDatabase(db)
+  enableAutoVacuum(db)
 }
 
 function connectDatabase(): IDatabase {
@@ -35,4 +36,9 @@ async function migrateDatabase(db: IDatabase) {
   const migrationsPath = path.join(appRoot, 'migrations/config-in-sqlite3')
   const migrations = await readMigrations(migrationsPath)
   migrate(db, migrations)
+}
+
+function enableAutoVacuum(db: IDatabase) {
+  db.pragma('main.auto_vacuum = FULL;')
+  db.prepare('VACUUM;').run()
 }
