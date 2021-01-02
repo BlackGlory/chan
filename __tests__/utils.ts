@@ -7,7 +7,7 @@ export async function resetDatabases() {
 
 export async function resetConfigInSqlite3Database() {
   ConfigInSqlite3.closeDatabase()
-  ConfigInSqlite3.connectDatabase()
+  ConfigInSqlite3.openDatabase()
   await ConfigInSqlite3.prepareDatabase()
 }
 

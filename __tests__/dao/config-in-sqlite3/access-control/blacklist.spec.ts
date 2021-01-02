@@ -13,8 +13,8 @@ beforeEach(async () => {
 
 describe('blacklist', () => {
   describe('getAllBlacklistItems(): string[]', () => {
-    it('return string[]', async () => {
-      const db = await getDatabase()
+    it('return string[]', () => {
+      const db = getDatabase()
       const id = 'id-1'
       insert(db, id)
 
@@ -27,8 +27,8 @@ describe('blacklist', () => {
 
   describe('inBlacklist(id: string): boolean', () => {
     describe('exist', () => {
-      it('return true', async () => {
-        const db = await getDatabase()
+      it('return true', () => {
+        const db = getDatabase()
         const id = 'id-1'
         insert(db, id)
 
@@ -39,7 +39,7 @@ describe('blacklist', () => {
     })
 
     describe('not exist', () => {
-      it('return false', async () => {
+      it('return false', () => {
         const id = 'id-1'
 
         const result = DAO.inBlacklist(id)
@@ -51,8 +51,8 @@ describe('blacklist', () => {
 
   describe('addBlacklistItem', () => {
     describe('exist', () => {
-      it('return undefined', async () => {
-        const db = await getDatabase()
+      it('return undefined', () => {
+        const db = getDatabase()
         const id = 'id-1'
         insert(db, id)
 
@@ -64,8 +64,8 @@ describe('blacklist', () => {
     })
 
     describe('not exist', () => {
-      it('return undefined', async () => {
-        const db = await getDatabase()
+      it('return undefined', () => {
+        const db = getDatabase()
         const id = 'id-1'
 
         const result = DAO.addBlacklistItem(id)
@@ -78,8 +78,8 @@ describe('blacklist', () => {
 
   describe('removeBlacklistItem', () => {
     describe('exist', () => {
-      it('return undefined', async () => {
-        const db = await getDatabase()
+      it('return undefined', () => {
+        const db = getDatabase()
         const id = 'id-1'
         insert(db, id)
 
@@ -91,8 +91,8 @@ describe('blacklist', () => {
     })
 
     describe('not exist', () => {
-      it('return undefined', async () => {
-        const db = await getDatabase()
+      it('return undefined', () => {
+        const db = getDatabase()
         const id = 'id-1'
 
         const result = DAO.removeBlacklistItem(id)
