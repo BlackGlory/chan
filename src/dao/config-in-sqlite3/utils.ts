@@ -11,6 +11,5 @@ export async function migrateDatabase(db: IDatabase): Promise<void> {
 }
 
 export function enableAutoVacuum(db: IDatabase): void {
-  db.pragma('main.auto_vacuum = FULL;')
-  db.prepare('VACUUM;').run()
+  db.exec('PRAGMA main.auto_vacuum = FULL;')
 }

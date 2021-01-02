@@ -10,23 +10,25 @@ assert(NODE_ENV() !== NodeEnv.Test)
 
 let db: IDatabase
 
-export function getDatabase() {
+export function getDatabase(): IDatabase {
+  assert(db)
   return db
 }
 
-export function closeDatabase() {
+export function closeDatabase(): void {
   if (db) db.close()
 }
 
-export async function prepareDatabase() {
-  db = connectDatabase()
+export async function prepareDatabase(): Promise<void> {
+  assert(db)
   await migrateDatabase(db)
-  enableAutoVacuum(db)
 }
 
-function connectDatabase(): IDatabase {
+export function connectDatabase(): void {
   const dataPath = path.join(appRoot, 'data')
   const dataFilename = path.join(dataPath, 'config.db')
   fs.ensureDirSync(dataPath)
-  return new Database(dataFilename)
+
+  db = new Database(dataFilename)
+  enableAutoVacuum(db)
 }
