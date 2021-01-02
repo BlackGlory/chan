@@ -3,10 +3,9 @@ import type { Database as IDatabase } from 'better-sqlite3'
 import { path as appRoot } from 'app-root-path'
 import * as path from 'path'
 import * as fs from 'fs-extra'
-import { readMigrations } from 'migrations-file'
-import { migrate } from '@blackglory/better-sqlite3-migrations'
 import { NODE_ENV, NodeEnv } from '@env'
 import { strict as assert } from 'assert'
+import { enableAutoVacuum, migrateDatabase } from './utils'
 assert(NODE_ENV() !== NodeEnv.Test)
 
 let db: IDatabase
@@ -30,15 +29,4 @@ function connectDatabase(): IDatabase {
   const dataFilename = path.join(dataPath, 'config.db')
   fs.ensureDirSync(dataPath)
   return new Database(dataFilename)
-}
-
-async function migrateDatabase(db: IDatabase) {
-  const migrationsPath = path.join(appRoot, 'migrations/config-in-sqlite3')
-  const migrations = await readMigrations(migrationsPath)
-  migrate(db, migrations)
-}
-
-function enableAutoVacuum(db: IDatabase) {
-  db.pragma('main.auto_vacuum = FULL;')
-  db.prepare('VACUUM;').run()
 }
