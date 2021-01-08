@@ -2,6 +2,8 @@ import { ValueGetter } from 'value-getter'
 import { Getter, isNumber } from '@blackglory/types'
 import { strict as assert } from 'assert'
 import { getCache } from '@env/cache'
+import { path as appRoot } from 'app-root-path'
+import * as path from 'path'
 
 export enum ListBasedAccessControl {
   Disable
@@ -31,6 +33,12 @@ export const CI: Getter<boolean> =
   env('CI')
     .convert(toBool)
     .default(false)
+    .memoize(getCache)
+    .get()
+
+export const DATA: Getter<string> =
+  env('CHAN_DATA')
+    .default(path.join(appRoot, 'data'))
     .memoize(getCache)
     .get()
 
