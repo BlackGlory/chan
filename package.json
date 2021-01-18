@@ -10,11 +10,13 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx --quiet src __tests__",
     "test": "jest --config jest.config.js --no-cache",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
-    "coverage": "jest --coverage --config jest.config.js",
+    "test:coverage": "jest --coverage --config jest.config.js",
     "dev": "nodemon",
     "dev:http2": "CHAN_HTTP2=true nodemon",
-    "clean": "rm -rf lib",
-    "build": "cross-env NODE_ENV=production tsc --project tsconfig.build.json && tscpaths --project tsconfig.build.json --src ./src --out ./lib",
+    "clean": "rimraf lib",
+    "build": "run-s build:*",
+    "build:compile": "cross-env NODE_ENV=production tsc --project tsconfig.build.json",
+    "build:patch": "tscpaths --project tsconfig.build.json --src ./src --out ./lib",
     "start": "cross-env NODE_ENV=production node lib/index.js",
     "start:http2": "cross-env NODE_ENV=production CHAN_HTTP2=true node lib/index.js",
     "docker:build": "docker build --tag chan .",
@@ -23,7 +25,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint && yarn test && yarn build",
+      "pre-commit": "run-s lint test build",
       "commit-msg": "commitlint --env HUSKY_GIT_PARAMS"
     }
   },
@@ -50,7 +52,9 @@
     "jest-extended": "^0.11.5",
     "jest-json-schema": "^2.1.0",
     "nodemon": "^2.0.7",
+    "npm-run-all": "^4.1.5",
     "pino-pretty": "^4.3.0",
+    "rimraf": "^3.0.2",
     "standard-version": "^9.1.0",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.1.1",
