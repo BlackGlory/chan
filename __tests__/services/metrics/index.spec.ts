@@ -8,14 +8,14 @@ beforeEach(async () => {
   await resetDatabases()
 })
 
-describe('stats', () => {
-  describe('GET /stats', () => {
+describe('metrics', () => {
+  describe('GET /metrics', () => {
     it('200', async () => {
       const server = await buildServer()
 
       const res = await server.inject({
         method: 'GET'
-      , url: '/stats'
+      , url: '/metrics'
       })
 
       expect(res.statusCode).toBe(200)

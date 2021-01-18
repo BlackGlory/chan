@@ -1,4 +1,4 @@
-export function stats() {
+export function metrics() {
   return {
     memoryUsage: process.memoryUsage()
   , cpuUsage: process.cpuUsage()
