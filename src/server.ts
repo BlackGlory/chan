@@ -14,11 +14,6 @@ export async function buildServer() {
     /* @ts-ignore */
   , http2: HTTP2()
   , bodyLimit: PAYLOAD_LIMIT()
-  , ajv: {
-      customOptions: {
-        coerceTypes: false
-      }
-    }
   })
   server.register(cors, { origin: true })
   server.register(chan, { Core })
