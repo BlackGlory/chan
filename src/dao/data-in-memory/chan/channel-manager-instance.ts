@@ -6,7 +6,7 @@ export function getChanChannelManager(): ChannelManager<unknown> {
   return manager
 }
 
-export function rebuildChanChannelManager(): void {
+export function resetChanChannelManager(): void {
   manager = createChanChannelManager()
 }
 

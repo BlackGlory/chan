@@ -1,24 +1,34 @@
 import { Channel as Chan } from 'extra-promise'
+import { EventEmitter } from 'events'
 
-export class Channel<T> {
-  chan: Chan<T>
-  iter: AsyncIterator<T, any, undefined>
+export class Channel<T> extends EventEmitter {
+  private users = 0
+  private chan: Chan<T>
+  private iter: AsyncIterator<T, any, undefined>
 
   constructor() {
+    super()
     this.chan = new Chan<T>()
     this.iter = this.chan.receive()[Symbol.asyncIterator]()
   }
 
-  async put(value: T): Promise<void> {
+  async enqueue(value: T): Promise<void> {
+    this.users++
     await this.chan.send(value)
+    this.users--
+    if (this.users === 0) this.close()
   }
 
-  async take() {
+  async dequeue() {
+    this.users++
     const { value } = await this.iter.next()
+    this.users--
+    if (this.users === 0) this.close()
     return value
   }
 
-  close() {
+  private close() {
     this.chan.close()
+    this.emit('close')
   }
 }
