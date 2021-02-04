@@ -1,4 +1,4 @@
-interface IChanDAO<T> {
-  enqueue(key: string, value: T): Promise<void>
-  dequeue(key: string): Promise<T>
+interface IChanDAO {
+  enqueue(key: string, value: string): Promise<void>
+  dequeue(key: string): Promise<string>
 }
