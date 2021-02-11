@@ -4,7 +4,7 @@ import * as path from 'path'
 import * as fs from 'fs-extra'
 import { NODE_ENV, NodeEnv, DATA } from '@env'
 import { strict as assert } from 'assert'
-import { enableAutoVacuum, migrateDatabase } from './utils'
+import { migrateDatabase } from './utils'
 assert(NODE_ENV() !== NodeEnv.Test)
 
 let db: IDatabase
@@ -15,7 +15,6 @@ export function openDatabase(): void {
   fs.ensureDirSync(dataPath)
 
   db = new Database(dataFilename)
-  enableAutoVacuum(db)
 }
 
 export async function prepareDatabase(): Promise<void> {

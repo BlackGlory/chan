@@ -9,7 +9,3 @@ export async function migrateDatabase(db: IDatabase): Promise<void> {
   const migrations = await readMigrations(migrationsPath)
   migrate(db, migrations)
 }
-
-export function enableAutoVacuum(db: IDatabase): void {
-  db.exec('PRAGMA main.auto_vacuum = FULL;')
-}
