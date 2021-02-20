@@ -21,16 +21,18 @@ export function getTokenPolicies(id: string): {
       FROM chan_token_policy
      WHERE chan_id = $id;
   `).get({ id })
+
   if (row) {
     const writeTokenRequired = row['write_token_required']
     const readTokenRequired = row['read_token_required']
+
     return {
       writeTokenRequired: writeTokenRequired === null
                           ? null
                           : numberToBoolean(writeTokenRequired)
     , readTokenRequired: readTokenRequired === null
-                        ? null
-                        : numberToBoolean(readTokenRequired)
+                         ? null
+                         : numberToBoolean(readTokenRequired)
     }
   } else {
     return { writeTokenRequired: null, readTokenRequired: null }
@@ -54,6 +56,7 @@ export function unsetWriteTokenRequired(id: string): void {
          SET write_token_required = NULL
        WHERE chan_id = $id;
     `).run({ id })
+
     deleteNoPoliciesRow(id)
   })()
 }
@@ -75,6 +78,7 @@ export function unsetReadTokenRequired(id: string): void {
          SET read_token_required = NULL
        WHERE chan_id = $id;
     `).run({ id })
+
     deleteNoPoliciesRow(id)
   })()
 }

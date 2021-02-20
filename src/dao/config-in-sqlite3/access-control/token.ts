@@ -5,6 +5,7 @@ export function getAllIdsWithTokens(): string[] {
     SELECT chan_id
       FROM chan_token;
   `).all()
+
   return result.map(x => x['chan_id'])
 }
 
@@ -20,6 +21,7 @@ export function getAllTokens(id: string): Array<{ token: string, write: boolean,
       FROM chan_token
      WHERE chan_id = $id;
   `).all({ id })
+
   return result.map(x => ({
     token: x['token']
   , write: x['write_permission'] === 1
@@ -36,6 +38,7 @@ export function hasWriteTokens(id: string): boolean {
                 AND write_permission = 1
            ) AS write_tokens_exist
   `).get({ id })
+
   return result['write_tokens_exist'] === 1
 }
 
@@ -52,6 +55,7 @@ export function matchWriteToken({ token, id }: {
                 AND write_permission = 1
            ) AS matched
   `).get({ token, id })
+
   return result['matched'] === 1
 }
 
@@ -73,6 +77,7 @@ export function unsetWriteToken({ token, id }: { token: string; id: string }) {
        WHERE token = $token
          AND chan_id = $id;
     `).run({ token, id })
+
     deleteNoPermissionToken({ token, id })
   })()
 }
@@ -86,6 +91,7 @@ export function hasReadTokens(id: string): boolean {
                 AND read_permission = 1
            ) AS read_tokens_exist
   `).get({ id })
+
   return result['read_tokens_exist'] === 1
 }
 
@@ -102,6 +108,7 @@ export function matchReadToken({ token, id }: {
                 AND read_permission = 1
            ) AS matched
   `).get({ token, id })
+
   return result['matched'] === 1
 }
 
@@ -123,6 +130,7 @@ export function unsetReadToken({ token, id }: { token: string; id: string }) {
        WHERE token = $token
          AND chan_id = $id;
     `).run({ token, id })
+
     deleteNoPermissionToken({ token, id })
   })()
 }
