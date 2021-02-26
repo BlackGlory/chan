@@ -19,7 +19,7 @@ describe('metrics', () => {
       })
 
       expect(res.statusCode).toBe(200)
-      expect(res.json()).toMatchObject({
+      expect(res.json()).toEqual({
         memoryUsage: expect.anything()
       , cpuUsage: expect.anything()
       , resourceUsage: expect.anything()
