@@ -5,11 +5,13 @@ interface IRawJsonSchema {
   json_schema: string
 }
 
-export function setRawJsonSchema(props: IRawJsonSchema): void {
+export function setRawJsonSchema(item: IRawJsonSchema): IRawJsonSchema {
   getDatabase().prepare(`
     INSERT INTO chan_json_schema (chan_id, json_schema)
     VALUES ($chan_id, $json_schema);
-  `).run(props)
+  `).run(item)
+
+  return item
 }
 
 export function hasRawJsonSchema(id: string): boolean {

@@ -21,11 +21,13 @@ interface IRawToken {
   read_permission: number
 }
 
-export function setRawBlacklist(props: IRawBlacklist): void {
+export function setRawBlacklist(item: IRawBlacklist): IRawBlacklist {
   getDatabase().prepare(`
     INSERT INTO chan_blacklist (chan_id)
     VALUES ($chan_id);
-  `).run(props)
+  `).run(item)
+
+  return item
 }
 
 export function hasRawBlacklist(id: string): boolean {
@@ -44,6 +46,7 @@ export function setRawWhitelist(props: IRawWhitelist): void {
   getDatabase().prepare(`
     INSERT INTO chan_whitelist (chan_id)
     VALUES ($chan_id);
+
   `).run(props)
 }
 
@@ -59,7 +62,7 @@ export function getRawWhitelist(id: string): IRawWhitelist | null {
   `).get({ id })
 }
 
-export function setRawTokenPolicy(props: IRawTokenPolicy): void {
+export function setRawTokenPolicy<T extends IRawTokenPolicy>(item: T): T {
   getDatabase().prepare(`
     INSERT INTO chan_token_policy (
       chan_id
@@ -71,7 +74,9 @@ export function setRawTokenPolicy(props: IRawTokenPolicy): void {
     , $write_token_required
     , $read_token_required
     );
-  `).run(props)
+  `).run(item)
+
+  return item
 }
 
 export function hasRawTokenPolicy(id: string): boolean {
@@ -86,7 +91,7 @@ export function getRawTokenPolicy(id: string): IRawTokenPolicy | null {
   `).get({ id })
 }
 
-export function setRawToken(props: IRawToken): void {
+export function setRawToken(item: IRawToken): IRawToken {
   getDatabase().prepare(`
     INSERT INTO chan_token (
       token
@@ -100,7 +105,9 @@ export function setRawToken(props: IRawToken): void {
     , $write_permission
     , $read_permission
     );
-  `).run(props)
+  `).run(item)
+
+  return item
 }
 
 export function hasRawToken(token: string, id: string): boolean {
