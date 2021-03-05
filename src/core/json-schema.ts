@@ -6,6 +6,8 @@ import { Json } from '@blackglory/types'
 import { getErrorResult } from 'return-style'
 import { CustomError } from '@blackglory/errors'
 
+const ajv = new Ajv()
+
 export function isEnabled(): boolean {
   return JSON_VALIDATION()
 }
@@ -37,7 +39,6 @@ export async function validate(id: string, payload: string): Promise<void> {
   const jsonSchema= await JsonSchemaDAO.getJsonSchema(id)
   const schema = jsonSchema ? JSON.parse(jsonSchema) : DEFAULT_JSON_SCHEMA()
   if (schema) {
-    const ajv = new Ajv()
     const valid = ajv.validate(schema, json)
     if (!valid) throw new InvalidPayload(ajv.errorsText())
   }
