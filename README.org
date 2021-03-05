@@ -636,7 +636,7 @@ curl \
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/tokens/$token/write`, {
+await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/write`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -684,7 +684,7 @@ curl \
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/tokens/$token/read`, {
+await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/read`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -728,7 +728,7 @@ CHAN支持HTTP/2, 以多路复用反向代理时的连接, 可通过设置环境
 设置环境变量 =CHAN_ENQUEUE_PAYLOAD_LIMIT= 可限制enqueue接受的单个请求的Payload字节数,
 默认值继承自 =CHAN_PAYLOAD_LIMIT=.
 
-** 用例展柜
+** 特殊用例
 *** 发送/接收文本文件
 #+BEGIN_SRC sh
 # 发送
