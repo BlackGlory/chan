@@ -4,7 +4,9 @@ WORKDIR /usr/src/app
 COPY package.json yarn.lock ./
 
 RUN apk add --update --no-cache --virtual .build-deps \
+      # extra-fetch
       git \
+      # better-sqlite3
       build-base \
       python3 \
  && yarn install \
