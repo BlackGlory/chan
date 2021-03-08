@@ -43,7 +43,7 @@
     "@types/fs-extra": "^9.0.8",
     "@types/jest": "^26.0.20",
     "@types/jest-json-schema": "^2.1.3",
-    "@types/node": "^14.14.31",
+    "@types/node": "^14.14.32",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
     "cross-env": "^7.0.3",
@@ -68,8 +68,8 @@
     "@blackglory/better-sqlite3-migrations": "^0.1.5",
     "@blackglory/errors": "^1.1.2",
     "@blackglory/go": "^0.1.0",
-    "@blackglory/types": "^0.3.0",
-    "ajv": "^7.1.1",
+    "@blackglory/types": "^0.3.3",
+    "ajv": "^7.2.1",
     "app-root-path": "^3.0.0",
     "better-sqlite3": "^7.1.2",
     "common-tags": "^1.8.0",
@@ -80,8 +80,8 @@
     "fastify-cors": "^5.2.0",
     "fastify-plugin": "^3.0.0",
     "fs-extra": "^9.1.0",
-    "migrations-file": "^0.1.4",
+    "migrations-file": "^0.1.5",
     "return-style": "^0.12.2",
-    "value-getter": "^0.1.11"
+    "value-getter": "^0.1.12"
   }
 }
