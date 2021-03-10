@@ -167,29 +167,6 @@ curl "http://localhost:8080/chan/$id"
 await fetch(`http://localhost:8080/chan/${id}`).then(res => res.text())
 #+END_SRC
 
-**** metrics
-=GET /metrics=
-
-输出JSON:
-#+BEGIN_SRC ts
-{
-  memoryUsage: NodeJS.MemoryUsage
-  cpuUsage: NodeJS.CpuUsage
-  resourceUsage: NodeJS.ResourceUsage
-}
-#+END_SRC
-
-***** Example
-****** curl
-#+BEGIN_SRC sh
-curl 'http://localhost:8080/metrics'
-#+END_SRC
-
-****** JavaScript
-#+BEGIN_SRC js
-await fetch('http://localhost:8080/metrics').then(res => res.json())
-#+END_SRC
-
 *** Private
 **** JSON Schema验证
 通过设置环境变量 =CHAN_JSON_VALIDATION=true= 可开启enqueue的JSON验证功能.

@@ -78,9 +78,11 @@
     "fastify": "^3.13.0",
     "fastify-bearer-auth": "^5.1.0",
     "fastify-cors": "^5.2.0",
+    "fastify-metrics": "^7.0.0",
     "fastify-plugin": "^3.0.0",
     "fs-extra": "^9.1.0",
     "migrations-file": "^0.1.5",
+    "prom-client": "^13.1.0",
     "return-style": "^0.12.2",
     "value-getter": "^0.1.12"
   }

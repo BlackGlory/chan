@@ -1,17 +1,14 @@
-import { buildServer } from '@src/server'
-import { resetDatabases, resetEnvironment } from '@test/utils'
+import { startService, stopService, getServer } from '@test/utils'
 
 jest.mock('@dao/config-in-sqlite3/database')
 
-beforeEach(async () => {
-  resetEnvironment()
-  await resetDatabases()
-})
+beforeEach(startService)
+afterEach(stopService)
 
 describe('metrics', () => {
   describe('GET /metrics', () => {
     it('200', async () => {
-      const server = await buildServer()
+      const server = getServer()
 
       const res = await server.inject({
         method: 'GET'
@@ -19,11 +16,6 @@ describe('metrics', () => {
       })
 
       expect(res.statusCode).toBe(200)
-      expect(res.json()).toEqual({
-        memoryUsage: expect.anything()
-      , cpuUsage: expect.anything()
-      , resourceUsage: expect.anything()
-      })
     })
   })
 })

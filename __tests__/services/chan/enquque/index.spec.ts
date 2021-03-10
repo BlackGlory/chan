@@ -1,15 +1,13 @@
-import { buildServer } from '@src/server'
-import { resetConfigInSqlite3Database, resetEnvironment } from '@test/utils'
+import { startService, stopService, getServer } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { JsonSchemaDAO } from '@dao'
 
 jest.mock('@dao/config-in-sqlite3/database')
 expect.extend(matchers)
 
-beforeEach(async () => {
-  resetEnvironment()
-  await resetConfigInSqlite3Database()
-})
+// 由于服务启动时会读取环境变量 CHAN_JSON_PAYLOAD_ONLY
+// 因此环境变量必须在服务启动前设置, 这迫使测试用例手动启动服务
+afterEach(stopService)
 
 describe('no access control', () => {
   describe('CHAN_JSON_VALIDATION=true', () => {
@@ -21,7 +19,8 @@ describe('no access control', () => {
             process.env.CHAN_DEFAULT_JSON_SCHEMA = JSON.stringify({
               type: 'number'
             })
-            const server = await buildServer()
+            await startService()
+            const server = getServer()
             const id = 'id'
             const message = '123'
 
@@ -50,7 +49,8 @@ describe('no access control', () => {
             process.env.CHAN_DEFAULT_JSON_SCHEMA = JSON.stringify({
               type: 'number'
             })
-            const server = await buildServer()
+            await startService()
+            const server = getServer()
             const id = 'id'
             const message = ' "message" '
 
@@ -74,7 +74,8 @@ describe('no access control', () => {
           process.env.CHAN_DEFAULT_JSON_SCHEMA = JSON.stringify({
             type: 'number'
           })
-          const server = await buildServer()
+          await startService()
+          const server = getServer()
           const id = 'id'
           const message = 'message'
 
@@ -103,10 +104,11 @@ describe('no access control', () => {
         describe('valid JSON', () => {
           it('204', async done => {
             process.env.CHAN_JSON_VALIDATION = 'true'
+            await startService()
+            const server = getServer()
             const id = 'id'
             const schema = { type: 'string' }
             const message = ' "message" '
-            const server = await buildServer()
             await JsonSchemaDAO.setJsonSchema({
               id
             , schema: JSON.stringify(schema)
@@ -137,10 +139,11 @@ describe('no access control', () => {
         describe('invalid JSON', () => {
           it('400', async () => {
             process.env.CHAN_JSON_VALIDATION = 'true'
+            await startService()
+            const server = getServer()
             const id = 'id'
             const schema = { type: 'string' }
             const message = 'message'
-            const server = await buildServer()
             await JsonSchemaDAO.setJsonSchema({
               id
             , schema: JSON.stringify(schema)
@@ -163,10 +166,11 @@ describe('no access control', () => {
       describe('other Content-Type', () => {
         it('415', async () => {
           process.env.CHAN_JSON_VALIDATION = 'true'
+          await startService()
+          const server = getServer()
           const id = 'id'
           const schema = { type: 'string' }
           const message = ' "message" '
-          const server = await buildServer()
           await JsonSchemaDAO.setJsonSchema({
             id
           , schema: JSON.stringify(schema)
@@ -191,10 +195,11 @@ describe('no access control', () => {
         describe('valid JSON', () => {
           it('204', async done => {
             process.env.CHAN_JSON_VALIDATION = 'true'
+            await startService()
+            const server = getServer()
             const id = 'id'
             const schema = { type: 'string' }
             const message = ' "message" '
-            const server = await buildServer()
             await JsonSchemaDAO.setJsonSchema({
               id
             , schema: JSON.stringify(schema)
@@ -225,9 +230,10 @@ describe('no access control', () => {
         describe('invalid JSON', () => {
           it('400', async () => {
             process.env.CHAN_JSON_VALIDATION = 'true'
+            await startService()
+            const server = getServer()
             const id = 'id'
             const message = 'message'
-            const server = await buildServer()
 
             const res = await server.inject({
               method: 'POST'
@@ -249,7 +255,8 @@ describe('no access control', () => {
     describe('Content-Type: application/json', () => {
       it('accept any plaintext, return 204', async done => {
         process.env.CHAN_JSON_PAYLOAD_ONLY = 'true'
-        const server = await buildServer()
+        await startService()
+        const server = getServer()
         const id = 'id'
         const message = 'message'
 
@@ -277,7 +284,8 @@ describe('no access control', () => {
     describe('other Content-Type', () => {
       it('400', async () => {
         process.env.CHAN_JSON_PAYLOAD_ONLY = 'true'
-        const server = await buildServer()
+        await startService()
+        const server = getServer()
         const id = 'id'
         const message = 'message'
 
@@ -297,7 +305,8 @@ describe('no access control', () => {
 
   describe('Content-Type', () => {
     it('reflect content-type', async done => {
-      const server = await buildServer()
+      await startService()
+      const server = getServer()
       const id = 'id'
       const message = 'message'
 

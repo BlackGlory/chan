@@ -3,7 +3,7 @@ import type { Database as IDatabase } from 'better-sqlite3'
 import { migrateDatabase } from '../utils'
 import { assert } from '@blackglory/errors'
 
-let db = new Database(':memory:')
+let db: IDatabase
 
 export function openDatabase(): void {
   db = new Database(':memory:')

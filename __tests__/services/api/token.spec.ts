@@ -1,22 +1,19 @@
-import { buildServer } from '@src/server'
-import { resetDatabases, resetEnvironment } from '@test/utils'
+import { startService, stopService, getServer } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { tokenSchema } from '@src/schema'
 
 jest.mock('@dao/config-in-sqlite3/database')
 expect.extend(matchers)
 
-beforeEach(async () => {
-  resetEnvironment()
-  await resetDatabases()
-})
+beforeEach(startService)
+afterEach(stopService)
 
 describe('Token', () => {
   describe('GET /api/chan-with-tokens', () => {
     describe('auth', () => {
       it('200', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -34,7 +31,7 @@ describe('Token', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -48,7 +45,7 @@ describe('Token', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -65,7 +62,7 @@ describe('Token', () => {
     describe('auth', () => {
       it('200', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
 
         const res = await server.inject({
@@ -91,7 +88,7 @@ describe('Token', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
 
         const res = await server.inject({
@@ -106,7 +103,7 @@ describe('Token', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
 
         const res = await server.inject({
@@ -124,7 +121,7 @@ describe('Token', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 
@@ -140,7 +137,7 @@ describe('Token', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 
@@ -156,7 +153,7 @@ describe('Token', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 
@@ -175,7 +172,7 @@ describe('Token', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 
@@ -191,7 +188,7 @@ describe('Token', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 
@@ -207,7 +204,7 @@ describe('Token', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 
@@ -226,7 +223,7 @@ describe('Token', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 
@@ -242,7 +239,7 @@ describe('Token', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 
@@ -258,7 +255,7 @@ describe('Token', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 
@@ -277,7 +274,7 @@ describe('Token', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 
@@ -293,7 +290,7 @@ describe('Token', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 
@@ -309,7 +306,7 @@ describe('Token', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
         const id = 'id'
         const token = 'token'
 

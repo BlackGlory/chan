@@ -2,9 +2,7 @@ import { resetChanChannelManager } from '@dao/data-in-memory/chan/channel-manage
 import { ChanDAO } from '@dao/data-in-memory/chan'
 import '@blackglory/jest-matchers'
 
-beforeEach(() => {
-  resetChanChannelManager()
-})
+beforeEach(resetChanChannelManager)
 
 describe('ChanDAO', () => {
   describe('enqueue', () => {

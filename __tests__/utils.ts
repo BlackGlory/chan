@@ -1,17 +1,36 @@
+import { UnboxPromise } from '@blackglory/types'
 import * as ConfigInSqlite3 from '@dao/config-in-sqlite3/database'
 import { resetCache } from '@env/cache'
+import { buildServer } from '@src/server'
 
-export async function resetDatabases() {
-  await resetConfigInSqlite3Database()
+let server: UnboxPromise<ReturnType<typeof buildServer>>
+
+export function getServer() {
+  return server
 }
 
-export async function resetConfigInSqlite3Database() {
-  ConfigInSqlite3.closeDatabase()
+export async function startService() {
+  await initializeDatabases()
+  server = await buildServer()
+}
+
+export async function stopService() {
+  server.metrics.clearRegister()
+  await server.close()
+  clearDatabases()
+  resetEnvironment()
+}
+
+export async function initializeDatabases() {
   ConfigInSqlite3.openDatabase()
   await ConfigInSqlite3.prepareDatabase()
 }
 
-export function resetEnvironment() {
+export async function clearDatabases() {
+  ConfigInSqlite3.closeDatabase()
+}
+
+function resetEnvironment() {
   // assigning a property on `process.env` will implicitly convert the value to a string.
   // use `delete` to delete a property from `process.env`.
   // see also: https://nodejs.org/api/process.html#process_process_env

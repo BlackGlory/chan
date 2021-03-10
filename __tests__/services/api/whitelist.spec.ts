@@ -1,21 +1,18 @@
-import { buildServer } from '@src/server'
-import { resetDatabases, resetEnvironment } from '@test/utils'
+import { startService, stopService, getServer } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 
 jest.mock('@dao/config-in-sqlite3/database')
 expect.extend(matchers)
 
-beforeEach(async () => {
-  resetEnvironment()
-  await resetDatabases()
-})
+beforeEach(startService)
+afterEach(stopService)
 
 describe('whitelist', () => {
   describe('GET /api/whitelist', () => {
     describe('auth', () => {
       it('200', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -33,7 +30,7 @@ describe('whitelist', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -47,7 +44,7 @@ describe('whitelist', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'GET'
@@ -65,7 +62,7 @@ describe('whitelist', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'PUT'
@@ -80,7 +77,7 @@ describe('whitelist', () => {
     describe('no admin password', () => {
       it('401', async () => {
         const id = 'id'
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'PUT'
@@ -95,7 +92,7 @@ describe('whitelist', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'PUT'
@@ -113,7 +110,7 @@ describe('whitelist', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'DELETE'
@@ -128,7 +125,7 @@ describe('whitelist', () => {
     describe('no admin password', () => {
       it('401', async () => {
         const id = 'id'
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'DELETE'
@@ -143,7 +140,7 @@ describe('whitelist', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
-        const server = await buildServer()
+        const server = getServer()
 
         const res = await server.inject({
           method: 'DELETE'

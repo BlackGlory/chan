@@ -1,14 +1,12 @@
 import * as DAO from '@dao/config-in-sqlite3/json-schema/json-schema'
-import { resetDatabases, resetEnvironment } from '@test/utils'
+import { initializeDatabases, clearDatabases } from '@test/utils'
 import { hasRawJsonSchema, setRawJsonSchema } from './utils'
 import 'jest-extended'
 
 jest.mock('@dao/config-in-sqlite3/database')
 
-beforeEach(async () => {
-  resetEnvironment()
-  await resetDatabases()
-})
+beforeEach(initializeDatabases)
+afterEach(clearDatabases)
 
 describe('JSON Schema', () => {
   describe('getAllIdsWithJsonSchema(): string[]', () => {
