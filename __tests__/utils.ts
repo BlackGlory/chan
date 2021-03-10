@@ -3,14 +3,16 @@ import { resetCache } from '@env/cache'
 import { buildServer } from '@src/server'
 
 let server: ReturnType<typeof buildServer>
+let address: string
 
-export function getServer() {
-  return server
+export function getAddress() {
+  return address
 }
 
 export async function startService() {
   await initializeDatabases()
   server = buildServer()
+  address = await server.listen(0)
 }
 
 export async function stopService() {

@@ -1,6 +1,10 @@
-import { startService, stopService, getServer } from '@test/utils'
+import { startService, stopService, getAddress } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { AccessControlDAO } from '@dao'
+import { fetch } from 'extra-fetch'
+import { get, post } from 'extra-request'
+import { url, pathname, text, searchParam } from 'extra-request/lib/es2018/transformers'
+import { toText } from 'extra-response'
 
 jest.mock('@dao/config-in-sqlite3/database')
 expect.extend(matchers)
@@ -17,27 +21,23 @@ describe('token-based access control', () => {
           const id = 'id'
           const token = 'token'
           const message = 'message'
-          const server = getServer()
           await AccessControlDAO.setWriteTokenRequired(id, true)
           await AccessControlDAO.setWriteToken({ id, token })
 
-          setImmediate(() => {
-            server.inject({
-              method: 'GET'
-            , url: `/chan/${id}`
-            })
+          setImmediate(async () => {
+            await fetch(get(
+              url(getAddress())
+            , pathname(`/chan/${id}`)
+            ))
           })
-          const res = await server.inject({
-            method: 'POST'
-          , url: `/chan/${id}`
-          , query: { token }
-          , headers: {
-              'Content-Type': 'text/plain'
-            }
-          , payload: message
-          })
+          const res = await fetch(post(
+            url(getAddress())
+          , pathname(`/chan/${id}`)
+          , searchParam('token', token)
+          , text(message)
+          ))
 
-          expect(res.statusCode).toBe(204)
+          expect(res.status).toBe(204)
         })
       })
 
@@ -47,21 +47,17 @@ describe('token-based access control', () => {
           const id = 'id'
           const token = 'token'
           const message = 'message'
-          const server = getServer()
           await AccessControlDAO.setWriteTokenRequired(id, true)
           await AccessControlDAO.setWriteToken({ id, token })
 
-          const res = await server.inject({
-            method: 'POST'
-          , url: `/chan/${id}`
-          , query: { token: 'bad' }
-          , headers: {
-              'Content-Type': 'text/plain'
-            }
-          , payload: message
-          })
+          const res = await fetch(post(
+            url(getAddress())
+          , pathname(`/chan/${id}`)
+          , searchParam('token', 'bad')
+          , text(message)
+          ))
 
-          expect(res.statusCode).toBe(401)
+          expect(res.status).toBe(401)
         })
       })
 
@@ -71,20 +67,16 @@ describe('token-based access control', () => {
           const id = 'id'
           const token = 'token'
           const message = 'message'
-          const server = getServer()
           await AccessControlDAO.setWriteTokenRequired(id, true)
           await AccessControlDAO.setWriteToken({ id, token })
 
-          const res = await server.inject({
-            method: 'POST'
-          , url: `/chan/${id}`
-          , headers: {
-              'Content-Type': 'text/plain'
-            }
-          , payload: message
-          })
+          const res = await fetch(post(
+            url(getAddress())
+          , pathname(`/chan/${id}`)
+          , text(message)
+          ))
 
-          expect(res.statusCode).toBe(401)
+          expect(res.status).toBe(401)
         })
       })
     })
@@ -96,18 +88,14 @@ describe('token-based access control', () => {
           process.env.CHAN_WRITE_TOKEN_REQUIRED = 'true'
           const id = 'id'
           const message = 'message'
-          const server = getServer()
 
-          const res = await server.inject({
-            method: 'POST'
-          , url: `/chan/${id}`
-          , headers: {
-              'Content-Type': 'text/plain'
-            }
-          , payload: message
-          })
+          const res = await fetch(post(
+            url(getAddress())
+          , pathname(`/chan/${id}`)
+          , text(message)
+          ))
 
-          expect(res.statusCode).toBe(401)
+          expect(res.status).toBe(401)
         })
       })
 
@@ -116,24 +104,20 @@ describe('token-based access control', () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
           const id = 'id'
           const message = 'message'
-          const server = getServer()
 
-          setImmediate(() => {
-            server.inject({
-              method: 'GET'
-            , url: `/chan/${id}`
-            })
+          setImmediate(async () => {
+            await fetch(get(
+              url(getAddress())
+            , pathname(`/chan/${id}`)
+            ))
           })
-          const res = await server.inject({
-            method: 'POST'
-          , url: `/chan/${id}`
-          , headers: {
-              'Content-Type': 'text/plain'
-            }
-          , payload: message
-          })
+          const res = await fetch(post(
+            url(getAddress())
+          , pathname(`/chan/${id}`)
+          , text(message)
+          ))
 
-          expect(res.statusCode).toBe(204)
+          expect(res.status).toBe(204)
         })
       })
     })
@@ -146,26 +130,22 @@ describe('token-based access control', () => {
           const id = 'id'
           const token = 'token'
           const message = 'message'
-          const server = getServer()
           await AccessControlDAO.setWriteTokenRequired(id, true)
           await AccessControlDAO.setWriteToken({ id, token })
 
-          setImmediate(() => {
-            server.inject({
-              method: 'GET'
-            , url: `/chan/${id}`
-            })
+          setImmediate(async () => {
+            await fetch(get(
+              url(getAddress())
+            , pathname(`/chan/${id}`)
+            ))
           })
-          const res = await server.inject({
-            method: 'POST'
-          , url: `/chan/${id}`
-          , headers: {
-              'Content-Type': 'text/plain'
-            }
-          , payload: message
-          })
+          const res = await fetch(post(
+            url(getAddress())
+          , pathname(`/chan/${id}`)
+          , text(message)
+          ))
 
-          expect(res.statusCode).toBe(204)
+          expect(res.status).toBe(204)
         })
       })
     })
@@ -177,26 +157,22 @@ describe('token-based access control', () => {
           const id = 'id'
           const token = 'token'
           const message = 'message'
-          const server = getServer()
           await AccessControlDAO.setWriteTokenRequired(id, true)
           await AccessControlDAO.setWriteToken({ id, token })
 
-          setImmediate(() => {
-            server.inject({
-              method: 'GET'
-            , url: `/chan/${id}`
-            })
+          setImmediate(async () => {
+            await fetch(get(
+              url(getAddress())
+            , pathname(`/chan/${id}`)
+            ))
           })
-          const res = await server.inject({
-            method: 'POST'
-          , url: `/chan/${id}`
-          , headers: {
-              'Content-Type': 'text/plain'
-            }
-          , payload: message
-          })
+          const res = await fetch(post(
+            url(getAddress())
+          , pathname(`/chan/${id}`)
+          , text(message)
+          ))
 
-          expect(res.statusCode).toBe(204)
+          expect(res.status).toBe(204)
         })
       })
     })

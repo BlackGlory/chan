@@ -1,6 +1,10 @@
-import { startService, stopService, getServer } from '@test/utils'
+import { startService, stopService, getAddress } from '@test/utils'
 import { matchers } from 'jest-json-schema'
 import { JsonSchemaDAO } from '@dao'
+import { fetch } from 'extra-fetch'
+import { get, put, del } from 'extra-request'
+import { url, pathname, headers, json, text, header } from 'extra-request/lib/es2018/transformers'
+import { toJSON } from 'extra-response'
 
 jest.mock('@dao/config-in-sqlite3/database')
 expect.extend(matchers)
@@ -13,16 +17,15 @@ describe('json schema', () => {
     describe('auth', () => {
       it('200', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = getServer()
 
-        const res = await server.inject({
-          method: 'GET'
-        , url: '/api/chan-with-json-schema'
-        , headers: createAuthHeaders()
-        })
+        const res = await fetch(get(
+          url(getAddress())
+        , pathname('/api/chan-with-json-schema')
+        , headers(createAuthHeaders())
+        ))
 
-        expect(res.statusCode).toBe(200)
-        expect(res.json()).toMatchSchema({
+        expect(res.status).toBe(200)
+        expect(await toJSON(res)).toMatchSchema({
           type: 'array'
         , items: { type: 'string' }
         })
@@ -31,29 +34,25 @@ describe('json schema', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = getServer()
+        const res = await fetch(get(
+          url(getAddress())
+        , pathname('/api/chan-with-json-schema')
+        ))
 
-        const res = await server.inject({
-          method: 'GET'
-        , url: '/api/chan-with-json-schema'
-        })
-
-        expect(res.statusCode).toBe(401)
+        expect(res.status).toBe(401)
       })
     })
 
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = getServer()
+        const res = await fetch(get(
+          url(getAddress())
+        , pathname('/api/chan-with-json-schema')
+        , headers(createAuthHeaders('bad'))
+        ))
 
-        const res = await server.inject({
-          method: 'GET'
-        , url: '/api/chan-with-json-schema'
-        , headers: createAuthHeaders('bad')
-        })
-
-        expect(res.statusCode).toBe(401)
+        expect(res.status).toBe(401)
       })
     })
   })
@@ -63,7 +62,6 @@ describe('json schema', () => {
       describe('exist', () => {
         it('200', async () => {
           process.env.CHAN_ADMIN_PASSWORD = 'password'
-          const server = getServer()
           const id = 'id'
           const schema = { type: 'number' }
           await JsonSchemaDAO.setJsonSchema({
@@ -71,61 +69,58 @@ describe('json schema', () => {
           , schema: JSON.stringify(schema)
           })
 
-          const res = await server.inject({
-            method: 'GET'
-          , url: `/api/chan/${id}/json-schema`
-          , headers: createAuthHeaders()
-          })
+          const res = await fetch(get(
+            url(getAddress())
+          , pathname(`/api/chan/${id}/json-schema`)
+          , headers(createAuthHeaders())
+          ))
 
-          expect(res.statusCode).toBe(200)
-          expect(res.json()).toEqual(schema)
+          expect(res.status).toBe(200)
+          expect(await toJSON(res)).toEqual(schema)
         })
       })
 
       describe('not exist', () => {
         it('404', async () => {
           process.env.CHAN_ADMIN_PASSWORD = 'password'
-          const server = getServer()
           const id = 'id'
 
-          const res = await server.inject({
-            method: 'GET'
-          , url: `/api/chan/${id}/json-schema`
-          , headers: createAuthHeaders()
-          })
+          const res = await fetch(get(
+            url(getAddress())
+          , pathname(`/api/chan/${id}/json-schema`)
+          , headers(createAuthHeaders())
+          ))
 
-          expect(res.statusCode).toBe(404)
+          expect(res.status).toBe(404)
         })
       })
     })
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = getServer()
         const id = 'id'
 
-        const res = await server.inject({
-          method: 'GET'
-        , url: `/api/chan/${id}/json-schema`
-        })
+        const res = await fetch(get(
+          url(getAddress())
+        , pathname(`/api/chan/${id}/json-schema`)
+        ))
 
-        expect(res.statusCode).toBe(401)
+        expect(res.status).toBe(401)
       })
     })
 
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = getServer()
         const id = 'id'
 
-        const res = await server.inject({
-          method: 'GET'
-        , url: `/api/chan/${id}/json-schema`
-        , headers: createAuthHeaders('bad')
-        })
+        const res = await fetch(get(
+          url(getAddress())
+        , pathname(`/api/chan/${id}/json-schema`)
+        , headers(createAuthHeaders('bad'))
+        ))
 
-        expect(res.statusCode).toBe(401)
+        expect(res.status).toBe(401)
       })
     })
   })
@@ -135,80 +130,67 @@ describe('json schema', () => {
       describe('valid JSON', () => {
         it('204', async () => {
           process.env.CHAN_ADMIN_PASSWORD = 'password'
-          const server = getServer()
           const id = 'id'
           const schema = { type: 'number' }
 
-          const res = await server.inject({
-            method: 'PUT'
-          , url: `/api/chan/${id}/json-schema`
-          , headers: {
-              ...createAuthHeaders()
-            , ...createJsonHeaders()
-            }
-          , payload: schema
-          })
+          const res = await fetch(put(
+            url(getAddress())
+          , pathname(`/api/chan/${id}/json-schema`)
+          , headers(createAuthHeaders())
+          , json(schema)
+          ))
 
-          expect(res.statusCode).toBe(204)
+          expect(res.status).toBe(204)
         })
       })
 
       describe('invalid JSON', () => {
         it('400', async () => {
           process.env.CHAN_ADMIN_PASSWORD = 'password'
-          const server = getServer()
           const id = 'id'
 
-          const res = await server.inject({
-            method: 'PUT'
-          , url: `/api/chan/${id}/json-schema`
-          , headers: {
-              ...createAuthHeaders()
-            , ...createJsonHeaders()
-            }
-          , payload: ''
-          })
+          const res = await fetch(put(
+            url(getAddress())
+          , pathname(`/api/chan/${id}/json-schema`)
+          , headers(createAuthHeaders())
+          , text('')
+          , header('Content-Type', 'application/json')
+          ))
 
-          expect(res.statusCode).toBe(400)
+          expect(res.status).toBe(400)
         })
       })
     })
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = getServer()
         const id = 'id'
         const schema = { type: 'number' }
 
-        const res = await server.inject({
-          method: 'PUT'
-        , url: `/api/chan/${id}/json-schema`
-        , headers: createJsonHeaders()
-        , payload: schema
-        })
+        const res = await fetch(put(
+          url(getAddress())
+        , pathname(`/api/chan/${id}/json-schema`)
+        , json(schema)
+        ))
 
-        expect(res.statusCode).toBe(401)
+        expect(res.status).toBe(401)
       })
     })
 
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = getServer()
         const id = 'id'
         const schema = { type: 'number' }
 
-        const res = await server.inject({
-          method: 'PUT'
-        , url: `/api/chan/${id}/json-schema`
-        , headers: {
-            ...createAuthHeaders('bad')
-          , ...createJsonHeaders()
-          }
-        , payload: schema
-        })
+        const res = await fetch(put(
+          url(getAddress())
+        , pathname(`/api/chan/${id}/json-schema`)
+        , headers(createAuthHeaders('bad'))
+        , json(schema)
+        ))
 
-        expect(res.statusCode).toBe(401)
+        expect(res.status).toBe(401)
       })
     })
   })
@@ -217,46 +199,43 @@ describe('json schema', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = getServer()
         const id = 'id'
 
-        const res = await server.inject({
-          method: 'DELETE'
-        , url: `/api/chan/${id}/json-schema`
-        , headers: createAuthHeaders()
-        })
+        const res = await fetch(del(
+          url(getAddress())
+        , pathname(`/api/chan/${id}/json-schema`)
+        , headers(createAuthHeaders())
+        ))
 
-        expect(res.statusCode).toBe(204)
+        expect(res.status).toBe(204)
       })
     })
 
     describe('no admin password', () => {
       it('401', async () => {
-        const server = getServer()
         const id = 'id'
 
-        const res = await server.inject({
-          method: 'DELETE'
-        , url: `/api/chan/${id}/json-schema`
-        })
+        const res = await fetch(del(
+          url(getAddress())
+        , pathname(`/api/chan/${id}/json-schema`)
+        ))
 
-        expect(res.statusCode).toBe(401)
+        expect(res.status).toBe(401)
       })
     })
 
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const server = getServer()
         const id = 'id'
 
-        const res = await server.inject({
-          method: 'DELETE'
-        , url: `/api/chan/${id}/json-schema`
-        , headers: createAuthHeaders('bad')
-        })
+        const res = await fetch(del(
+          url(getAddress())
+        , pathname(`/api/chan/${id}/json-schema`)
+        , headers(createAuthHeaders('bad'))
+        ))
 
-        expect(res.statusCode).toBe(401)
+        expect(res.status).toBe(401)
       })
     })
   })
@@ -265,11 +244,5 @@ describe('json schema', () => {
 function createAuthHeaders(adminPassword?: string) {
   return {
     'Authorization': `Bearer ${ adminPassword ?? process.env.CHAN_ADMIN_PASSWORD }`
-  }
-}
-
-function createJsonHeaders() {
-  return {
-    'Content-Type': 'application/json'
   }
 }

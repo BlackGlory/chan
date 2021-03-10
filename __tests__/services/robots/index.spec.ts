@@ -1,4 +1,8 @@
-import { startService, stopService, getServer } from '@test/utils'
+import { startService, stopService, getAddress } from '@test/utils'
+import { fetch } from 'extra-fetch'
+import { get } from 'extra-request'
+import { url, pathname } from 'extra-request/lib/es2018/transformers'
+import { toText } from 'extra-response'
 
 jest.mock('@dao/config-in-sqlite3/database')
 
@@ -8,16 +12,14 @@ afterEach(stopService)
 describe('robots', () => {
   describe('GET /robots.txt', () => {
     it('200', async () => {
-      const server = getServer()
+      const res = await fetch(get(
+        url(getAddress())
+      , pathname('/robots.txt')
+      ))
 
-      const res = await server.inject({
-        method: 'GET'
-      , url: '/robots.txt'
-      })
-
-      expect(res.statusCode).toBe(200)
-      expect(res.headers['content-type']).toBe('text/plain')
-      expect(res.body).toBe(
+      expect(res.status).toBe(200)
+      expect(res.headers.get('content-type')).toBe('text/plain')
+      expect(await toText(res)).toBe(
         'User-agent: *' + '\n'
       + 'Disallow: /'
       )

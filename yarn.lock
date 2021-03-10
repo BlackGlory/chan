@@ -295,6 +295,13 @@
   resolved "https://registry.yarnpkg.com/@blackglory/go/-/go-0.1.0.tgz#a145a98d17593549a91ed79766230f5c7719e1de"
   integrity sha512-p6kO5ThjCLRg3giGiaYhYcMZeA2akHAcCzjW7D5zz2YTJQ2JDKNzSk4WkKEFSpSiFcMzeNABN+tz1tasn4D2tg==
 
+"@blackglory/http-status@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@blackglory/http-status/-/http-status-1.0.0.tgz#c5075811464a76b8cca3a6ec31ddd4b34e72f709"
+  integrity sha512-I6o/ovu0bWA8oYFFOmKhAV7VCInBbEcvcZ60nOg3+g+Tid7VD9Tj9eV0Yt0Mdq/5CEamy/gvUxZz02u5IQ634w==
+  dependencies:
+    "@blackglory/errors" "^1.1.2"
+
 "@blackglory/jest-matchers@^0.1.12":
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/@blackglory/jest-matchers/-/jest-matchers-0.1.12.tgz#de16c177620f169152e8dc34e9f488ca87662485"
@@ -2940,6 +2947,13 @@ eventemitter3@^4.0.7:
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
+"eventsource@git+https://github.com/EventSource/eventsource.git#46fe04e03e54f4129a28bf75b3a1e5f4ab68b52a":
+  version "1.0.7"
+  uid "46fe04e03e54f4129a28bf75b3a1e5f4ab68b52a"
+  resolved "git+https://github.com/EventSource/eventsource.git#46fe04e03e54f4129a28bf75b3a1e5f4ab68b52a"
+  dependencies:
+    original "^1.0.0"
+
 "eventsource@https://github.com/EventSource/eventsource#46fe04e03e54f4129a28bf75b3a1e5f4ab68b52a":
   version "1.0.7"
   resolved "https://github.com/EventSource/eventsource#46fe04e03e54f4129a28bf75b3a1e5f4ab68b52a"
@@ -3088,6 +3102,18 @@ extra-fetch@^1.2.0:
     formdata-node "^2.4.0"
     node-fetch "3.0.0-beta.9"
 
+extra-fetch@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/extra-fetch/-/extra-fetch-1.3.0.tgz#5af4880ad67ef42a2f1a6667b2837925c53d023b"
+  integrity sha512-XyuanpUnNRM5E6YLeqgwgPbszOQ+MbaqTm4gCaQiqSKRsrnm9khC5N5kYfiUtT17sdltb25hONtYiXk2fLEZpQ==
+  dependencies:
+    abort-controller "^3.0.0"
+    domexception "^2.0.1"
+    eventsource "https://github.com/EventSource/eventsource#46fe04e03e54f4129a28bf75b3a1e5f4ab68b52a"
+    fetch-blob "^2.1.1"
+    formdata-node "^2.4.0"
+    node-fetch "3.0.0-beta.9"
+
 extra-promise@^0.15.3, extra-promise@^0.15.4:
   version "0.15.4"
   resolved "https://registry.yarnpkg.com/extra-promise/-/extra-promise-0.15.4.tgz#762624c442e703bca0f2e953fcf3d8375d3100e4"
@@ -3101,6 +3127,24 @@ extra-promise@^0.15.3, extra-promise@^0.15.4:
     iterable-operator "^0.13.4"
     reflect-metadata "^0.1.13"
     return-style "^0.12.2"
+
+extra-request@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/extra-request/-/extra-request-2.1.0.tgz#952758dd04457a23d230082dfba9e1db6cd9e4fd"
+  integrity sha512-OBWTbTy+okmKri5ZOwgy7AGpeGtnX21OaRztoFG4pqvS5a8d7+NI2+SjDu0vWOxlKeBcJ25RItRw9TBpGDHqHg==
+  dependencies:
+    "@blackglory/errors" "^1.1.2"
+    "@blackglory/types" "^0.3.3"
+    js-base64 "^3.6.0"
+    papaparse "^5.3.0"
+
+extra-response@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/extra-response/-/extra-response-0.3.3.tgz#df4cf415094f3a168af87f30408c53fa5a0b9154"
+  integrity sha512-lvTdBK+/+5zfatTpYP77K69WGp+HqRDI/uaFy5ualkCJtPhSP2hmHJUhspXJ4sKvYXQH4mrY3R4b/F7HytXMew==
+  dependencies:
+    iterable-operator "^0.13.4"
+    papaparse "^5.3.0"
 
 extra-stream@^0.1.0:
   version "0.1.0"
@@ -4826,6 +4870,11 @@ joycon@^2.2.5:
   resolved "https://registry.yarnpkg.com/joycon/-/joycon-2.2.5.tgz#8d4cf4cbb2544d7b7583c216fcdfec19f6be1615"
   integrity sha512-YqvUxoOcVPnCp0VU1/56f+iKSdvIRJYPznH22BdXV3xMk75SFXhWeJkZ8C9XxUWt1b5x2X1SxuFygW1U0FmkEQ==
 
+js-base64@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.6.0.tgz#773e1de628f4f298d65a7e9842c50244751f5756"
+  integrity sha512-wVdUBYQeY2gY73RIlPrysvpYx+2vheGo8Y1SNQv/BzHToWpAZzJU7Z6uheKMAe+GLSBig5/Ps2nxg/8tRB73xg==
+
 js-git@^0.7.8:
   version "0.7.8"
   resolved "https://registry.yarnpkg.com/js-git/-/js-git-0.7.8.tgz#52fa655ab61877d6f1079efc6534b554f31e5444"
@@ -5861,6 +5910,11 @@ pako@^0.2.5:
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/pako/-/pako-0.2.9.tgz#f3f7522f4ef782348da8161bad9ecfd51bf83a75"
   integrity sha1-8/dSL073gjSNqBYbrZ7P1Rv4OnU=
+
+papaparse@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.3.0.tgz#ab1702feb96e79ab4309652f36db9536563ad05a"
+  integrity sha512-Lb7jN/4bTpiuGPrYy4tkKoUS8sTki8zacB5ke1p5zolhcSE4TlWgrlsxjrDTbG/dFVh07ck7X36hUf/b5V68pg==
 
 parent-module@^1.0.0:
   version "1.0.1"
