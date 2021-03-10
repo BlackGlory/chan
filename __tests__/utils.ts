@@ -1,9 +1,8 @@
-import { UnboxPromise } from '@blackglory/types'
 import * as ConfigInSqlite3 from '@dao/config-in-sqlite3/database'
 import { resetCache } from '@env/cache'
 import { buildServer } from '@src/server'
 
-let server: UnboxPromise<ReturnType<typeof buildServer>>
+let server: ReturnType<typeof buildServer>
 
 export function getServer() {
   return server
@@ -11,7 +10,7 @@ export function getServer() {
 
 export async function startService() {
   await initializeDatabases()
-  server = await buildServer()
+  server = buildServer()
 }
 
 export async function stopService() {

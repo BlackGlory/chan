@@ -8,7 +8,7 @@ import { routes as robots } from '@services/robots'
 import { HTTP2, PAYLOAD_LIMIT, NODE_ENV, NodeEnv } from '@env'
 import { Core } from '@core'
 
-export async function buildServer() {
+export function buildServer() {
   const server = fastify({
     logger: getLoggerOptions()
   , maxParamLength: 600
