@@ -34,7 +34,7 @@ export async function clearDatabases() {
 function resetEnvironment() {
   // assigning a property on `process.env` will implicitly convert the value to a string.
   // use `delete` to delete a property from `process.env`.
-  // see also: https://nodejs.org/admin/process.html#process_process_env
+  // see also: https://nodejs.org/api/process.html#process_process_env
   delete process.env.CHAN_ADMIN_PASSWORD
   delete process.env.CHAN_LIST_BASED_ACCESS_CONTROL
   delete process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL
