@@ -19,9 +19,9 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
     }
   })
 
-  server.register(jsonSchemaRoutes, { prefix: '/api', Core })
-  server.register(blacklistRoutes, { prefix: '/api', Core })
-  server.register(whitelistRoutes, { prefix: '/api', Core })
-  server.register(tokenPolicyRoutes, { prefix: '/api', Core })
-  server.register(tokenRoutes, { prefix: '/api', Core })
+  server.register(jsonSchemaRoutes, { prefix: '/admin', Core })
+  server.register(blacklistRoutes, { prefix: '/admin', Core })
+  server.register(whitelistRoutes, { prefix: '/admin', Core })
+  server.register(tokenPolicyRoutes, { prefix: '/admin', Core })
+  server.register(tokenRoutes, { prefix: '/admin', Core })
 }

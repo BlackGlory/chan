@@ -13,14 +13,14 @@ beforeEach(startService)
 afterEach(stopService)
 
 describe('json schema', () => {
-  describe('GET /api/chan-with-json-schema', () => {
+  describe('GET /admin/chan-with-json-schema', () => {
     describe('auth', () => {
       it('200', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
 
         const res = await fetch(get(
           url(getAddress())
-        , pathname('/api/chan-with-json-schema')
+        , pathname('/admin/chan-with-json-schema')
         , headers(createAuthHeaders())
         ))
 
@@ -36,7 +36,7 @@ describe('json schema', () => {
       it('401', async () => {
         const res = await fetch(get(
           url(getAddress())
-        , pathname('/api/chan-with-json-schema')
+        , pathname('/admin/chan-with-json-schema')
         ))
 
         expect(res.status).toBe(401)
@@ -48,7 +48,7 @@ describe('json schema', () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
         const res = await fetch(get(
           url(getAddress())
-        , pathname('/api/chan-with-json-schema')
+        , pathname('/admin/chan-with-json-schema')
         , headers(createAuthHeaders('bad'))
         ))
 
@@ -57,7 +57,7 @@ describe('json schema', () => {
     })
   })
 
-  describe('GET /api/chan/<id>/json-schema', () => {
+  describe('GET /admin/chan/<id>/json-schema', () => {
     describe('auth', () => {
       describe('exist', () => {
         it('200', async () => {
@@ -71,7 +71,7 @@ describe('json schema', () => {
 
           const res = await fetch(get(
             url(getAddress())
-          , pathname(`/api/chan/${id}/json-schema`)
+          , pathname(`/admin/chan/${id}/json-schema`)
           , headers(createAuthHeaders())
           ))
 
@@ -87,7 +87,7 @@ describe('json schema', () => {
 
           const res = await fetch(get(
             url(getAddress())
-          , pathname(`/api/chan/${id}/json-schema`)
+          , pathname(`/admin/chan/${id}/json-schema`)
           , headers(createAuthHeaders())
           ))
 
@@ -102,7 +102,7 @@ describe('json schema', () => {
 
         const res = await fetch(get(
           url(getAddress())
-        , pathname(`/api/chan/${id}/json-schema`)
+        , pathname(`/admin/chan/${id}/json-schema`)
         ))
 
         expect(res.status).toBe(401)
@@ -116,7 +116,7 @@ describe('json schema', () => {
 
         const res = await fetch(get(
           url(getAddress())
-        , pathname(`/api/chan/${id}/json-schema`)
+        , pathname(`/admin/chan/${id}/json-schema`)
         , headers(createAuthHeaders('bad'))
         ))
 
@@ -125,7 +125,7 @@ describe('json schema', () => {
     })
   })
 
-  describe('PUT /api/chan/<id>/json-schema', () => {
+  describe('PUT /admin/chan/<id>/json-schema', () => {
     describe('auth', () => {
       describe('valid JSON', () => {
         it('204', async () => {
@@ -135,7 +135,7 @@ describe('json schema', () => {
 
           const res = await fetch(put(
             url(getAddress())
-          , pathname(`/api/chan/${id}/json-schema`)
+          , pathname(`/admin/chan/${id}/json-schema`)
           , headers(createAuthHeaders())
           , json(schema)
           ))
@@ -151,7 +151,7 @@ describe('json schema', () => {
 
           const res = await fetch(put(
             url(getAddress())
-          , pathname(`/api/chan/${id}/json-schema`)
+          , pathname(`/admin/chan/${id}/json-schema`)
           , headers(createAuthHeaders())
           , text('')
           , header('Content-Type', 'application/json')
@@ -169,7 +169,7 @@ describe('json schema', () => {
 
         const res = await fetch(put(
           url(getAddress())
-        , pathname(`/api/chan/${id}/json-schema`)
+        , pathname(`/admin/chan/${id}/json-schema`)
         , json(schema)
         ))
 
@@ -185,7 +185,7 @@ describe('json schema', () => {
 
         const res = await fetch(put(
           url(getAddress())
-        , pathname(`/api/chan/${id}/json-schema`)
+        , pathname(`/admin/chan/${id}/json-schema`)
         , headers(createAuthHeaders('bad'))
         , json(schema)
         ))
@@ -195,7 +195,7 @@ describe('json schema', () => {
     })
   })
 
-  describe('DELETE /api/chan/<id>/json-schema', () => {
+  describe('DELETE /admin/chan/<id>/json-schema', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
@@ -203,7 +203,7 @@ describe('json schema', () => {
 
         const res = await fetch(del(
           url(getAddress())
-        , pathname(`/api/chan/${id}/json-schema`)
+        , pathname(`/admin/chan/${id}/json-schema`)
         , headers(createAuthHeaders())
         ))
 
@@ -217,7 +217,7 @@ describe('json schema', () => {
 
         const res = await fetch(del(
           url(getAddress())
-        , pathname(`/api/chan/${id}/json-schema`)
+        , pathname(`/admin/chan/${id}/json-schema`)
         ))
 
         expect(res.status).toBe(401)
@@ -231,7 +231,7 @@ describe('json schema', () => {
 
         const res = await fetch(del(
           url(getAddress())
-        , pathname(`/api/chan/${id}/json-schema`)
+        , pathname(`/admin/chan/${id}/json-schema`)
         , headers(createAuthHeaders('bad'))
         ))
 

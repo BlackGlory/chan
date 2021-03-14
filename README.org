@@ -185,7 +185,7 @@ JSON验证仅用于验证, 不会重新序列化消息, 因此subscribe得到的
 可单独为id设置JSON Schema, 被设置的id将仅接受 =Content-Type: application/json= 请求.
 
 ****** 获取所有具有JSON Schema的消息队列id
-=GET /api/chan-with-json-schema=
+=GET /admin/chan-with-json-schema=
 
 获取所有具有JSON Schema的消息队列id, 返回由JSON表示的字符串数组 =string[]=.
 
@@ -194,12 +194,12 @@ JSON验证仅用于验证, 不会重新序列化消息, 因此subscribe得到的
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan-with-json-schema"
+  "http://localhost:8080/admin/chan-with-json-schema"
 #+END_SRC
 
 ******** fetch
 #+BEGIN_SRC js
-await fetch('http://localhost:8080/api/chan-with-json-schema', {
+await fetch('http://localhost:8080/admin/chan-with-json-schema', {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -207,19 +207,19 @@ await fetch('http://localhost:8080/api/chan-with-json-schema', {
 #+END_SRC
 
 ****** 获取JSON Schema
-=GET /api/chan/<id>/json-schema=
+=GET /admin/chan/<id>/json-schema=
 
 ******* Example
 ******** curl
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan/$id/json-schema"
+  "http://localhost:8080/admin/chan/$id/json-schema"
 #+END_SRC
 
 ******** fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/json-schema`, {
+await fetch(`http://localhost:8080/admin/chan/${id}/json-schema`, {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -227,7 +227,7 @@ await fetch(`http://localhost:8080/api/chan/${id}/json-schema`, {
 #+END_SRC
 
 ****** 设置JSON Schema
-=PUT /api/chan/<id>/json-schema=
+=PUT /admin/chan/<id>/json-schema=
 
 ******* Example
 ******** curl
@@ -237,12 +237,12 @@ curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
   --header "Content-Type: application/json" \
   --data "$JSON_SCHEMA" \
-  "http://localhost:8080/api/chan/$id/jsonschema"
+  "http://localhost:8080/admin/chan/$id/jsonschema"
 #+END_SRC
 
 ******** fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/json-schema`, {
+await fetch(`http://localhost:8080/admin/chan/${id}/json-schema`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -253,7 +253,7 @@ await fetch(`http://localhost:8080/api/chan/${id}/json-schema`, {
 #+END_SRC
 
 ****** 移除JSON Schema
-=DELETE /api/chan/<id>/json-schema=
+=DELETE /admin/chan/<id>/json-schema=
 
 ******* Example
 ******** curl
@@ -261,12 +261,12 @@ await fetch(`http://localhost:8080/api/chan/${id}/json-schema`, {
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan/$id/json-schema"
+  "http://localhost:8080/admin/chan/$id/json-schema"
 #+END_SRC
 
 ******** fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/json-schema`, {
+await fetch(`http://localhost:8080/admin/chan/${id}/json-schema`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -294,7 +294,7 @@ CHAN提供两种可以同时启用的访问控制策略.
 
 ****** 黑名单
 ******* 获取黑名单
-=GET /api/blacklist=
+=GET /admin/blacklist=
 
 获取位于黑名单中的所有消息队列id, 返回JSON表示的字符串数组 =string[]=.
 
@@ -303,12 +303,12 @@ CHAN提供两种可以同时启用的访问控制策略.
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/blacklist"
+  "http://localhost:8080/admin/blacklist"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch('http://localhost:8080/api/blacklist', {
+await fetch('http://localhost:8080/admin/blacklist', {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -316,7 +316,7 @@ await fetch('http://localhost:8080/api/blacklist', {
 #+END_SRC
 
 ******* 添加黑名单
-=PUT /api/blacklist/<id>=
+=PUT /admin/blacklist/<id>=
 
 将特定消息队列加入黑名单.
 
@@ -326,12 +326,12 @@ await fetch('http://localhost:8080/api/blacklist', {
 curl \
   --request PUT \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/blacklist/$id"
+  "http://localhost:8080/admin/blacklist/$id"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/blacklist/${id}`, {
+await fetch(`http://localhost:8080/admin/blacklist/${id}`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -340,7 +340,7 @@ await fetch(`http://localhost:8080/api/blacklist/${id}`, {
 #+END_SRC
 
 ******* 移除黑名单
-=DELETE /api/blacklist/<id>=
+=DELETE /admin/blacklist/<id>=
 
 将特定消息队列从黑名单中移除.
 
@@ -350,12 +350,12 @@ await fetch(`http://localhost:8080/api/blacklist/${id}`, {
 curl \
   --request DELEjTE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/blacklist/$id"
+  "http://localhost:8080/admin/blacklist/$id"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/blacklist/${id}`, {
+await fetch(`http://localhost:8080/admin/blacklist/${id}`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -365,7 +365,7 @@ await fetch(`http://localhost:8080/api/blacklist/${id}`, {
 
 ****** 白名单
 ******* 获取白名单
-=GET /api/whitelist=
+=GET /admin/whitelist=
 
 获取位于黑名单中的所有消息队列id, 返回JSON表示的字符串数组 =string[]=.
 
@@ -374,12 +374,12 @@ await fetch(`http://localhost:8080/api/blacklist/${id}`, {
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIM_PASSWORD" \
-  "http://localhost:8080/api/whitelist"
+  "http://localhost:8080/admin/whitelist"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch('http://localhost:8080/api/whitelist', {
+await fetch('http://localhost:8080/admin/whitelist', {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -387,7 +387,7 @@ await fetch('http://localhost:8080/api/whitelist', {
 #+END_SRC
 
 ******* 添加白名单
-=PUT /api/whitelist/<id>=
+=PUT /admin/whitelist/<id>=
 
 将特定消息队列加入白名单.
 
@@ -397,12 +397,12 @@ await fetch('http://localhost:8080/api/whitelist', {
 curl \
   --request PUT \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/whitelist/$id"
+  "http://localhost:8080/admin/whitelist/$id"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/whitelist/${id}`, {
+await fetch(`http://localhost:8080/admin/whitelist/${id}`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -411,7 +411,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 #+END_SRC
 
 ******* 移除白名单
-=DELETE /api/whitelist/<id>=
+=DELETE /admin/whitelist/<id>=
 
 将特定消息队列从白名单中移除.
 
@@ -421,12 +421,12 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/whitelist/$id"
+  "http://localhost:8080/admin/whitelist/$id"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/whitelist/${id}`, {
+await fetch(`http://localhost:8080/admin/whitelist/${id}`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -452,7 +452,7 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 
 ****** token策略
 ******* 获取所有具有token策略的消息队列id
-=GET /api/chan-with-token-policies=
+=GET /admin/chan-with-token-policies=
 
 获取所有具有token策略的消息队列id, 返回由JSON表示的字符串数组 =string[]=.
 
@@ -461,16 +461,16 @@ await fetch(`http://localhost:8080/api/whitelist/${id}`, {
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan-with-token-policies"
+  "http://localhost:8080/admin/chan-with-token-policies"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch('http://localhost:8080/api/chan-with-token-policies')
+await fetch('http://localhost:8080/admin/chan-with-token-policies')
 #+END_SRC
 
 ******* 获取特定消息队列的token策略
-=GET /api/chan/<id>/token-policies=
+=GET /admin/chan/<id>/token-policies=
 
 返回JSON:
 #+BEGIN_SRC ts
@@ -486,12 +486,12 @@ await fetch('http://localhost:8080/api/chan-with-token-policies')
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan/$id/token-policies"
+  "http://localhost:8080/admin/chan/$id/token-policies"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fethc(`http://localhost:8080/api/chan/${id}/token-policies`, {
+await fethc(`http://localhost:8080/admin/chan/${id}/token-policies`, {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -499,8 +499,8 @@ await fethc(`http://localhost:8080/api/chan/${id}/token-policies`, {
 #+END_SRC
 
 ******* 设置token策略
-=PUT /api/chan/<id>/token-policies/write-token-required=
-=PUT /api/chan/<id>/token-policies/read-token-required=
+=PUT /admin/chan/<id>/token-policies/write-token-required=
+=PUT /admin/chan/<id>/token-policies/read-token-required=
 
 Payload必须是一个布尔值.
 
@@ -512,12 +512,12 @@ curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
   --header "Content-Type: application/json" \
   --data "$WRITE_TOKEN_REQUIRED" \
-  "http://localhost:8080/api/chan/$id/token-policies/write-token-required"
+  "http://localhost:8080/admin/chan/$id/token-policies/write-token-required"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-required`, {
+await fetch(`http://localhost:8080/admin/chan/${id}/token-policies/write-token-required`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -528,8 +528,8 @@ await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-req
 #+END_SRC
 
 ******* 移除token策略
-=DELETE /api/chan/<id>/token-policies/write-token-required=
-=DELETE /api/chan/<id>/token-policies/read-token-required=
+=DELETE /admin/chan/<id>/token-policies/write-token-required=
+=DELETE /admin/chan/<id>/token-policies/read-token-required=
 
 ******** Example
 ********* curl
@@ -537,12 +537,12 @@ await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-req
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan/$id/token-policies/write-token-required"
+  "http://localhost:8080/admin/chan/$id/token-policies/write-token-required"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-required`, {
+await fetch(`http://localhost:8080/admin/chan/${id}/token-policies/write-token-required`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -553,7 +553,7 @@ await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-req
 
 ****** token
 ******* 获取所有具有token的消息队列id
-=GET /api/chan-with-tokens=
+=GET /admin/chan-with-tokens=
 
 获取所有具有token的消息队列id, 返回由JSON表示的字符串数组 =string[]=.
 
@@ -562,12 +562,12 @@ await fetch(`http://localhost:8080/api/chan/${id}/token-policies/write-token-req
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan-with-tokens"
+  "http://localhost:8080/admin/chan-with-tokens"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan-with-tokens`, {
+await fetch(`http://localhost:8080/admin/chan-with-tokens`, {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -575,7 +575,7 @@ await fetch(`http://localhost:8080/api/chan-with-tokens`, {
 #+END_SRC
 
 ******* 获取特定消息队列的所有token
-=GET /api/chan/<id>/tokens=
+=GET /admin/chan/<id>/tokens=
 
 获取特定消息队列的所有token, 返回JSON数组表示的token及其权限
 =Array<{ token: string, write: boolean, read: boolean }>=.
@@ -585,12 +585,12 @@ await fetch(`http://localhost:8080/api/chan-with-tokens`, {
 #+BEGIN_SRC sh
 curl \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan/$id/tokens"
+  "http://localhost:8080/admin/chan/$id/tokens"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/tokens`, {
+await fetch(`http://localhost:8080/admin/chan/${id}/tokens`, {
   headers: {
     'Authorization': `Bearer ${adminPassword}`
   }
@@ -598,7 +598,7 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens`, {
 #+END_SRC
 
 ******* 为特定消息队列的token设置write权限
-=PUT /api/chan/<id>/tokens/<token>/write=
+=PUT /admin/chan/<id>/tokens/<token>/write=
 
 添加/更新token, 为token设置write权限.
 
@@ -608,12 +608,12 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens`, {
 curl \
   --request PUT \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan/$id/tokens/$token/write"
+  "http://localhost:8080/admin/chan/$id/tokens/$token/write"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/write`, {
+await fetch(`http://localhost:8080/admin/chan/${id}/tokens/${token}/write`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -622,7 +622,7 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/write`, {
 #+END_SRC
 
 ******* 取消特定消息队列的token的write权限
-=DELETE /api/chan/<id>/tokens/<token>/write=
+=DELETE /admin/chan/<id>/tokens/<token>/write=
 
 取消token的write权限.
 
@@ -632,12 +632,12 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/write`, {
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan/$id/tokens/$token/write"
+  "http://localhost:8080/admin/chan/$id/tokens/$token/write"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/write`, {
+await fetch(`http://localhost:8080/admin/chan/${id}/tokens/${token}/write`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -646,7 +646,7 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/write`, {
 #+END_SRC
 
 ******* 为特定消息队列的token设置read权限
-=PUT /api/chan/<id>/tokens/<token>/read=
+=PUT /admin/chan/<id>/tokens/<token>/read=
 
 添加/更新token, 为token设置read权限.
 
@@ -656,12 +656,12 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/write`, {
 curl \
   --request PUT \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan/$id/tokens/$token/read"
+  "http://localhost:8080/admin/chan/$id/tokens/$token/read"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/read`, {
+await fetch(`http://localhost:8080/admin/chan/${id}/tokens/${token}/read`, {
   method: 'PUT'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`
@@ -670,7 +670,7 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/read`, {
 #+END_SRC
 
 ******* 取消特定消息队列的token的read权限
-=DELETE /api/chan/<id>/tokens/<token>/read=
+=DELETE /admin/chan/<id>/tokens/<token>/read=
 
 取消token的read权限.
 
@@ -680,12 +680,12 @@ await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/read`, {
 curl \
   --request DELETE \
   --header "Authorization: Bearer $ADMIN_PASSWORD" \
-  "http://localhost:8080/api/chan/$id/tokens/$token/read"
+  "http://localhost:8080/admin/chan/$id/tokens/$token/read"
 #+END_SRC
 
 ********* fetch
 #+BEGIN_SRC js
-await fetch(`http://localhost:8080/api/chan/${id}/tokens/${token}/read`, {
+await fetch(`http://localhost:8080/admin/chan/${id}/tokens/${token}/read`, {
   method: 'DELETE'
 , headers: {
     'Authorization': `Bearer ${adminPassword}`

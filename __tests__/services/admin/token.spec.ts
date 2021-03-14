@@ -1,8 +1,9 @@
 import { startService, stopService, getAddress } from '@test/utils'
 import { matchers } from 'jest-json-schema'
+import { tokenSchema } from '@src/schema'
 import { fetch } from 'extra-fetch'
 import { get, put, del } from 'extra-request'
-import { url, pathname, headers, json } from 'extra-request/lib/es2018/transformers'
+import { url, pathname, headers } from 'extra-request/lib/es2018/transformers'
 import { toJSON } from 'extra-response'
 
 jest.mock('@dao/config-in-sqlite3/database')
@@ -11,15 +12,15 @@ expect.extend(matchers)
 beforeEach(startService)
 afterEach(stopService)
 
-describe('TokenPolicy', () => {
-  describe('GET /api/chan-with-token-policies', () => {
+describe('Token', () => {
+  describe('GET /admin/chan-with-tokens', () => {
     describe('auth', () => {
       it('200', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
 
         const res = await fetch(get(
           url(getAddress())
-        , pathname('/api/chan-with-token-policies')
+        , pathname('/admin/chan-with-tokens')
         , headers(createAuthHeaders())
         ))
 
@@ -35,7 +36,7 @@ describe('TokenPolicy', () => {
       it('401', async () => {
         const res = await fetch(get(
           url(getAddress())
-        , pathname('/api/chan-with-token-policies')
+        , pathname('/admin/chan-with-tokens')
         ))
 
         expect(res.status).toBe(401)
@@ -48,7 +49,7 @@ describe('TokenPolicy', () => {
 
         const res = await fetch(get(
           url(getAddress())
-        , pathname('/api/chan-with-token-policies')
+        , pathname('/admin/chan-with-tokens')
         , headers(createAuthHeaders('bad'))
         ))
 
@@ -57,7 +58,7 @@ describe('TokenPolicy', () => {
     })
   })
 
-  describe('GET /api/chan/:id/token-policies', () => {
+  describe('GET /admin/chan/:id/tokens', () => {
     describe('auth', () => {
       it('200', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
@@ -65,25 +66,19 @@ describe('TokenPolicy', () => {
 
         const res = await fetch(get(
           url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies`)
+        , pathname(`/admin/chan/${id}/tokens`)
         , headers(createAuthHeaders())
         ))
 
         expect(res.status).toBe(200)
-        expect(toJSON(res)).toMatchSchema({
-          type: 'object'
-        , properties: {
-            writeTokenRequired: {
-              oneOf: [
-                { type: 'boolean' }
-              , { type: 'null' }
-              ]
-            }
-          , readTokenRequired: {
-              oneOf: [
-                { type: 'boolean' }
-              , { type: 'null' }
-              ]
+        expect(await toJSON(res)).toMatchSchema({
+          type: 'array'
+        , items: {
+            type: 'object'
+          , properties: {
+              token: tokenSchema
+            , enqueue: { type: 'boolean' }
+            , dequeue: { type: 'boolean' }
             }
           }
         })
@@ -96,7 +91,7 @@ describe('TokenPolicy', () => {
 
         const res = await fetch(get(
           url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies`)
+        , pathname(`/admin/chan/${id}/tokens`)
         ))
 
         expect(res.status).toBe(401)
@@ -110,7 +105,7 @@ describe('TokenPolicy', () => {
 
         const res = await fetch(get(
           url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies`)
+        , pathname(`/admin/chan/${id}/tokens`)
         , headers(createAuthHeaders('bad'))
         ))
 
@@ -119,125 +114,16 @@ describe('TokenPolicy', () => {
     })
   })
 
-  describe('PUT /api/chan/:id/token-policies/write-token-required', () => {
+  describe('PUT /admin/chan/:id/tokens/:token/write', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
-        const val = true
+        const token = 'token'
 
         const res = await fetch(put(
           url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/write-token-required`)
-        , headers(createJsonHeaders())
-        , headers(createAuthHeaders())
-        , json(val)
-        ))
-
-        expect(res.status).toBe(204)
-      })
-    })
-
-    describe('no admin password', () => {
-      it('401', async () => {
-        const id = 'id'
-        const val = true
-
-        const res = await fetch(put(
-          url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/write-token-required`)
-        , headers(createJsonHeaders())
-        , headers(createAuthHeaders())
-        , json(val)
-        ))
-
-        expect(res.status).toBe(401)
-      })
-    })
-
-    describe('bad auth', () => {
-      it('401', async () => {
-        process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const id = 'id'
-        const val = true
-
-        const res = await fetch(put(
-          url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/write-token-required`)
-        , headers(createJsonHeaders())
-        , headers(createAuthHeaders('bad'))
-        , json(val)
-        ))
-
-        expect(res.status).toBe(401)
-      })
-    })
-  })
-
-  describe('PUT /api/chan/:id/token-policies/read-token-required', () => {
-    describe('auth', () => {
-      it('204', async () => {
-        process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const id = 'id'
-        const val = true
-
-        const res = await fetch(put(
-          url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/read-token-required`)
-        , headers(createJsonHeaders())
-        , headers(createAuthHeaders())
-        , json(val)
-        ))
-
-        expect(res.status).toBe(204)
-      })
-    })
-
-    describe('no admin password', () => {
-      it('401', async () => {
-        const id = 'id'
-        const val = true
-
-        const res = await fetch(put(
-          url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/read-token-required`)
-        , headers(createJsonHeaders())
-        , headers(createAuthHeaders())
-        , json(val)
-        ))
-
-        expect(res.status).toBe(401)
-      })
-    })
-
-    describe('bad auth', () => {
-      it('401', async () => {
-        process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const id = 'id'
-        const val = true
-
-        const res = await fetch(put(
-          url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/read-token-required`)
-        , headers(createJsonHeaders())
-        , headers(createAuthHeaders('bad'))
-        , json(val)
-        ))
-
-        expect(res.status).toBe(401)
-      })
-    })
-  })
-
-  describe('DELETE /api/chan/:id/token-policies/write-token-required', () => {
-    describe('auth', () => {
-      it('204', async () => {
-        process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const id = 'id'
-
-        const res = await fetch(del(
-          url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/write-token-required`)
+        , pathname(`/admin/chan/${id}/tokens/${token}/write`)
         , headers(createAuthHeaders())
         ))
 
@@ -248,10 +134,11 @@ describe('TokenPolicy', () => {
     describe('no admin password', () => {
       it('401', async () => {
         const id = 'id'
+        const token = 'token'
 
-        const res = await fetch(del(
+        const res = await fetch(put(
           url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/write-token-required`)
+        , pathname(`/admin/chan/${id}/tokens/${token}/write`)
         ))
 
         expect(res.status).toBe(401)
@@ -262,10 +149,11 @@ describe('TokenPolicy', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
+        const token = 'token'
 
-        const res = await fetch(del(
+        const res = await fetch(put(
           url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/write-token-required`)
+        , pathname(`/admin/chan/${id}/tokens/${token}/write`)
         , headers(createAuthHeaders('bad'))
         ))
 
@@ -274,15 +162,16 @@ describe('TokenPolicy', () => {
     })
   })
 
-  describe('DELETE /api/chan/:id/token-policies/read-token-required', () => {
+  describe('DELETE /admin/chan/:id/tokens/:token/write', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
+        const token = 'token'
 
         const res = await fetch(del(
           url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/read-token-required`)
+        , pathname(`/admin/chan/${id}/tokens/${token}/write`)
         , headers(createAuthHeaders())
         ))
 
@@ -293,10 +182,11 @@ describe('TokenPolicy', () => {
     describe('no admin password', () => {
       it('401', async () => {
         const id = 'id'
+        const token = 'token'
 
         const res = await fetch(del(
           url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/read-token-required`)
+        , pathname(`/admin/chan/${id}/tokens/${token}/write`)
         ))
 
         expect(res.status).toBe(401)
@@ -307,10 +197,107 @@ describe('TokenPolicy', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
         const id = 'id'
+        const token = 'token'
 
         const res = await fetch(del(
           url(getAddress())
-        , pathname(`/api/chan/${id}/token-policies/read-token-required`)
+        , pathname(`/admin/chan/${id}/tokens/${token}/write`)
+        , headers(createAuthHeaders('bad'))
+        ))
+
+        expect(res.status).toBe(401)
+      })
+    })
+  })
+
+  describe('PUT /admin/chan/:id/tokens/:token/read', () => {
+    describe('auth', () => {
+      it('204', async () => {
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
+        const id = 'id'
+        const token = 'token'
+
+        const res = await fetch(put(
+          url(getAddress())
+        , pathname(`/admin/chan/${id}/tokens/${token}/read`)
+        , headers(createAuthHeaders())
+        ))
+
+        expect(res.status).toBe(204)
+      })
+    })
+
+    describe('no admin password', () => {
+      it('401', async () => {
+        const id = 'id'
+        const token = 'token'
+
+        const res = await fetch(put(
+          url(getAddress())
+        , pathname(`/admin/chan/${id}/tokens/${token}/read`)
+        ))
+
+        expect(res.status).toBe(401)
+      })
+    })
+
+    describe('bad auth', () => {
+      it('401', async () => {
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
+        const id = 'id'
+        const token = 'token'
+
+        const res = await fetch(put(
+          url(getAddress())
+        , pathname(`/admin/chan/${id}/tokens/${token}/read`)
+        , headers(createAuthHeaders('bad'))
+        ))
+
+        expect(res.status).toBe(401)
+      })
+    })
+  })
+
+  describe('DELETE /admin/chan/:id/tokens/:token/read', () => {
+    describe('auth', () => {
+      it('204', async () => {
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
+        const id = 'id'
+        const token = 'token'
+
+        const res = await fetch(del(
+          url(getAddress())
+        , pathname(`/admin/chan/${id}/tokens/${token}/read`)
+        , headers(createAuthHeaders())
+        ))
+
+        expect(res.status).toBe(204)
+      })
+    })
+
+    describe('no admin password', () => {
+      it('401', async () => {
+        const id = 'id'
+        const token = 'token'
+
+        const res = await fetch(del(
+          url(getAddress())
+        , pathname(`/admin/chan/${id}/tokens/${token}/read`)
+        ))
+
+        expect(res.status).toBe(401)
+      })
+    })
+
+    describe('bad auth', () => {
+      it('401', async () => {
+        process.env.CHAN_ADMIN_PASSWORD = 'password'
+        const id = 'id'
+        const token = 'token'
+
+        const res = await fetch(del(
+          url(getAddress())
+        , pathname(`/admin/chan/${id}/tokens/${token}/read`)
         , headers(createAuthHeaders('bad'))
         ))
 
@@ -323,11 +310,5 @@ describe('TokenPolicy', () => {
 function createAuthHeaders(adminPassword?: string) {
   return {
     'Authorization': `Bearer ${ adminPassword ?? process.env.CHAN_ADMIN_PASSWORD }`
-  }
-}
-
-function createJsonHeaders() {
-  return {
-    'Content-Type': 'application/json'
   }
 }
