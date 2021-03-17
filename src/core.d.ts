@@ -1,4 +1,4 @@
-type Json = import('@blackglory/types').Json
+type Json = import('justypes').Json
 type CustomErrorConstructor = import('@blackglory/errors').CustomErrorConstructor
 
 interface ICore {
