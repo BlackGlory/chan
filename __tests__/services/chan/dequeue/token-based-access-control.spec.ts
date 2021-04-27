@@ -14,26 +14,26 @@ afterEach(stopService)
 
 describe('token-based access control', () => {
   describe('enabled', () => {
-    describe('id need read tokens', () => {
+    describe('namespace need read tokens', () => {
       describe('token matched', () => {
         it('200', async () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
-          const id = 'id'
+          const namespace = 'namespace'
           const token = 'token'
           const message = 'message'
-          await AccessControlDAO.setReadTokenRequired(id, true)
-          await AccessControlDAO.setReadToken({ id, token })
+          await AccessControlDAO.setReadTokenRequired(namespace, true)
+          await AccessControlDAO.setReadToken({ namespace, token })
 
           setImmediate(async () => {
             await fetch(post(
               url(getAddress())
-            , pathname(`/chan/${id}`)
+            , pathname(`/chan/${namespace}`)
             , text(message)
             ))
           })
           const res = await fetch(get(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           , searchParam('token', token)
           ))
 
@@ -45,14 +45,14 @@ describe('token-based access control', () => {
       describe('token does not matched', () => {
         it('401', async () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
-          const id = 'id'
+          const namespace = 'namespace'
           const token = 'token'
-          await AccessControlDAO.setReadTokenRequired(id, true)
-          await AccessControlDAO.setReadToken({ id, token })
+          await AccessControlDAO.setReadTokenRequired(namespace, true)
+          await AccessControlDAO.setReadToken({ namespace, token })
 
           const res = await fetch(get(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           , searchParam(token, 'bad')
           ))
 
@@ -63,14 +63,14 @@ describe('token-based access control', () => {
       describe('no token', () => {
         it('401', async () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
-          const id = 'id'
+          const namespace = 'namespace'
           const token = 'token'
-          await AccessControlDAO.setReadTokenRequired(id, true)
-          await AccessControlDAO.setReadToken({ id, token })
+          await AccessControlDAO.setReadTokenRequired(namespace, true)
+          await AccessControlDAO.setReadToken({ namespace, token })
 
           const res = await fetch(get(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           ))
 
           expect(res.status).toBe(401)
@@ -78,16 +78,16 @@ describe('token-based access control', () => {
       })
     })
 
-    describe('id does not need read tokens', () => {
+    describe('namespace does not need read tokens', () => {
       describe('READ_TOKEN_REQUIRED=true', () => {
         it('401', async () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
           process.env.CHAN_READ_TOKEN_REQUIRED = 'true'
-          const id = 'id'
+          const namespace = 'namespace'
 
           const res = await fetch(get(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           ))
 
           expect(res.status).toBe(401)
@@ -98,19 +98,19 @@ describe('token-based access control', () => {
         it('200', async () => {
           process.env.CHAN_TOKEN_BASED_ACCESS_CONTROL = 'true'
           process.env.CHAN_READ_TOKEN_REQUIRED = 'false'
-          const id = 'id'
+          const namespace = 'namespace'
           const message = 'message'
 
           setImmediate(async () => {
             await fetch(post(
               url(getAddress())
-            , pathname(`/chan/${id}`)
+            , pathname(`/chan/${namespace}`)
             , text(message)
             ))
           })
           const res = await fetch(get(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           ))
 
           expect(res.status).toBe(200)
@@ -121,25 +121,25 @@ describe('token-based access control', () => {
   })
 
   describe('disabled', () => {
-    describe('id need read tokens', () => {
+    describe('namespace need read tokens', () => {
       describe('no token', () => {
         it('200', async () => {
-          const id = 'id'
+          const namespace = 'namespace'
           const token = 'token'
           const message = 'message'
-          await AccessControlDAO.setReadTokenRequired(id, true)
-          await AccessControlDAO.setReadToken({ id, token })
+          await AccessControlDAO.setReadTokenRequired(namespace, true)
+          await AccessControlDAO.setReadToken({ namespace, token })
 
           setImmediate(async () => {
             await fetch(post(
               url(getAddress())
-            , pathname(`/chan/${id}`)
+            , pathname(`/chan/${namespace}`)
             , text(message)
             ))
           })
           const res = await fetch(get(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           ))
 
           expect(res.status).toBe(200)
@@ -148,23 +148,23 @@ describe('token-based access control', () => {
       })
     })
 
-    describe('id does not need read tokens', () => {
+    describe('namespace does not need read tokens', () => {
       describe('READ_TOKEN_REQUIRED=true', () => {
         it('200', async () => {
           process.env.CHAN_READ_TOKEN_REQUIRED = 'true'
-          const id = 'id'
+          const namespace = 'namespace'
           const message = 'message'
 
           setImmediate(async () => {
             await fetch(post(
               url(getAddress())
-            , pathname(`/chan/${id}`)
+            , pathname(`/chan/${namespace}`)
             , text(message)
             ))
           })
           const res = await fetch(get(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           ))
 
           expect(res.status).toBe(200)

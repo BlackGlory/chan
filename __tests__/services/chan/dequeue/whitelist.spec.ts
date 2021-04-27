@@ -14,23 +14,23 @@ afterEach(stopService)
 
 describe('whitelist', () => {
   describe('enabled', () => {
-    describe('id in whitelist', () => {
+    describe('namespace in whitelist', () => {
       it('200', async () => {
         process.env.CHAN_LIST_BASED_ACCESS_CONTROL = 'whitelist'
-        const id = 'id'
+        const namespace = 'namespace'
         const message = 'message'
-        await AccessControlDAO.addWhitelistItem(id)
+        await AccessControlDAO.addWhitelistItem(namespace)
 
         setImmediate(async () => {
           fetch(post(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           , text(message)
           ))
         })
         const res = await fetch(get(
           url(getAddress())
-        , pathname(`/chan/${id}`)
+        , pathname(`/chan/${namespace}`)
         ))
 
         expect(res.status).toBe(200)
@@ -38,14 +38,14 @@ describe('whitelist', () => {
       })
     })
 
-    describe('id not in whitelist', () => {
+    describe('namespace not in whitelist', () => {
       it('403', async () => {
         process.env.CHAN_LIST_BASED_ACCESS_CONTROL = 'whitelist'
-        const id = 'id'
+        const namespace = 'namespace'
 
         const res = await fetch(get(
           url(getAddress())
-        , pathname(`/chan/${id}`)
+        , pathname(`/chan/${namespace}`)
         ))
 
         expect(res.status).toBe(403)
@@ -54,22 +54,22 @@ describe('whitelist', () => {
   })
 
   describe('disabled', () => {
-    describe('id not in whitelist', () => {
+    describe('namespace not in whitelist', () => {
       it('403', async () => {
-        const id = 'id'
+        const namespace = 'namespace'
         const message = 'message'
-        await AccessControlDAO.addWhitelistItem(id)
+        await AccessControlDAO.addWhitelistItem(namespace)
 
         setImmediate(async () => {
           await fetch(post(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           , text(message)
           ))
         })
         const res = await fetch(get(
           url(getAddress())
-        , pathname(`/chan/${id}`)
+        , pathname(`/chan/${namespace}`)
         ))
 
         expect(res.status).toBe(200)

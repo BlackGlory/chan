@@ -13,19 +13,19 @@ afterEach(stopService)
 
 describe('no access control', () => {
   it('200', async () => {
-    const id = 'id'
+    const namespace = 'namespace'
     const message = 'message'
 
     setImmediate(async () => {
       await fetch(post(
         url(getAddress())
-      , pathname(`/chan/${id}`)
+      , pathname(`/chan/${namespace}`)
       , text(message)
       ))
     })
     const res = await fetch(get(
       url(getAddress())
-    , pathname(`/chan/${id}`)
+    , pathname(`/chan/${namespace}`)
     ))
 
     expect(res.status).toBe(200)

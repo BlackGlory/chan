@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify'
-import { idSchema } from '@src/schema'
+import { namespaceSchema } from '@src/schema'
 
 export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   server.get(
@@ -20,36 +20,36 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
     }
   )
 
-  server.put<{ Params: { id: string }}>(
-    '/whitelist/:id'
+  server.put<{ Params: { namespace: string }}>(
+    '/whitelist/:namespace'
   , {
       schema: {
-        params: { id: idSchema }
+        params: { namespace: namespaceSchema }
       , response: {
           204: { type: 'null' }
         }
       }
     }
   , async (req, reply) => {
-      const id = req.params.id
-      await Core.Whitelist.add(id)
+      const namespace = req.params.namespace
+      await Core.Whitelist.add(namespace)
       reply.status(204).send()
     }
   )
 
-  server.delete<{ Params: { id: string }}>(
-    '/whitelist/:id'
+  server.delete<{ Params: { namespace: string }}>(
+    '/whitelist/:namespace'
   , {
       schema: {
-        params: { id: idSchema }
+        params: { namespace: namespaceSchema }
       , response: {
           204: { type: 'null' }
         }
       }
     }
   , async (req, reply) => {
-      const id = req.params.id
-      await Core.Whitelist.remove(id)
+      const namespace = req.params.namespace
+      await Core.Whitelist.remove(namespace)
       reply.status(204).send()
     }
   )

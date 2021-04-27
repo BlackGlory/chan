@@ -57,15 +57,15 @@ describe('whitelist', () => {
     })
   })
 
-  describe('PUT /admin/whitelist/:id', () => {
+  describe('PUT /admin/whitelist/:namespace', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const id = 'id'
+        const namespace = 'namespace'
 
         const res = await fetch(put(
           url(getAddress())
-        , pathname(`/admin/whitelist/${id}`)
+        , pathname(`/admin/whitelist/${namespace}`)
         , headers(createAuthHeaders())
         ))
 
@@ -75,11 +75,11 @@ describe('whitelist', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const id = 'id'
+        const namespace = 'namespace'
 
         const res = await fetch(put(
           url(getAddress())
-        , pathname(`/admin/whitelist/${id}`)
+        , pathname(`/admin/whitelist/${namespace}`)
         ))
 
         expect(res.status).toBe(401)
@@ -89,11 +89,11 @@ describe('whitelist', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const id = 'id'
+        const namespace = 'namespace'
 
         const res = await fetch(put(
           url(getAddress())
-        , pathname(`/admin/whitelist/${id}`)
+        , pathname(`/admin/whitelist/${namespace}`)
         , headers(createAuthHeaders('bad'))
         ))
 
@@ -102,15 +102,15 @@ describe('whitelist', () => {
     })
   })
 
-  describe('DELETE /admin/whitelist/:id', () => {
+  describe('DELETE /admin/whitelist/:namespace', () => {
     describe('auth', () => {
       it('204', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const id = 'id'
+        const namespace = 'namespace'
 
         const res = await fetch(del(
           url(getAddress())
-        , pathname(`/admin/whitelist/${id}`)
+        , pathname(`/admin/whitelist/${namespace}`)
         , headers(createAuthHeaders())
         ))
 
@@ -120,11 +120,11 @@ describe('whitelist', () => {
 
     describe('no admin password', () => {
       it('401', async () => {
-        const id = 'id'
+        const namespace = 'namespace'
 
         const res = await fetch(del(
           url(getAddress())
-        , pathname(`/admin/whitelist/${id}`)
+        , pathname(`/admin/whitelist/${namespace}`)
         ))
 
         expect(res.status).toBe(401)
@@ -134,11 +134,11 @@ describe('whitelist', () => {
     describe('bad auth', () => {
       it('401', async () => {
         process.env.CHAN_ADMIN_PASSWORD = 'password'
-        const id = 'id'
+        const namespace = 'namespace'
 
         const res = await fetch(del(
           url(getAddress())
-        , pathname(`/admin/whitelist/${id}`)
+        , pathname(`/admin/whitelist/${namespace}`)
         , headers(createAuthHeaders('bad'))
         ))
 

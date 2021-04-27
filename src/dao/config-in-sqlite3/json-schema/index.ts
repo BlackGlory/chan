@@ -1,7 +1,7 @@
 import * as JsonSchema from './json-schema'
 
 export const JsonSchemaDAO: IJsonSchemaDAO = {
-  getAllIdsWithJsonSchema: asyncify(JsonSchema.getAllIdsWithJsonSchema)
+  getAllNamespacesWithJsonSchema: asyncify(JsonSchema.getAllNamespacesWithJsonSchema)
 , getJsonSchema: asyncify(JsonSchema.getJsonSchema)
 , removeJsonSchema: asyncify(JsonSchema.removeJsonSchema)
 , setJsonSchema: asyncify(JsonSchema.setJsonSchema)

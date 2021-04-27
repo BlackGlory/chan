@@ -14,22 +14,22 @@ afterEach(stopService)
 
 describe('whitelist', () => {
   describe('enabled', () => {
-    describe('id in whitelist', () => {
+    describe('namespace in whitelist', () => {
       it('204', async () => {
-        const id = 'id'
+        const namespace = 'namespace'
         const message = 'message'
         process.env.CHAN_LIST_BASED_ACCESS_CONTROL = 'whitelist'
-        await AccessControlDAO.addWhitelistItem(id)
+        await AccessControlDAO.addWhitelistItem(namespace)
 
         setImmediate(() => {
           fetch(get(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           ))
         })
         const res = await fetch(post(
           url(getAddress())
-        , pathname(`/chan/${id}`)
+        , pathname(`/chan/${namespace}`)
         , text(message)
         ))
 
@@ -37,15 +37,15 @@ describe('whitelist', () => {
       })
     })
 
-    describe('id not in whitelist', () => {
+    describe('namespace not in whitelist', () => {
       it('403', async () => {
         process.env.CHAN_LIST_BASED_ACCESS_CONTROL = 'whitelist'
-        const id = 'id'
+        const namespace = 'namespace'
         const message = 'message'
 
         const res = await fetch(post(
           url(getAddress())
-        , pathname(`/chan/${id}`)
+        , pathname(`/chan/${namespace}`)
         , text(message)
         ))
 
@@ -55,20 +55,20 @@ describe('whitelist', () => {
   })
 
   describe('disabled', () => {
-    describe('id not in whitelist', () => {
+    describe('namespace not in whitelist', () => {
       it('204', async () => {
-        const id = 'id'
+        const namespace = 'namespace'
         const message = 'message'
 
         setImmediate(async () => {
           await fetch(get(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           ))
         })
         const res = await fetch(post(
           url(getAddress())
-        , pathname(`/chan/${id}`)
+        , pathname(`/chan/${namespace}`)
         , text(message)
         ))
 

@@ -11,22 +11,22 @@ afterEach(clearDatabases)
 describe('whitelist', () => {
   describe('getAllWhitelistItems(): string[]', () => {
     it('return string[]', () => {
-      const id = 'id-1'
-      setRawWhitelist({ chan_id: id })
+      const namespace = 'namespace'
+      setRawWhitelist({ namespace })
 
       const result = DAO.getAllWhitelistItems()
 
-      expect(result).toEqual([id])
+      expect(result).toEqual([namespace])
     })
   })
 
-  describe('inWhitelist(id: string): boolean', () => {
+  describe('inWhitelist(namespace: string): boolean', () => {
     describe('exist', () => {
       it('return true', () => {
-        const id = 'id-1'
-        setRawWhitelist({ chan_id: id })
+        const namespace = 'namespace'
+        setRawWhitelist({ namespace })
 
-        const result = DAO.inWhitelist(id)
+        const result = DAO.inWhitelist(namespace)
 
         expect(result).toBeTrue()
       })
@@ -34,9 +34,9 @@ describe('whitelist', () => {
 
     describe('not exist', () => {
       it('return false', () => {
-        const id = 'id-1'
+        const namespace = 'namespace'
 
-        const result = DAO.inWhitelist(id)
+        const result = DAO.inWhitelist(namespace)
 
         expect(result).toBeFalse()
       })
@@ -46,24 +46,24 @@ describe('whitelist', () => {
   describe('addWhitelistItem', () => {
     describe('exist', () => {
       it('return undefined', () => {
-        const id = 'id-1'
-        setRawWhitelist({ chan_id: id })
+        const namespace = 'namespace'
+        setRawWhitelist({ namespace })
 
-        const result = DAO.addWhitelistItem(id)
+        const result = DAO.addWhitelistItem(namespace)
 
         expect(result).toBeUndefined()
-        expect(hasRawWhitelist(id)).toBeTrue()
+        expect(hasRawWhitelist(namespace)).toBeTrue()
       })
     })
 
     describe('not exist', () => {
       it('return undefined', () => {
-        const id = 'id-1'
+        const namespace = 'namespace'
 
-        const result = DAO.addWhitelistItem(id)
+        const result = DAO.addWhitelistItem(namespace)
 
         expect(result).toBeUndefined()
-        expect(hasRawWhitelist(id)).toBeTrue()
+        expect(hasRawWhitelist(namespace)).toBeTrue()
       })
     })
   })
@@ -71,24 +71,24 @@ describe('whitelist', () => {
   describe('removeWhitelistItem', () => {
     describe('exist', () => {
       it('return undefined', () => {
-        const id = 'id-1'
-        setRawWhitelist({ chan_id: id })
+        const namespace = 'namespace'
+        setRawWhitelist({ namespace })
 
-        const result = DAO.removeWhitelistItem(id)
+        const result = DAO.removeWhitelistItem(namespace)
 
         expect(result).toBeUndefined()
-        expect(hasRawWhitelist(id)).toBeFalse()
+        expect(hasRawWhitelist(namespace)).toBeFalse()
       })
     })
 
     describe('not exist', () => {
       it('return undefined', () => {
-        const id = 'id-1'
+        const namespace = 'namespace'
 
-        const result = DAO.removeWhitelistItem(id)
+        const result = DAO.removeWhitelistItem(namespace)
 
         expect(result).toBeUndefined()
-        expect(hasRawWhitelist(id)).toBeFalse()
+        expect(hasRawWhitelist(namespace)).toBeFalse()
       })
     })
   })

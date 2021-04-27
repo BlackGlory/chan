@@ -11,22 +11,22 @@ afterEach(clearDatabases)
 describe('blacklist', () => {
   describe('getAllBlacklistItems(): string[]', () => {
     it('return string[]', async () => {
-      const id = 'id-1'
-      setRawBlacklist({ chan_id: id })
+      const namespace = 'namespace'
+      setRawBlacklist({ namespace })
 
       const result = DAO.getAllBlacklistItems()
 
-      expect(result).toEqual([id])
+      expect(result).toEqual([namespace])
     })
   })
 
-  describe('inBlacklist(id: string): boolean', () => {
+  describe('inBlacklist(namespace: string): boolean', () => {
     describe('exist', () => {
       it('return true', async () => {
-        const id = 'id-1'
-        setRawBlacklist({ chan_id: id })
+        const namespace = 'namespace'
+        setRawBlacklist({ namespace })
 
-        const result = DAO.inBlacklist(id)
+        const result = DAO.inBlacklist(namespace)
 
         expect(result).toBeTrue()
       })
@@ -34,9 +34,9 @@ describe('blacklist', () => {
 
     describe('not exist', () => {
       it('return false', () => {
-        const id = 'id-1'
+        const namespace = 'namespace-1'
 
-        const result = DAO.inBlacklist(id)
+        const result = DAO.inBlacklist(namespace)
 
         expect(result).toBeFalse()
       })
@@ -46,24 +46,24 @@ describe('blacklist', () => {
   describe('addBlacklistItem', () => {
     describe('exist', () => {
       it('return undefined', () => {
-        const id = 'id-1'
-        setRawBlacklist({ chan_id: id })
+        const namespace = 'namespace-1'
+        setRawBlacklist({ namespace })
 
-        const result = DAO.addBlacklistItem(id)
+        const result = DAO.addBlacklistItem(namespace)
 
         expect(result).toBeUndefined()
-        expect(hasRawBlacklist(id)).toBeTrue()
+        expect(hasRawBlacklist(namespace)).toBeTrue()
       })
     })
 
     describe('not exist', () => {
       it('return undefined', () => {
-        const id = 'id-1'
+        const namespace = 'namespace-1'
 
-        const result = DAO.addBlacklistItem(id)
+        const result = DAO.addBlacklistItem(namespace)
 
         expect(result).toBeUndefined()
-        expect(hasRawBlacklist(id)).toBeTrue()
+        expect(hasRawBlacklist(namespace)).toBeTrue()
       })
     })
   })
@@ -71,24 +71,24 @@ describe('blacklist', () => {
   describe('removeBlacklistItem', () => {
     describe('exist', () => {
       it('return undefined', () => {
-        const id = 'id-1'
-        setRawBlacklist({ chan_id: id })
+        const namespace = 'namespace-1'
+        setRawBlacklist({ namespace })
 
-        const result = DAO.removeBlacklistItem(id)
+        const result = DAO.removeBlacklistItem(namespace)
 
         expect(result).toBeUndefined()
-        expect(hasRawBlacklist(id)).toBeFalse()
+        expect(hasRawBlacklist(namespace)).toBeFalse()
       })
     })
 
     describe('not exist', () => {
       it('return undefined', () => {
-        const id = 'id-1'
+        const namespace = 'namespace-1'
 
-        const result = DAO.removeBlacklistItem(id)
+        const result = DAO.removeBlacklistItem(namespace)
 
         expect(result).toBeUndefined()
-        expect(hasRawBlacklist(id)).toBeFalse()
+        expect(hasRawBlacklist(namespace)).toBeFalse()
       })
     })
   })

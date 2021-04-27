@@ -1,48 +1,48 @@
 interface IBlacklistDAO {
   getAllBlacklistItems(): Promise<string[]>
-  inBlacklist(id: string): Promise<boolean>
-  addBlacklistItem(id: string): Promise<void>
-  removeBlacklistItem(id: string): Promise<void>
+  inBlacklist(namespace: string): Promise<boolean>
+  addBlacklistItem(namespace: string): Promise<void>
+  removeBlacklistItem(namespace: string): Promise<void>
 }
 
 interface IWhitelistDAO {
   getAllWhitelistItems(): Promise<string[]>
-  inWhitelist(id: string): Promise<boolean>
-  addWhitelistItem(id: string): Promise<void>
-  removeWhitelistItem(id: string): Promise<void>
+  inWhitelist(namespace: string): Promise<boolean>
+  addWhitelistItem(namespace: string): Promise<void>
+  removeWhitelistItem(namespace: string): Promise<void>
 }
 
 interface ITokenDAO {
-  getAllIdsWithTokens(): Promise<string[]>
-  getAllTokens(id: string): Promise<Array<{
+  getAllNamespacesWithTokens(): Promise<string[]>
+  getAllTokens(namespace: string): Promise<Array<{
     token: string
     write: boolean
     read: boolean
   }>>
 
-  hasWriteTokens(id: string): Promise<boolean>
-  matchWriteToken(props: { token: string; id: string }): Promise<boolean>
-  setWriteToken(props: { token: string; id: string }): Promise<void>
-  unsetWriteToken(props: { token: string; id: string }): Promise<void>
+  hasWriteTokens(namespace: string): Promise<boolean>
+  matchWriteToken(params: { token: string; namespace: string }): Promise<boolean>
+  setWriteToken(params: { token: string; namespace: string }): Promise<void>
+  unsetWriteToken(params: { token: string; namespace: string }): Promise<void>
 
-  hasReadTokens(id: string): Promise<boolean>
-  matchReadToken(props: { token: string; id: string }): Promise<boolean>
-  setReadToken(props: { token: string; id: string }): Promise<void>
-  unsetReadToken(props: { token: string; id: string }): Promise<void>
+  hasReadTokens(namespace: string): Promise<boolean>
+  matchReadToken(params: { token: string; namespace: string }): Promise<boolean>
+  setReadToken(params: { token: string; namespace: string }): Promise<void>
+  unsetReadToken(params: { token: string; namespace: string }): Promise<void>
 }
 
 interface ITokenPolicyDAO {
-  getAllIdsWithTokenPolicies(): Promise<string[]>
-  getTokenPolicies(id: string): Promise<{
+  getAllNamespacesWithTokenPolicies(): Promise<string[]>
+  getTokenPolicies(namespace: string): Promise<{
     writeTokenRequired: boolean | null
     readTokenRequired: boolean | null
   }>
 
-  setWriteTokenRequired(id: string, val: boolean): Promise<void>
-  unsetWriteTokenRequired(id: string): Promise<void>
+  setWriteTokenRequired(namespace: string, val: boolean): Promise<void>
+  unsetWriteTokenRequired(namespace: string): Promise<void>
 
-  setReadTokenRequired(id: string, val: boolean): Promise<void>
-  unsetReadTokenRequired(id: string): Promise<void>
+  setReadTokenRequired(namespace: string, val: boolean): Promise<void>
+  unsetReadTokenRequired(namespace: string): Promise<void>
 }
 
 interface IAccessControlDAO extends

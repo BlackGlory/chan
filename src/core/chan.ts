@@ -1,9 +1,9 @@
 import { ChanDAO } from '@dao'
 
-export function enqueue(id: string, payload: string): Promise<void> {
-  return ChanDAO.enqueue(id, payload)
+export function enqueue(namespace: string, payload: string): Promise<void> {
+  return ChanDAO.enqueue(namespace, payload)
 }
 
-export function dequeue(id: string): Promise<string> {
-  return ChanDAO.dequeue(id)
+export function dequeue(namespace: string): Promise<string> {
+  return ChanDAO.dequeue(namespace)
 }

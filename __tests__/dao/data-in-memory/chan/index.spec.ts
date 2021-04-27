@@ -7,10 +7,10 @@ beforeEach(resetChanChannelManager)
 describe('ChanDAO', () => {
   describe('enqueue', () => {
     it('block', async done => {
-      const key = 'key'
+      const namespace = 'namespace'
       const value = 'value'
 
-      const result = ChanDAO.enqueue(key, value)
+      const result = ChanDAO.enqueue(namespace, value)
       result.then(() => done.fail())
       setImmediate(done)
 
@@ -20,9 +20,9 @@ describe('ChanDAO', () => {
 
   describe('dequeue',  () => {
     it('block', async done => {
-      const key = 'key'
+      const namespace = 'namespace'
 
-      const result = ChanDAO.dequeue(key)
+      const result = ChanDAO.dequeue(namespace)
       result.then(() => done.fail())
       setImmediate(done)
 
@@ -32,11 +32,11 @@ describe('ChanDAO', () => {
 
   describe('dequeue, enqueue', () => {
     it('non-block', async () => {
-      const key = 'key'
+      const namespace = 'namespace'
       const value = 'value'
 
-      setImmediate(() => ChanDAO.enqueue(key, value))
-      const result = ChanDAO.dequeue(key)
+      setImmediate(() => ChanDAO.enqueue(namespace, value))
+      const result = ChanDAO.dequeue(namespace)
       const proResult = await result
 
       expect(result).toBePromise()
@@ -46,11 +46,11 @@ describe('ChanDAO', () => {
 
   describe('enqueue, dequeue', () => {
     it('non-block', async () => {
-      const key = 'key'
+      const namespace = 'namespace'
       const value = 'value'
 
-      setImmediate(() => ChanDAO.dequeue(key))
-      const result = ChanDAO.enqueue(key, value)
+      setImmediate(() => ChanDAO.dequeue(namespace))
+      const result = ChanDAO.enqueue(namespace, value)
       const proResult = await result
 
       expect(result).toBePromise()

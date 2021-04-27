@@ -1,14 +1,14 @@
 import { getChanChannelManager } from './channel-manager-instance'
 
 export const ChanDAO: IChanDAO = {
-  enqueue(key: string, value: string): Promise<void> {
+  enqueue(namespace: string, value: string): Promise<void> {
     const manager = getChanChannelManager()
-    const channel = manager.getChannel(key)
+    const channel = manager.getChannel(namespace)
     return channel.enqueue(value)
   }
-, dequeue(key: string): Promise<string> {
+, dequeue(namespace: string): Promise<string> {
     const manager = getChanChannelManager()
-    const channel = manager.getChannel(key)
+    const channel = manager.getChannel(namespace)
     return channel.dequeue()
   }
 }

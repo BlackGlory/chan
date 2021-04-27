@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify'
-import { idSchema } from '@src/schema'
+import { namespaceSchema } from '@src/schema'
 
 export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   server.get(
@@ -20,36 +20,36 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
     }
   )
 
-  server.put<{ Params: { id: string }}>(
-    '/blacklist/:id'
+  server.put<{ Params: { namespace: string }}>(
+    '/blacklist/:namespace'
   , {
       schema: {
-        params: { id: idSchema }
+        params: { namespace: namespaceSchema }
       , response: {
           204: { type: 'null' }
         }
       }
     }
   , async (req, reply) => {
-      const id = req.params.id
-      await Core.Blacklist.add(id)
+      const namespace = req.params.namespace
+      await Core.Blacklist.add(namespace)
       reply.status(204).send()
     }
   )
 
-  server.delete<{ Params: { id: string }}>(
-    '/blacklist/:id'
+  server.delete<{ Params: { namespace: string }}>(
+    '/blacklist/:namespace'
   , {
       schema: {
-        params: { id: idSchema }
+        params: { namespace: namespaceSchema }
       , response: {
           204: { type: 'null' }
         }
       }
     }
   , async (req, reply) => {
-      const id = req.params.id
-      await Core.Blacklist.remove(id)
+      const namespace = req.params.namespace
+      await Core.Blacklist.remove(namespace)
       reply.status(204).send()
     }
   )

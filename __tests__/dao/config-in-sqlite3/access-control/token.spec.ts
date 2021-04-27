@@ -9,50 +9,56 @@ beforeEach(initializeDatabases)
 afterEach(clearDatabases)
 
 describe('token-based access control', () => {
-  describe('getAllIdsWithTokens(): string[]', () => {
+  describe('getAllNamespacesWithTokens(): string[]', () => {
     it('return string[]', () => {
-      const id1 = 'id-1'
+      const namespace1 = 'namespace-1'
       const token1 = 'token-1'
-      const id2 = 'id-2'
+      const namespace = 'namespace-2'
       const token2 = 'token-2'
       setRawToken({
         token: token1
-      , chan_id: id1
+      , namespace: namespace1
       , read_permission: 1
       , write_permission: 0
       })
       setRawToken({
         token: token2
-      , chan_id: id2
+      , namespace
       , read_permission: 0
       , write_permission: 1
       })
 
       const result = DAO.getAllIdsWithTokens()
 
-      expect(result).toEqual([id1, id2])
+      expect(result).toEqual([namespace1, namespace])
     })
   })
 
-  describe('getAllTokens(id: string): Array<{ token: string; enqueue: boolean; dequeue: boolean }>', () => {
+  describe(`
+    getAllTokens(namespace: string): Array<{
+      token: string
+      enqueue: boolean
+      dequeue: boolean
+    }>
+  `, () => {
     it('return Array<{ token: string; write: boolean; read: boolean }>', () => {
-      const id = 'id-1'
+      const namespace = 'namespace'
       const token1 = 'token-1'
       const token2 = 'token-2'
       setRawToken({
         token: token1
-      , chan_id: id
+      , namespace
       , read_permission: 1
       , write_permission: 0
       })
       setRawToken({
         token: token2
-      , chan_id: id
+      , namespace
       , read_permission: 0
       , write_permission: 1
       })
 
-      const result = DAO.getAllTokens(id)
+      const result = DAO.getAllTokens(namespace)
 
       expect(result).toEqual([
         { token: token1, read: true, write: false }
@@ -62,19 +68,19 @@ describe('token-based access control', () => {
   })
 
   describe('WriteToken', () => {
-    describe('hasWriteTokens(id: string): boolean', () => {
+    describe('hasWriteTokens(namespace: string): boolean', () => {
       describe('tokens exist', () => {
         it('return true', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 0
           , write_permission: 1
           })
 
-          const result = DAO.hasWriteTokens(id)
+          const result = DAO.hasWriteTokens(namespace)
 
           expect(result).toBeTrue()
         })
@@ -83,34 +89,34 @@ describe('token-based access control', () => {
       describe('tokens do not exist', () => {
         it('return false', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 1
           , write_permission: 0
           })
 
-          const result = DAO.hasWriteTokens(id)
+          const result = DAO.hasWriteTokens(namespace)
 
           expect(result).toBeFalse()
         })
       })
     })
 
-    describe('matchWriteToken({ token: string; id: string }): boolean', () => {
+    describe('matchWriteToken({ token: string; namespace: string }): boolean', () => {
       describe('token exist', () => {
         it('return true', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 0
           , write_permission: 1
           })
 
-          const result = DAO.matchWriteToken({ token, id })
+          const result = DAO.matchWriteToken({ token, namespace })
 
           expect(result).toBeTrue()
         })
@@ -119,35 +125,35 @@ describe('token-based access control', () => {
       describe('token does not exist', () => {
         it('return false', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 1
           , write_permission: 0
           })
 
-          const result = DAO.matchWriteToken({ token, id })
+          const result = DAO.matchWriteToken({ token, namespace })
 
           expect(result).toBeFalse()
         })
       })
     })
 
-    describe('setWriteToken({ token: string; id: string })', () => {
+    describe('setWriteToken({ token: string; namespace: string })', () => {
       describe('token exists', () => {
         it('update row', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 1
           , write_permission: 0
           })
 
-          const result = DAO.setWriteToken({ token, id })
-          const row = getRawToken(token, id)
+          const result = DAO.setWriteToken({ token, namespace })
+          const row = getRawToken(token, namespace)
 
           expect(result).toBeUndefined()
           expect(row).not.toBeNull()
@@ -158,10 +164,10 @@ describe('token-based access control', () => {
       describe('token does not exist', () => {
         it('insert row', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
 
-          const result = DAO.setWriteToken({ token, id })
-          const row = getRawToken(token, id)
+          const result = DAO.setWriteToken({ token, namespace })
+          const row = getRawToken(token, namespace)
 
           expect(result).toBeUndefined()
           expect(row).not.toBeNull()
@@ -170,20 +176,20 @@ describe('token-based access control', () => {
       })
     })
 
-    describe('unsetWriteToken({ token: string; id: string })', () => {
+    describe('unsetWriteToken({ token: string; namespace: string })', () => {
       describe('token exists', () => {
         it('return undefined', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 1
           , write_permission: 1
           })
 
-          const result = DAO.unsetWriteToken({ token, id })
-          const row = getRawToken(token, id)
+          const result = DAO.unsetWriteToken({ token, namespace })
+          const row = getRawToken(token, namespace)
 
           expect(result).toBeUndefined()
           expect(row).not.toBeNull()
@@ -194,31 +200,31 @@ describe('token-based access control', () => {
       describe('token does not exist', () => {
         it('return undefined', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
 
-          const result = DAO.unsetWriteToken({ token, id })
+          const result = DAO.unsetWriteToken({ token, namespace })
 
           expect(result).toBeUndefined()
-          expect(hasRawToken(token, id)).toBeFalse()
+          expect(hasRawToken(token, namespace)).toBeFalse()
         })
       })
     })
   })
 
   describe('ReadToken', () => {
-    describe('hasReadTokens(id: string): boolean', () => {
+    describe('hasReadTokens(namespace: string): boolean', () => {
       describe('tokens exist', () => {
         it('return true', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 1
           , write_permission: 0
           })
 
-          const result = DAO.hasReadTokens(id)
+          const result = DAO.hasReadTokens(namespace)
 
           expect(result).toBeTrue()
         })
@@ -227,33 +233,33 @@ describe('token-based access control', () => {
       describe('tokens do not exist', () => {
         it('return false', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 0
           , write_permission: 1
           })
 
-          const result = DAO.hasReadTokens(id)
+          const result = DAO.hasReadTokens(namespace)
 
           expect(result).toBeFalse()
         })
       })
     })
 
-    describe('matchReadToken({ token: string; id: string }): boolean', () => {
+    describe('matchReadToken({ token: string; namespace: string }): boolean', () => {
       describe('tokens exist', () => {
         it('return true', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 1
           , write_permission: 0 })
 
-          const result = DAO.matchReadToken({ token, id })
+          const result = DAO.matchReadToken({ token, namespace })
 
           expect(result).toBeTrue()
         })
@@ -262,34 +268,34 @@ describe('token-based access control', () => {
       describe('tokens do not exist', () => {
         it('return false', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 0
           , write_permission: 1
           })
 
-          const result = DAO.matchReadToken({ token, id })
+          const result = DAO.matchReadToken({ token, namespace })
 
           expect(result).toBeFalse()
         })
       })
     })
 
-    describe('setReadToken(token: string, id: string)', () => {
+    describe('setReadToken(token: string, namespace: string)', () => {
       describe('token exists', () => {
         it('update row', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 0
           , write_permission: 1 })
 
-          const result = DAO.setReadToken({ token, id })
-          const row = getRawToken(token, id)
+          const result = DAO.setReadToken({ token, namespace })
+          const row = getRawToken(token, namespace)
 
           expect(result).toBeUndefined()
           expect(row).not.toBeNull()
@@ -300,10 +306,10 @@ describe('token-based access control', () => {
       describe('token does not exist', () => {
         it('insert row', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
 
-          const result = DAO.setReadToken({ token, id })
-          const row = getRawToken(token, id)
+          const result = DAO.setReadToken({ token, namespace })
+          const row = getRawToken(token, namespace)
 
           expect(result).toBeUndefined()
           expect(row).not.toBeNull()
@@ -316,16 +322,16 @@ describe('token-based access control', () => {
       describe('token exists', () => {
         it('return undefined', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
           setRawToken({
             token
-          , chan_id: id
+          , namespace
           , read_permission: 1
           , write_permission: 1
           })
 
-          const result = DAO.unsetReadToken({ token, id })
-          const row = getRawToken(token, id)
+          const result = DAO.unsetReadToken({ token, namespace })
+          const row = getRawToken(token, namespace)
 
           expect(result).toBeUndefined()
           expect(row).not.toBeNull()
@@ -336,12 +342,12 @@ describe('token-based access control', () => {
       describe('token does not exist', () => {
         it('return undefined', () => {
           const token = 'token-1'
-          const id = 'id-1'
+          const namespace = 'namespace'
 
-          const result = DAO.unsetReadToken({ token, id })
+          const result = DAO.unsetReadToken({ token, namespace })
 
           expect(result).toBeUndefined()
-          expect(hasRawToken(token, id)).toBeFalse()
+          expect(hasRawToken(token, namespace)).toBeFalse()
         })
       })
     })

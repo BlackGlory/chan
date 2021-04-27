@@ -2,37 +2,37 @@ import { getDatabase } from '../database'
 
 export function getAllWhitelistItems(): string[] {
   const result = getDatabase().prepare(`
-    SELECT chan_id
+    SELECT namespace
       FROM chan_whitelist;
   `).all()
 
-  return result.map(x => x['chan_id'])
+  return result.map(x => x['namespace'])
 }
 
-export function inWhitelist(id: string): boolean {
+export function inWhitelist(namespace: string): boolean {
   const result = getDatabase().prepare(`
     SELECT EXISTS(
              SELECT *
                FROM chan_whitelist
-              WHERE chan_id = $id
+              WHERE namespace = $namespace
            ) AS exist_in_whitelist;
-  `).get({ id })
+  `).get({ namespace })
 
   return result['exist_in_whitelist'] === 1
 }
 
-export function addWhitelistItem(id: string) {
+export function addWhitelistItem(namespace: string) {
   getDatabase().prepare(`
-    INSERT INTO chan_whitelist (chan_id)
-    VALUES ($id)
+    INSERT INTO chan_whitelist (namespace)
+    VALUES ($namespace)
         ON CONFLICT
         DO NOTHING;
-  `).run({ id })
+  `).run({ namespace })
 }
 
-export function removeWhitelistItem(id: string) {
+export function removeWhitelistItem(namespace: string) {
   getDatabase().prepare(`
     DELETE FROM chan_whitelist
-     WHERE chan_id = $id;
-  `).run({ id })
+     WHERE namespace = $namespace;
+  `).run({ namespace })
 }

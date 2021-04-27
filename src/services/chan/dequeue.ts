@@ -1,16 +1,16 @@
 import { FastifyPluginAsync } from 'fastify'
-import { idSchema, tokenSchema } from '@src/schema'
+import { namespaceSchema, tokenSchema } from '@src/schema'
 import { IPackage } from './types'
 
 export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes(server, { Core }) {
   server.get<{
-    Params: { id: string }
+    Params: { namespace: string }
     Querystring: { token?: string }
   }>(
-    '/chan/:id'
+    '/chan/:namespace'
   , {
       schema: {
-        params: { id: idSchema }
+        params: { namespace: namespaceSchema }
       , querystring: { token: tokenSchema }
       , response: {
           200: { type: 'null' }
@@ -18,13 +18,13 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
       }
     }
   , async (req, reply) => {
-      const id = req.params.id
+      const namespace = req.params.namespace
       const token = req.query.token
 
       try {
-        await Core.Blacklist.check(id)
-        await Core.Whitelist.check(id)
-        await Core.TBAC.checkReadPermission(id, token)
+        await Core.Blacklist.check(namespace)
+        await Core.Whitelist.check(namespace)
+        await Core.TBAC.checkReadPermission(namespace, token)
       } catch (e) {
         if (e instanceof Core.Blacklist.Forbidden) return reply.status(403).send()
         if (e instanceof Core.Whitelist.Forbidden) return reply.status(403).send()
@@ -32,7 +32,7 @@ export const routes: FastifyPluginAsync<{ Core: ICore }> = async function routes
         throw e
       }
 
-      const value = await Core.Chan.dequeue(id) as IPackage
+      const value = await Core.Chan.dequeue(namespace) as IPackage
       if (value.type) reply.header('content-type', value.type)
       reply.send(value.payload)
     }

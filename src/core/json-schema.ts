@@ -12,31 +12,31 @@ export function isEnabled(): boolean {
   return JSON_VALIDATION()
 }
 
-export function getAllIds(): Promise<string[]> {
-  return JsonSchemaDAO.getAllIdsWithJsonSchema()
+export function getAllNamespaces(): Promise<string[]> {
+  return JsonSchemaDAO.getAllNamespacesWithJsonSchema()
 }
 
-export function get(id: string): Promise<string | null> {
-  return JsonSchemaDAO.getJsonSchema(id)
+export function get(namespace: string): Promise<string | null> {
+  return JsonSchemaDAO.getJsonSchema(namespace)
 }
 
-export function set(id: string, schema: Json): Promise<void> {
+export function set(namespace: string, schema: Json): Promise<void> {
   const schemaString = JSON.stringify(schema, null, 2)
-  return JsonSchemaDAO.setJsonSchema({ id, schema: schemaString })
+  return JsonSchemaDAO.setJsonSchema({ namespace, schema: schemaString })
 }
 
-export function remove(id: string): Promise<void> {
-  return JsonSchemaDAO.removeJsonSchema(id)
+export function remove(namespace: string): Promise<void> {
+  return JsonSchemaDAO.removeJsonSchema(namespace)
 }
 
 /**
  * @throws {InvalidPayload}
  */
-export async function validate(id: string, payload: string): Promise<void> {
+export async function validate(namespace: string, payload: string): Promise<void> {
   const [err, json] = getErrorResult(() => JSON.parse(payload))
   if (err) throw new InvalidPayload()
 
-  const jsonSchema= await JsonSchemaDAO.getJsonSchema(id)
+  const jsonSchema= await JsonSchemaDAO.getJsonSchema(namespace)
   const schema = jsonSchema ? JSON.parse(jsonSchema) : DEFAULT_JSON_SCHEMA()
   if (schema) {
     const valid = ajv.validate(schema, json)

@@ -14,37 +14,37 @@ afterEach(stopService)
 
 describe('blackllist', () => {
   describe('enabled', () => {
-    describe('id in blacklist', () => {
+    describe('namespace in blacklist', () => {
       it('403', async () => {
         process.env.CHAN_LIST_BASED_ACCESS_CONTROL = 'blacklist'
-        const id = 'id'
-        await AccessControlDAO.addBlacklistItem(id)
+        const namespace = 'namespace'
+        await AccessControlDAO.addBlacklistItem(namespace)
 
         const res = await fetch(get(
           url(getAddress())
-        , pathname(`/chan/${id}`)
+        , pathname(`/chan/${namespace}`)
         ))
 
         expect(res.status).toBe(403)
       })
     })
 
-    describe('id not in blacklist', () => {
+    describe('namespace not in blacklist', () => {
       it('200', async () => {
         process.env.CHAN_LIST_BASED_ACCESS_CONTROL = 'blacklist'
-        const id = 'id'
+        const namespace = 'namespace'
         const message = 'message'
 
         setImmediate(async () => {
           await fetch(post(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           , text(message)
           ))
         })
         const res = await fetch(get(
           url(getAddress())
-        , pathname(`/chan/${id}`)
+        , pathname(`/chan/${namespace}`)
         ))
 
         expect(res.status).toBe(200)
@@ -54,22 +54,22 @@ describe('blackllist', () => {
   })
 
   describe('disabled', () => {
-    describe('id in blacklist', () => {
+    describe('namespace in blacklist', () => {
       it('200', async () => {
-        const id = 'id'
+        const namespace = 'namespace'
         const message = 'message'
-        await AccessControlDAO.addBlacklistItem(id)
+        await AccessControlDAO.addBlacklistItem(namespace)
 
         setImmediate(async () => {
           await fetch(post(
             url(getAddress())
-          , pathname(`/chan/${id}`)
+          , pathname(`/chan/${namespace}`)
           , text(message)
           ))
         })
         const res = await fetch(get(
           url(getAddress())
-        , pathname(`/chan/${id}`)
+        , pathname(`/chan/${namespace}`)
         ))
 
         expect(res.status).toBe(200)

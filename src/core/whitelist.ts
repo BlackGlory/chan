@@ -6,16 +6,16 @@ export function getAll(): Promise<string[]> {
   return AccessControlDAO.getAllWhitelistItems()
 }
 
-export function add(id: string): Promise<void> {
-  return AccessControlDAO.addWhitelistItem(id)
+export function add(namespace: string): Promise<void> {
+  return AccessControlDAO.addWhitelistItem(namespace)
 }
 
-export function remove(id: string): Promise<void> {
-  return AccessControlDAO.removeWhitelistItem(id)
+export function remove(namespace: string): Promise<void> {
+  return AccessControlDAO.removeWhitelistItem(namespace)
 }
 
-export async function isBlocked(id: string): Promise<boolean> {
-  return !await AccessControlDAO.inWhitelist(id)
+export async function isBlocked(namespace: string): Promise<boolean> {
+  return !await AccessControlDAO.inWhitelist(namespace)
 }
 
 export function isEnabled() {
@@ -25,8 +25,8 @@ export function isEnabled() {
 /**
  * @throws {Forbidden}
  */
-export async function check(id: string): Promise<void> {
-  if (isEnabled() && await isBlocked(id)) throw new Forbidden()
+export async function check(namespace: string): Promise<void> {
+  if (isEnabled() && await isBlocked(namespace)) throw new Forbidden()
 }
 
 export class Forbidden extends CustomError {}
