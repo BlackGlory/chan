@@ -6,7 +6,7 @@ beforeEach(resetChanChannelManager)
 
 describe('ChanDAO', () => {
   describe('enqueue', () => {
-    it('block', async done => {
+    it('block', done => {
       const namespace = 'namespace'
       const value = 'value'
 
@@ -19,7 +19,7 @@ describe('ChanDAO', () => {
   })
 
   describe('dequeue',  () => {
-    it('block', async done => {
+    it('block', done => {
       const namespace = 'namespace'
 
       const result = ChanDAO.dequeue(namespace)

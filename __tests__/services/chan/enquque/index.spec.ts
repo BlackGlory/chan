@@ -5,6 +5,7 @@ import { fetch } from 'extra-fetch'
 import { get, post } from 'extra-request'
 import { url, pathname, json, text, header } from 'extra-request/lib/es2018/transformers'
 import { toJSON } from 'extra-response'
+import { go } from '@blackglory/go'
 
 jest.mock('@dao/config-in-sqlite3/database')
 expect.extend(matchers)
@@ -94,33 +95,35 @@ describe('no access control', () => {
     describe('namespace has JSON Schema', () => {
       describe('Content-Type: application/json', () => {
         describe('valid JSON', () => {
-          it('204', async done => {
-            process.env.CHAN_JSON_VALIDATION = 'true'
-            await startService()
-            const namespace = 'namespace'
-            const schema = { type: 'string' }
-            const message = 'message'
-            await JsonSchemaDAO.setJsonSchema({
-              namespace
-            , schema: JSON.stringify(schema)
-            })
+          it('204', done => {
+            go(async () => {
+              process.env.CHAN_JSON_VALIDATION = 'true'
+              await startService()
+              const namespace = 'namespace'
+              const schema = { type: 'string' }
+              const message = 'message'
+              await JsonSchemaDAO.setJsonSchema({
+                namespace
+              , schema: JSON.stringify(schema)
+              })
 
-            setImmediate(async () => {
-              const res = await fetch(get(
+              setImmediate(async () => {
+                const res = await fetch(get(
+                  url(getAddress())
+                , pathname(`/chan/${namespace}`)
+                ))
+                expect(res.headers.get('content-type')).toMatch('application/json')
+                expect(await toJSON(res)).toBe(message)
+                done()
+              })
+              const res = await fetch(post(
                 url(getAddress())
               , pathname(`/chan/${namespace}`)
+              , json(message)
               ))
-              expect(res.headers.get('content-type')).toMatch('application/json')
-              expect(await toJSON(res)).toBe(message)
-              done()
-            })
-            const res = await fetch(post(
-              url(getAddress())
-            , pathname(`/chan/${namespace}`)
-            , json(message)
-            ))
 
-            expect(res.status).toBe(204)
+              expect(res.status).toBe(204)
+            })
           })
         })
 
@@ -174,33 +177,35 @@ describe('no access control', () => {
     describe('namespace does not have JSON Schema', () => {
       describe('Content-Type: application/json', () => {
         describe('valid JSON', () => {
-          it('204', async done => {
-            process.env.CHAN_JSON_VALIDATION = 'true'
-            await startService()
-            const namespace = 'namespace'
-            const schema = { type: 'string' }
-            const message = 'message'
-            await JsonSchemaDAO.setJsonSchema({
-              namespace
-            , schema: JSON.stringify(schema)
-            })
+          it('204', done => {
+            go(async () => {
+              process.env.CHAN_JSON_VALIDATION = 'true'
+              await startService()
+              const namespace = 'namespace'
+              const schema = { type: 'string' }
+              const message = 'message'
+              await JsonSchemaDAO.setJsonSchema({
+                namespace
+              , schema: JSON.stringify(schema)
+              })
 
-            setImmediate(async () => {
-              const res = await fetch(get(
+              setImmediate(async () => {
+                const res = await fetch(get(
+                  url(getAddress())
+                , pathname(`/chan/${namespace}`)
+                ))
+                expect(res.headers.get('content-type')).toMatch('application/json')
+                expect(await toJSON(res)).toBe(message)
+                done()
+              })
+              const res = await fetch(post(
                 url(getAddress())
               , pathname(`/chan/${namespace}`)
+              , json(message)
               ))
-              expect(res.headers.get('content-type')).toMatch('application/json')
-              expect(await toJSON(res)).toBe(message)
-              done()
-            })
-            const res = await fetch(post(
-              url(getAddress())
-            , pathname(`/chan/${namespace}`)
-            , json(message)
-            ))
 
-            expect(res.status).toBe(204)
+              expect(res.status).toBe(204)
+            })
           })
         })
 
@@ -227,27 +232,29 @@ describe('no access control', () => {
 
   describe('CHAN_JSON_PAYLOAD_ONLY', () => {
     describe('Content-Type: application/json', () => {
-      it('accept , return 204', async done => {
-        process.env.CHAN_JSON_PAYLOAD_ONLY = 'true'
-        await startService()
-        const namespace = 'namespace'
-        const message = 'message'
+      it('accept , return 204', done => {
+        go(async () => {
+          process.env.CHAN_JSON_PAYLOAD_ONLY = 'true'
+          await startService()
+          const namespace = 'namespace'
+          const message = 'message'
 
-        setImmediate(async () => {
-          const res = await fetch(get(
+          setImmediate(async () => {
+            const res = await fetch(get(
+              url(getAddress())
+            , pathname(`/chan/${namespace}`)
+            ))
+            expect(res.headers.get('content-type')).toMatch('application/json')
+            done()
+          })
+          const res = await fetch(post(
             url(getAddress())
           , pathname(`/chan/${namespace}`)
+          , json(message)
           ))
-          expect(res.headers.get('content-type')).toMatch('application/json')
-          done()
-        })
-        const res = await fetch(post(
-          url(getAddress())
-        , pathname(`/chan/${namespace}`)
-        , json(message)
-        ))
 
-        expect(res.status).toBe(204)
+          expect(res.status).toBe(204)
+        })
       })
     })
 
@@ -270,28 +277,29 @@ describe('no access control', () => {
   })
 
   describe('Content-Type', () => {
-    it('reflect content-type', async done => {
-      await startService()
-      const namespace = 'namespace'
-      const message = 'message'
+    it('reflect content-type', done => {
+      go(async () => {
+        await startService()
+        const namespace = 'namespace'
+        const message = 'message'
 
-      setImmediate(async () => {
-        const res = await fetch(get(
+        setImmediate(async () => {
+          const res = await fetch(get(
+            url(getAddress())
+          , pathname(`/chan/${namespace}`)
+          ))
+          expect(res.headers.get('content-type')).toMatch('apple/banana')
+          done()
+        })
+        const res = await fetch(post(
           url(getAddress())
         , pathname(`/chan/${namespace}`)
+        , text(message)
+        , header('Content-Type', 'apple/banana')
         ))
-        expect(res.headers.get('content-type')).toMatch('apple/banana')
-        done()
-      })
-      const res = await fetch(post(
-        url(getAddress())
-      , pathname(`/chan/${namespace}`)
-      , text(message)
-      , header('Content-Type', 'apple/banana')
-      )
-)
 
-      expect(res.status).toBe(204)
+        expect(res.status).toBe(204)
+      })
     })
   })
 })
