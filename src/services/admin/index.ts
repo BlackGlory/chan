@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify'
-import bearerAuthPlugin = require('fastify-bearer-auth')
+import bearerAuthPlugin from 'fastify-bearer-auth'
 import { routes as jsonSchemaRoutes } from './json-schema'
 import { routes as blacklistRoutes } from './blacklist'
 import { routes as whitelistRoutes } from './whitelist'
