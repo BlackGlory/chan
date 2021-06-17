@@ -35,7 +35,6 @@ RUN apk add --update --no-cache --virtual .build-deps \
 
 COPY . ./
 
-ENV NODE_ENV=production
 ENV CHAN_HOST=0.0.0.0
 ENV CHAN_PORT=8080
 EXPOSE 8080
