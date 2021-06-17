@@ -29,7 +29,7 @@ RUN apk add --update --no-cache --virtual .build-deps \
       python3 \
  && yarn install --production \
  && yarn cache clean \
- && apk del .build-deps
+ && apk del .build-deps \
  && mkdir /data \
  && ln -s /data data
 
