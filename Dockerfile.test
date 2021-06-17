@@ -1,5 +1,6 @@
-FROM node:14-alpine as builder
+FROM node:14-alpine
 WORKDIR /usr/src/app
+
 COPY package.json yarn.lock ./
 
 RUN apk add --update --no-cache --virtual .build-deps \
@@ -14,26 +15,9 @@ RUN apk add --update --no-cache --virtual .build-deps \
 
 COPY . ./
 
-RUN yarn build
-
-FROM node:14-alpine
-WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/lib .
-COPY package.json yarn.lock ./
-
-RUN apk add --update --no-cache --virtual .build-deps \
-      # extra-fetch
-      git \
-      # better-sqlite3
-      build-base \
-      python3 \
- && yarn install --production \
- && yarn cache clean \
- && apk del .build-deps
+RUN yarn build \
  && mkdir /data \
  && ln -s /data data
-
-COPY . ./
 
 ENV NODE_ENV=production
 ENV CHAN_HOST=0.0.0.0
