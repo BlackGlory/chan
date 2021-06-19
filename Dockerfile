@@ -18,7 +18,7 @@ RUN yarn build
 
 FROM node:14-alpine
 WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/lib .
+COPY --from=builder /usr/src/app/lib /usr/src/app/lib
 COPY package.json yarn.lock ./
 
 RUN apk add --update --no-cache --virtual .build-deps \
