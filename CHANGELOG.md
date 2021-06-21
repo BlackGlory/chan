@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/BlackGlory/chan/compare/v0.3.0...v0.3.1) (2021-06-21)
+
+
+### Features
+
+* add /health ([9822041](https://github.com/BlackGlory/chan/commit/9822041d7be5b5b376009f89798b25c0541876ef))
+
+
+### Bug Fixes
+
+* docker build ([4db026a](https://github.com/BlackGlory/chan/commit/4db026a0dcb89b5a995985befe5b94cca1ecdde5))
+* docker build ([879b11a](https://github.com/BlackGlory/chan/commit/879b11ab70f7e2630721aea27e884826b6e97155))
+
 ## [0.3.0](https://github.com/BlackGlory/chan/compare/v0.2.1...v0.3.0) (2021-04-27)
 
 
