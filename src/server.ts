@@ -5,6 +5,7 @@ import { Registry } from 'prom-client'
 import { routes as chan } from '@services/chan'
 import { routes as admin } from '@services/admin'
 import { routes as robots } from '@services/robots'
+import { routes as health } from '@services/health'
 import { HTTP2, PAYLOAD_LIMIT, NODE_ENV, NodeEnv } from '@env'
 import { Core } from '@core'
 
@@ -27,6 +28,7 @@ export function buildServer() {
   server.register(chan, { Core })
   server.register(admin, { Core })
   server.register(robots)
+  server.register(health)
 
   return server
 }
