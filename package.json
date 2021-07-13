@@ -76,7 +76,7 @@
     "better-sqlite3": "^7.4.1",
     "dotenv": "^10.0.0",
     "extra-filesystem": "^0.3.4",
-    "extra-promise": "^0.17.5",
+    "extra-promise": "^0.17.6",
     "extra-tags": "^0.2.2",
     "fastify": "^3.19.1",
     "fastify-bearer-auth": "^6.0.0",
