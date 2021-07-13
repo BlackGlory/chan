@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.4](https://github.com/BlackGlory/chan/compare/v0.3.3...v0.3.4) (2021-07-13)
+
+
+### Bug Fixes
+
+* close unexhausted iterators ([bb849ec](https://github.com/BlackGlory/chan/commit/bb849ecb40d89495174700097ab62b5278857a32))
+
 ### [0.3.3](https://github.com/BlackGlory/chan/compare/v0.3.2...v0.3.3) (2021-07-12)
 
 ### [0.3.2](https://github.com/BlackGlory/chan/compare/v0.3.1...v0.3.2) (2021-07-03)
