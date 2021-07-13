@@ -28,6 +28,7 @@ export class Channel extends EventEmitter {
   }
 
   private close() {
+    this.iter.return?.()
     this.chan.close()
     this.emit('close')
   }
